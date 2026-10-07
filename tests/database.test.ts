@@ -119,10 +119,22 @@ test("confirmed payment is idempotent; fulfillment has role gates and exactly-on
   const db = await fixture();
   try {
     const id = await createOrder(db);
-    await asUser(
-      db,
-      customer,
-      `select public.attach_paypal_order('${id}','PAYPAL-1')`,
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `select public.attach_paypal_order('${id}','PAYPAL-1')`,
+      ),
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `select public.attach_verified_paypal_order('${id}','PAYPAL-1','${customer}')`,
+      ),
+    );
+    await db.exec(
+      `select public.attach_verified_paypal_order('${id}','PAYPAL-1','${customer}')`,
     );
     await db.exec(
       `select public.confirm_payment('${id}','CAPTURE-1','EVENT-1',900);select public.confirm_payment('${id}','CAPTURE-1','EVENT-1',900);select public.confirm_payment('${id}','CAPTURE-1','EVENT-2',900);`,
@@ -363,6 +375,89 @@ test("uncompleted orders cannot receive fabricated customer reviews", async () =
         `insert into reviews(order_id,customer_id,rating,comment) values('${id}','${other}',5,'Another customer review')`,
       ),
     );
+  } finally {
+    await db.close();
+  }
+});
+
+test("payment attachment is server-only and cannot change ownership or overwrite a bound ID", async () => {
+  const db = await fixture();
+  try {
+    const id = await createOrder(db);
+    await assert.rejects(() =>
+      asUser(
+        db,
+        other,
+        `select public.attach_verified_paypal_order('${id}','BAD','${other}')`,
+      ),
+    );
+    await assert.rejects(() =>
+      db.exec(
+        `select public.attach_verified_paypal_order('${id}','BAD','${other}')`,
+      ),
+    );
+    await db.exec(
+      `select public.attach_verified_paypal_order('${id}','PAYPAL','${customer}');select public.attach_verified_paypal_order('${id}','PAYPAL','${customer}');`,
+    );
+    await assert.rejects(() =>
+      db.exec(
+        `select public.attach_verified_paypal_order('${id}','DIFFERENT','${customer}')`,
+      ),
+    );
+    assert.equal(
+      (
+        await db.query(
+          "select * from order_events where event='PAYMENT_PENDING'",
+        )
+      ).rows.length,
+      1,
+    );
+  } finally {
+    await db.close();
+  }
+});
+test("runner cannot accept distant pickups and trip replacement has only one active destination", async () => {
+  const db = await fixture();
+  try {
+    const id = await createOrder(db);
+    await db.exec(
+      `select public.attach_verified_paypal_order('${id}','PAYPAL','${customer}');select public.confirm_payment('${id}','CAPTURE','EVENT',900)`,
+    );
+    await asUser(
+      db,
+      vendor,
+      `select public.transition_order('${id}','VENDOR_ACCEPTED')`,
+    );
+    await asUser(
+      db,
+      vendor,
+      `select public.transition_order('${id}','RUNNER_MATCHING')`,
+    );
+    await asUser(db, runner, "update runners set public_lon=-90,public_lat=38");
+    await assert.rejects(() =>
+      asUser(db, runner, `select public.accept_run('${id}')`),
+    );
+    await asUser(
+      db,
+      runner,
+      "update runners set public_lon=-91.05,public_lat=39.45",
+    );
+    await asUser(
+      db,
+      runner,
+      `insert into runner_trips(runner_id,destination_vendor_id,expires_at) values('${runner}','${shop}',now()+interval '1 hour')`,
+    );
+    await asUser(
+      db,
+      runner,
+      `insert into runner_trips(runner_id,destination_vendor_id,expires_at) values('${runner}','${shop}',now()+interval '2 hours')`,
+    );
+    assert.equal(
+      (await db.query("select * from runner_trips where expires_at>now()")).rows
+        .length,
+      1,
+    );
+    await asUser(db, runner, `select public.accept_run('${id}')`);
   } finally {
     await db.close();
   }

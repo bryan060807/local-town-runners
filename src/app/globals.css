@@ -982,3 +982,29 @@ footer span:first-child {
   border-radius: 16px;
   margin-top: 20px;
 }
+
+/* Comfortable touch targets and readable operational forms on narrow screens. */
+@media (max-width: 760px) {
+  .tabs button,
+  .suggestions button,
+  .mini-results button,
+  .locate-button,
+  .simple-page button,
+  .simple-page select,
+  .quantity button,
+  .close {
+    min-height: 44px;
+  }
+  .simple-card {
+    overflow-wrap: anywhere;
+  }
+  .simple-page input,
+  .simple-page select,
+  .modal input {
+    font-size: 16px;
+  }
+  .maplibregl-ctrl button {
+    width: 40px;
+    height: 40px;
+  }
+}

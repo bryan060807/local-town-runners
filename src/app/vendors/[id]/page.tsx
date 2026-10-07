@@ -16,7 +16,11 @@ export default async function VendorPage({
     <main className="simple-page">
       <Link href="/">← Explore your town</Link>
       <div className="eyebrow">
-        {vendor.demo ? "FICTIONAL DEMO VENDOR" : "MARKETPLACE VENDOR"}
+        {vendor.demo
+          ? "FICTIONAL DEMO VENDOR"
+          : vendor.verified
+            ? "APPROVED MARKETPLACE VENDOR"
+            : "MARKETPLACE VENDOR"}
       </div>
       {vendor.coverUrl && (
         <Image
@@ -37,6 +41,31 @@ export default async function VendorPage({
         />
       )}
       <h1>{vendor.name}</h1>
+      {vendor.description && <p>{vendor.description}</p>}
+      {vendor.websiteUrl && (
+        <p>
+          <a href={vendor.websiteUrl} target="_blank" rel="noopener noreferrer">
+            Business website ↗
+          </a>
+        </p>
+      )}
+      {vendor.socialUrls?.map((url) => (
+        <p key={url}>
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            Social profile ↗
+          </a>
+        </p>
+      ))}
+      {vendor.hours && Object.keys(vendor.hours).length > 0 && (
+        <div className="simple-card">
+          <h2>Published availability</h2>
+          {Object.entries(vendor.hours).map(([day, hours]) => (
+            <p key={day}>
+              {day}: {hours}
+            </p>
+          ))}
+        </div>
+      )}
       <p>
         {vendor.category} · Louisiana, Missouri. Public location is approximate;
         operational pickup addresses are private.

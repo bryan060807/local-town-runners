@@ -47,6 +47,7 @@ async function account(
     await checked(
       client.from("runners").upsert({
         id,
+        demo: true,
         display_name: name,
         public_lon: -91.05,
         public_lat: 39.45,

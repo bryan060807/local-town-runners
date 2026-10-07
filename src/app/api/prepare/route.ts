@@ -1,8 +1,9 @@
+import { readLimited } from "@/lib/request-body";
 import { prepareSchema } from "@/lib/orders";
 import { listings, money } from "@/lib/catalog";
 export async function POST(req: Request) {
   try {
-    const p = prepareSchema.safeParse(await req.json());
+    const p = prepareSchema.safeParse(JSON.parse(await readLimited(req)));
     if (!p.success)
       return Response.json({ error: "Invalid order" }, { status: 400 });
     const l = listings.find((l) => l.id === p.data.listingId && l.active);

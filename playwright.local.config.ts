@@ -2,6 +2,12 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./e2e-local",
   workers: 1,
+  projects: [
+    { name: "desktop" },
+    { name: "mobile-360", use: { viewport: { width: 360, height: 800 } } },
+    { name: "mobile-390", use: { viewport: { width: 390, height: 844 } } },
+    { name: "mobile-430", use: { viewport: { width: 430, height: 932 } } },
+  ],
   use: {
     baseURL: "http://127.0.0.1:3000",
     launchOptions: {

@@ -68,3 +68,5 @@ Vercel deployment instructions: `docs/deployment.md`. Sandbox configuration and 
 Do not publish the environment or claim live payment readiness solely because the local build passes. Vendor/runner/platform ledger allocations are simulations, never PayPal payouts.
 
 For the tested persistent development backend, see [local backend setup](docs/local-backend.md). Current validation and remaining integration requirements are documented in [build notes](docs/build-notes.md).
+
+Phase 2 audit/hardening: [audit](docs/phase-2-audit.md), [report](docs/phase-2-report.md), [PayPal verification](docs/paypal-verification.md). Existing hosted databases need migrations **008 and 009 in order before deploying these changes**. The current configured AI model failed a provider check; use `AI_MODEL=gpt-4.1-mini` with OpenAI (verified accessible with the configured key), then redeploy. Safe log events expose provider stages/statuses without secrets. Local reset is opt-in: `npm run local:reset -- --confirm-demo-reset`; this destroys only the dedicated local demo data.

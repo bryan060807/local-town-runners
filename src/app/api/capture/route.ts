@@ -1,8 +1,8 @@
-import { paymentMatchesOrder } from "@/lib/payment-validation";
+import { reconcileOwnedCapture } from "@/lib/payment-validation";
 import { z } from "zod";
 import { authenticated, serviceDb, HttpError } from "@/lib/server/db";
 import { body, sameOrigin, failure, limited } from "@/lib/server/http";
-import { paypal, validCapture } from "@/lib/server/paypal";
+import { paypal } from "@/lib/server/paypal";
 export async function POST(req: Request) {
   try {
     sameOrigin(req);
@@ -28,25 +28,35 @@ export async function POST(req: Request) {
         "Payment reconciliation database is unavailable",
         503,
       );
-    let result = await paypal(
-      `/v2/checkout/orders/${encodeURIComponent(o.paypal_order_id)}`,
-    );
-    if (result.status !== "COMPLETED")
-      result = await paypal(
-        `/v2/checkout/orders/${encodeURIComponent(o.paypal_order_id)}/capture`,
-        {},
-        `capture-${o.id}`,
+    let captureId: string;
+    try {
+      captureId = await reconcileOwnedCapture(
+        { id: o.id, paypalId: o.paypal_order_id, totalCents: o.total_cents },
+        {
+          read: () =>
+            paypal(
+              `/v2/checkout/orders/${encodeURIComponent(o.paypal_order_id)}`,
+            ),
+          capture: () =>
+            paypal(
+              `/v2/checkout/orders/${encodeURIComponent(o.paypal_order_id)}/capture`,
+              {},
+              `capture-${o.id}`,
+            ),
+        },
       );
-    const capture = result.purchase_units?.[0]?.payments?.captures?.[0];
-    if (
-      !paymentMatchesOrder(result, o.id, o.paypal_order_id) ||
-      !validCapture(capture, o.total_cents)
-    )
-      throw new HttpError("Payment not confirmed", 409);
+    } catch (e) {
+      if (
+        e instanceof Error &&
+        ["Payment order mismatch", "Payment not confirmed"].includes(e.message)
+      )
+        throw new HttpError(e.message, 409);
+      throw e;
+    }
     const { error } = await service.rpc("confirm_payment", {
       order_id: o.id,
-      capture_id: capture.id,
-      event_id: `capture-${capture.id}`,
+      capture_id: captureId,
+      event_id: `capture-${captureId}`,
       amount_cents: o.total_cents,
     });
     if (error) throw error;

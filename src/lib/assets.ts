@@ -20,3 +20,15 @@ export function safeAssetUrl(
     return;
   }
 }
+
+export function safeWebsiteUrl(value: unknown) {
+  if (typeof value !== "string") return undefined;
+  try {
+    const u = new URL(value);
+    return u.protocol === "https:" && !u.username && !u.password
+      ? u.toString()
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}

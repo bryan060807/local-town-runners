@@ -27,7 +27,17 @@ export function matchRunners(
 ) {
   return runners
     .filter(
-      (r) => r.until > now && r.categories.includes(category) && r.workload < 3,
+      (r) =>
+        r.until > now &&
+        r.categories.includes(category) &&
+        r.workload < 3 &&
+        r.workload >= 0 &&
+        Number.isFinite(r.maxDetour) &&
+        r.maxDetour >= 0 &&
+        Number.isFinite(r.reliability) &&
+        r.reliability >= 0 &&
+        r.reliability <= 1 &&
+        r.area.every(Number.isFinite),
     )
     .map((r) => {
       const miles = distanceMiles(r.area, pickup);
@@ -36,6 +46,10 @@ export function matchRunners(
         ...r,
         approximateMiles: miles,
         existingTrip,
+        approximateIncrementalMiles: existingTrip ? 0 : miles,
+        explanation: existingTrip
+          ? "Declared trip already targets this vendor; pickup adds no separate straight-line approach. Delivery routing is not estimated."
+          : `About ${miles.toFixed(1)} straight-line miles from pickup; within the runner’s declared approach limit.`,
         score:
           (existingTrip ? 40 : 0) +
           r.reliability * 20 -

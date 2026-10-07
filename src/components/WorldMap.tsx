@@ -10,17 +10,20 @@ export default function WorldMap({
   vendors,
   highlight,
   onSelect,
+  matchedRunnerId,
 }: {
   runners: PublicRunner[];
   vendors: Vendor[];
   highlight: string[];
   onSelect: (id: string) => void;
+  matchedRunnerId?: string;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const marks = useRef<Map<string, HTMLButtonElement>>(new Map());
   const [error, setError] = useState(false);
   const [locationStatus, setLocationStatus] = useState("");
+  const runnerMarks = useRef<Map<string, HTMLButtonElement>>(new Map());
   const customerMarker = useRef<maplibregl.Marker | null>(null);
   function locate() {
     if (!navigator.geolocation) {
@@ -58,6 +61,7 @@ export default function WorldMap({
     if (!root.current) return;
     maplibregl.setWorkerUrl("/maplibre-worker.mjs");
     const markerElements = marks.current;
+    const runnerElements = runnerMarks.current;
     const m = new maplibregl.Map({
       container: root.current,
       style: {
@@ -109,6 +113,7 @@ export default function WorldMap({
       el.onclick = () => {
         if (r.destinationVendorId) onSelect(r.destinationVendorId);
       };
+      runnerMarks.current.set(r.id, el);
       new maplibregl.Marker({ element: el }).setLngLat(r.area).addTo(m);
     });
     m.on("load", () => {
@@ -147,13 +152,22 @@ export default function WorldMap({
       map.current = null;
       customerMarker.current = null;
       markerElements.clear();
+      runnerElements.clear();
     };
   }, [onSelect, vendors, runners]);
   useEffect(() => {
     marks.current.forEach((el, id) =>
       el.classList.toggle("highlight", highlight.includes(id)),
     );
-  }, [highlight]);
+    runnerMarks.current.forEach((el, id) =>
+      el.classList.toggle("highlight", id === matchedRunnerId),
+    );
+    const v =
+      highlight.length === 1
+        ? vendors.find((v) => v.id === highlight[0])
+        : undefined;
+    if (v) map.current?.easeTo({ center: v.coordinates, duration: 500 });
+  }, [highlight, matchedRunnerId, vendors]);
   return (
     <div className="map-shell">
       <div ref={root} className="world-map" />

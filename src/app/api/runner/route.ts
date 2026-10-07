@@ -1,5 +1,6 @@
+import { logEvent } from "@/lib/observability";
 import { z } from "zod";
-import { authenticated } from "@/lib/server/db";
+import { authenticated, HttpError } from "@/lib/server/db";
 import { body, sameOrigin, failure, limited } from "@/lib/server/http";
 const schema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("accept"), orderId: z.uuid() }).strict(),
@@ -34,6 +35,7 @@ export async function POST(req: Request) {
         order_id: p.orderId,
       });
       if (error) throw error;
+      logEvent("runner_assignment", { outcome: "accepted" });
       return Response.json({ order: data });
     }
     if (p.action === "trip") {
@@ -57,7 +59,8 @@ export async function POST(req: Request) {
         })
         .eq("id", user.id)
         .select("id");
-      if (error || !data?.length) throw Error("Runner permissions required");
+      if (error || !data?.length)
+        throw new HttpError("Runner permissions required", 403);
     }
     return Response.json({ ok: true });
   } catch (e) {

@@ -20,12 +20,14 @@
     "import:vendors": "node --use-env-proxy --use-system-ca --import tsx --env-file=.env.local scripts/import-vendors.ts",
     "local:backend": "node scripts/local-backend.mjs",
     "local:gateway": "node scripts/local-gateway.mjs",
-    "local:seed": "node --import tsx --env-file=.local-backend/app.env scripts/seed.ts",
+    "local:seed": "node scripts/with-local-env.mjs --script scripts/seed.ts",
     "local:dev": "node scripts/with-local-env.mjs dev --hostname 0.0.0.0",
     "local:start": "node scripts/with-local-env.mjs start --hostname 0.0.0.0",
-    "test:local": "node --import tsx --env-file=.local-backend/app.env scripts/local-smoke.ts",
+    "test:local": "node scripts/with-local-env.mjs --script scripts/local-smoke.ts",
     "local:build": "node scripts/with-local-env.mjs build",
-    "test:e2e:local": "playwright test --config playwright.local.config.ts"
+    "test:e2e:local": "playwright test --config playwright.local.config.ts",
+    "local:reset": "node scripts/local-reset.mjs",
+    "test:imports": "node scripts/with-local-env.mjs --script scripts/local-import-smoke.ts"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,6 @@
 import "server-only";
-import { safeAssetUrl } from "@/lib/assets";
+import { logEvent } from "@/lib/observability";
+import { safeAssetUrl, safeWebsiteUrl } from "@/lib/assets";
 import { demoRunners } from "@/lib/runners";
 import { PublicRunner } from "@/lib/map-types";
 import { createClient } from "@supabase/supabase-js";
@@ -30,7 +31,9 @@ export async function publicCatalog() {
   const [v, l, r, t] = await Promise.all([
     c
       .from("vendors")
-      .select("id,name,category,public_lon,public_lat,demo,logo_url,cover_url")
+      .select(
+        "id,name,category,public_lon,public_lat,demo,verified,description,hours,website_url,social_urls,logo_url,cover_url",
+      )
       .eq("active", true),
     c
       .from("listings")
@@ -42,16 +45,22 @@ export async function publicCatalog() {
       .gt("inventory", 0),
     c
       .from("runners")
-      .select("id,display_name,public_lon,public_lat,available_until")
+      .select("id,display_name,public_lon,public_lat,available_until,demo")
       .eq("visible", true)
       .gt("available_until", new Date().toISOString()),
     c
       .from("runner_trips")
-      .select("runner_id,destination_vendor_id")
+      .select("runner_id,destination_vendor_id,expires_at")
+      .order("expires_at", { ascending: false })
       .gt("expires_at", new Date().toISOString()),
   ]);
-  if (v.error || l.error || r.error || t.error)
+  if (v.error || l.error || r.error || t.error) {
+    logEvent("catalog_failure", {
+      stage: "public_read",
+      outcome: "unavailable",
+    });
     throw Error("Marketplace data unavailable");
+  }
   return {
     demo: false,
     runners: r.data!.map((row) => ({
@@ -61,7 +70,7 @@ export async function publicCatalog() {
       availableUntil: Date.parse(row.available_until),
       destinationVendorId: t.data!.find((trip) => trip.runner_id === row.id)
         ?.destination_vendor_id,
-      demo: false,
+      demo: row.demo,
     })) as PublicRunner[],
     vendors: v.data.map((row) => ({
       id: row.id,
@@ -69,6 +78,21 @@ export async function publicCatalog() {
       category: row.category,
       coordinates: [Number(row.public_lon), Number(row.public_lat)],
       demo: row.demo,
+      verified: row.verified,
+      description: row.description,
+      hours: Object.fromEntries(
+        Object.entries(
+          row.hours &&
+            typeof row.hours === "object" &&
+            !Array.isArray(row.hours)
+            ? row.hours
+            : {},
+        )
+          .filter(([, value]) => typeof value === "string")
+          .slice(0, 14),
+      ) as Record<string, string>,
+      websiteUrl: safeWebsiteUrl(row.website_url),
+      socialUrls: (row.social_urls || []).map(safeWebsiteUrl).filter(Boolean),
       logoUrl: safeAssetUrl(row.logo_url, e.url),
       coverUrl: safeAssetUrl(row.cover_url, e.url),
     })) as Vendor[],

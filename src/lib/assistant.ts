@@ -44,7 +44,7 @@ export function discover(
     text =
       "For a gift under $40, these local demo makers have some lovely options.";
   }
-  if (/local|happening|around me/.test(q)) {
+  if (/happening|around me/.test(q)) {
     results = listings.filter((l) => l.active && l.inventory > 0);
     text = `There are ${vendors.length} demo vendors and ${runners.length} demo runners nearby. All businesses shown here are fictional demo data.`;
   }
@@ -56,11 +56,8 @@ export function discover(
       : "No cinnamon rolls currently available.";
   }
   if (/get me|pick.?up|two|runner/.test(q)) {
-    const l =
-      listings.find((l) => l.id === previousListing) ||
-      results[0] ||
-      listings[0];
-    results = [l];
+    const l = listings.find((l) => l.id === previousListing) || results[0];
+    results = l ? [l] : [];
     if (!l)
       return {
         text: "No available listing matches that request.",
@@ -69,7 +66,15 @@ export function discover(
         source: "catalog",
         tools: ["searchListings"],
       };
-    const vendor = vendors.find((v) => v.id === l.vendorId)!;
+    const vendor = vendors.find((v) => v.id === l.vendorId);
+    if (!vendor || !l.active || l.inventory < 1)
+      return {
+        text: "That item is no longer available.",
+        listings: [],
+        vendorIds: [],
+        source: "catalog",
+        tools: ["getListingAvailability"],
+      };
     const matches = matchRunners(
       runners,
       vendor.coordinates,

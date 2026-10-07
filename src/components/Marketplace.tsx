@@ -106,6 +106,13 @@ export default function Marketplace({
   );
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
+  const [matchedRunnerId, setMatchedRunnerId] = useState<string | undefined>();
+  const [conversationListing, setConversationListing] = useState<
+    string | undefined
+  >();
+  const [preparing, setPreparing] = useState(false);
+  const requestKey = useRef<string | undefined>(undefined);
+  const requestPayload = useRef("");
   const [recommendations, setRecommendations] = useState<Listing[]>([]);
   const selectVendor = useCallback(
     (id: string) => {
@@ -125,7 +132,9 @@ export default function Marketplace({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: text,
-          previousListing: selected?.id || recommendations[0]?.id,
+          previousListing:
+            selected?.id || conversationListing || recommendations[0]?.id,
+          resultIds: recommendations.map((l) => l.id),
         }),
       });
       const data = await res.json();
@@ -133,6 +142,8 @@ export default function Marketplace({
       setReply(data.text);
       setHighlight(data.vendorIds);
       setRecommendations(data.listings);
+      setMatchedRunnerId(data.matchedRunnerId);
+      if (data.listings?.length) setConversationListing(data.listings[0].id);
       if (data.prepared) {
         const l = listings.find((l) => l.id === data.prepared.listingId);
         if (l) {
@@ -152,7 +163,13 @@ export default function Marketplace({
     }
   }
   async function prepare() {
-    if (!selected) return;
+    if (!selected || preparing) return;
+    setPreparing(true);
+    const payload = JSON.stringify([selected.id, quantity, address]);
+    if (requestPayload.current !== payload) {
+      requestKey.current = crypto.randomUUID();
+      requestPayload.current = payload;
+    }
     try {
       const res = await fetch(demo ? "/api/prepare" : "/api/orders", {
         method: "POST",
@@ -161,7 +178,7 @@ export default function Marketplace({
           listingId: selected.id,
           quantity,
           ...(!demo
-            ? { requestId: crypto.randomUUID(), deliveryAddress: address }
+            ? { requestId: requestKey.current, deliveryAddress: address }
             : {}),
         }),
       });
@@ -174,6 +191,8 @@ export default function Marketplace({
       setNotice(`${d.formatted} · ${d.message}`);
     } catch (e) {
       setNotice(e instanceof Error ? e.message : "Could not prepare order");
+    } finally {
+      setPreparing(false);
     }
   }
   const shown = listings.filter(
@@ -250,6 +269,7 @@ export default function Marketplace({
               runners={runners}
               vendors={vendors}
               highlight={highlight}
+              matchedRunnerId={matchedRunnerId}
               onSelect={selectVendor}
             />
             <aside className="assistant">
@@ -269,8 +289,7 @@ export default function Marketplace({
                   around today?
                 </h3>
                 <p>
-                  Demo discovery grounded in the catalog. No invented prices or
-                  inventory.
+                  Recommendations use current catalog prices and availability.
                 </p>
                 <div className="suggestions">
                   {[
@@ -293,6 +312,8 @@ export default function Marketplace({
                       <button
                         key={l.id}
                         onClick={() => {
+                          setHighlight([l.vendorId]);
+                          setConversationListing(l.id);
                           setSelected(l);
                           setQuantity(1);
                           setNotice("");
@@ -524,7 +545,7 @@ export default function Marketplace({
                 />
               </label>
             )}
-            <button className="primary" onClick={prepare}>
+            <button className="primary" onClick={prepare} disabled={preparing}>
               <ShoppingBag size={17} />{" "}
               {demo ? "Preview order" : "Prepare order"}{" "}
               <ChevronRight size={17} />

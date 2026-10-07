@@ -9,15 +9,26 @@ const values = Object.fromEntries(
       return [line.slice(0, i), line.slice(i + 1)];
     }),
 );
+const args = process.argv.slice(2);
+const target =
+  args[0] === "--script"
+    ? ["--import", "tsx", ...args.slice(1)]
+    : ["node_modules/next/dist/bin/next", ...args];
 const child = spawn(
   process.execPath,
-  [
-    "--use-env-proxy",
-    "--use-system-ca",
-    "node_modules/next/dist/bin/next",
-    ...process.argv.slice(2),
-  ],
-  { stdio: "inherit", env: { ...process.env, ...values } },
+  ["--use-env-proxy", "--use-system-ca", ...target],
+  {
+    stdio: "inherit",
+    env: {
+      ...process.env,
+      PAYPAL_CLIENT_ID: "",
+      PAYPAL_CLIENT_SECRET: "",
+      PAYPAL_WEBHOOK_ID: "",
+      AI_API_KEY: "",
+      AI_MODEL: "",
+      ...values,
+    },
+  },
 );
 child.on("error", () => {
   console.error("Could not start local application process");

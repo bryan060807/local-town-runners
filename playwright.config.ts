@@ -12,6 +12,8 @@ export default defineConfig({
   },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
+    { name: "mobile-360", use: { viewport: { width: 360, height: 800 } } },
+    { name: "mobile-430", use: { viewport: { width: 430, height: 932 } } },
     {
       name: "mobile",
       use: { ...devices["iPhone 13"], defaultBrowserType: "chromium" },
@@ -19,7 +21,7 @@ export default defineConfig({
   ],
   webServer: {
     command:
-      "APP_URL=http://127.0.0.1:3000 npm run build && APP_URL=http://127.0.0.1:3000 npm run start",
+      "NEXT_PUBLIC_SUPABASE_URL= NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY= SUPABASE_SERVICE_ROLE_KEY= PAYPAL_CLIENT_ID= PAYPAL_CLIENT_SECRET= AI_API_KEY= APP_URL=http://127.0.0.1:3000 npm run build && NEXT_PUBLIC_SUPABASE_URL= NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY= SUPABASE_SERVICE_ROLE_KEY= PAYPAL_CLIENT_ID= PAYPAL_CLIENT_SECRET= AI_API_KEY= APP_URL=http://127.0.0.1:3000 npm run start",
     url: "http://127.0.0.1:3000",
     reuseExistingServer: false,
     timeout: 120000,

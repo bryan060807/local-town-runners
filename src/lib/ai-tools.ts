@@ -1,3 +1,4 @@
+import { HttpError } from "./server/errors";
 import { z } from "zod";
 import { Listing, Vendor, money } from "./catalog";
 import { Runner, matchRunners } from "./runners";
@@ -15,6 +16,7 @@ const search = z
       "Services",
     ]),
     maxPriceCents: z.number().int().min(0).max(10000000),
+    madeLocal: z.boolean().optional(),
   })
   .strict();
 export const toolSchemas = {
@@ -23,6 +25,7 @@ export const toolSchemas = {
   searchServices: search,
   getNearbyActivity: z.object({}).strict(),
   getListingAvailability: z.object({ listingId: id }).strict(),
+  getListingDetails: z.object({ listingId: id }).strict(),
   getVendor: z.object({ vendorId: id }).strict(),
   findCompatibleRunners: z.object({ listingId: id }).strict(),
   estimateFulfillment: z.object({ listingId: id }).strict(),
@@ -84,7 +87,7 @@ export function executeTool(
   let matchedRunnerId: string | undefined;
   const listing = (value: unknown) => {
     const l = catalog.find((l) => l.id === value);
-    if (!l) throw Error("Listing unavailable");
+    if (!l) throw new HttpError("Listing unavailable", 409);
     return l;
   };
   if (name === "searchListings" || name === "searchServices") {
@@ -98,6 +101,7 @@ export function executeTool(
           (name !== "searchServices" || l.mode === "DO") &&
           (args.category === "All" || l.category === args.category) &&
           l.price <= (args.maxPriceCents as number) &&
+          (!args.madeLocal || l.local) &&
           (!words.length ||
             words.some((w) =>
               `${l.title} ${l.description} ${l.category}`
@@ -124,7 +128,10 @@ export function executeTool(
   } else if (name === "getNearbyActivity") {
     result = catalog.slice(0, 4);
     text = `${context.vendors.length} active vendors and ${context.runners.filter((r) => r.until > Date.now()).length} available runners in this marketplace. Demo businesses are labeled on their cards.`;
-  } else if (name === "getListingAvailability") {
+  } else if (
+    name === "getListingAvailability" ||
+    name === "getListingDetails"
+  ) {
     const l = listing(args.listingId);
     result = [l];
     text = `${l.title}: ${l.inventory} available at ${money(l.price)} each. ${l.description}`;
@@ -152,20 +159,31 @@ export function executeTool(
     const r = matches[0];
     matchedRunnerId = r?.id;
     text = r
-      ? `${r.name} ${r.existingTrip ? "is already heading toward this vendor" : "is a compatible candidate"}. Matching uses approximate straight-line proximity and workload; no precise road detour is claimed. The runner must accept the assignment.`
+      ? `${r.name} ${r.existingTrip ? "is already heading toward this vendor" : "is a compatible candidate"}. ${r.explanation} Workload: ${r.workload}/3. Availability is temporary; no precise road detour or delivery time is claimed. The runner must accept the assignment.`
       : "No currently available compatible runner was found.";
   } else if (name === "prepareOrder") {
-    if (!context.authenticated) throw Error("Sign in to prepare an order");
+    if (!context.authenticated)
+      throw new HttpError("Sign in to prepare an order", 401);
     const l = listing(args.listingId);
     const quantity = args.quantity as number;
-    if (quantity > l.inventory) throw Error("Insufficient inventory");
+    if (quantity > l.inventory)
+      throw new HttpError("Insufficient inventory", 409);
     result = [l];
     prepared = { listingId: l.id, quantity, totalCents: l.price * quantity };
-    text = `Review ${quantity} × ${l.title} for ${money(prepared.totalCents)}. This is a quote only; inventory reservation and payment require your explicit approval.`;
+    const vendor = context.vendors.find((v) => v.id === l.vendorId)!;
+    const runner = matchRunners(
+      context.runners,
+      vendor.coordinates,
+      l.category,
+      vendor.id,
+    )[0];
+    matchedRunnerId = runner?.id;
+    text = `Review ${quantity} × ${l.title} for ${money(prepared.totalCents)}. This is a quote only; inventory reservation and payment require your explicit approval. ${runner ? `${runner.name} ${runner.existingTrip ? "is already heading toward this vendor" : "is a compatible candidate"}; ${runner.explanation} The runner must accept.` : "No compatible runner is currently available."}`;
   } else if (name === "getOrderStatus") {
-    if (!context.authenticated) throw Error("Sign in to read order status");
+    if (!context.authenticated)
+      throw new HttpError("Sign in to read order status", 401);
     const state = context.orders?.[args.orderId as string];
-    if (!state) throw Error("Order unavailable");
+    if (!state) throw new HttpError("Order unavailable", 404);
     text = `Order status: ${state}. Payment status comes from the persisted server record.`;
   }
   return {

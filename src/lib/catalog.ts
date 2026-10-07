@@ -18,6 +18,11 @@ export type Vendor = {
   category: string;
   coordinates: [number, number];
   demo: boolean;
+  verified?: boolean;
+  description?: string;
+  hours?: Record<string, string>;
+  websiteUrl?: string;
+  socialUrls?: string[];
   logoUrl?: string;
   coverUrl?: string;
 };

@@ -9,3 +9,5 @@ Run `npm run test:local` for real Auth/PostgREST smoke checks and `npm run test:
 The dedicated Docker containers are `ltr-local-db`, `ltr-local-auth` and `ltr-local-rest`. A destructive local reset requires stopping these containers and removing only these named containers with their anonymous volumes, then rerunning initialization and seeding. It deletes local demo orders and accounts. Do not run this against a hosted project. `supabase db reset` applies only to a separate full Supabase CLI stack and does not reset this reduced stack.
 
 For the selected hosted project, configure the public key and server service-role key in environment settings, review migrations, and apply them using the deployment guide. Hosted Auth, Storage, PayPal Sandbox and provider AI must be checked separately before deployment.
+
+Phase 2 provides `npm run local:reset -- --confirm-demo-reset`. It validates the exact local containers before deleting their demo data, then rebuilds and seeds. Local wrappers override inherited hosted configuration and remove PayPal/AI credentials. Stop the application before reset and leave the loopback gateway running. See demo.md for the signature flow.

@@ -27,12 +27,17 @@ test("cookie-authenticated order preparation persists; missing PayPal configurat
   await login(page, "customer");
   await page.goto("/");
   await expect(page.getByText("Connected marketplace")).toBeVisible();
-  await page
-    .getByRole("button", { name: /Habanero Cinnamon Rolls/ })
-    .first()
-    .click();
+  await page.getByRole("button",{name:"I'm hungry. What's good?"}).click();
+  await expect(page.locator(".mini-results")).toContainText("Habanero Cinnamon Rolls");
+  const assistant=page.getByRole("textbox",{name:"Ask your local sidekick"});
+  await assistant.fill("Wait. Habanero cinnamon rolls?");
+  await page.getByRole("button",{name:"Send message"}).click();
+  await expect(page.locator(".mini-results button")).toHaveCount(1);
+  await assistant.fill("Get me two");
+  await page.getByRole("button",{name:"Send message"}).click();
   const dialog = page.getByRole("dialog");
-  await dialog.getByRole("button", { name: "Increase quantity" }).click();
+  await expect(dialog).toContainText("$9.00");
+  await expect(dialog.getByRole("status")).toContainText("already heading");
   await dialog
     .getByPlaceholder("Delivery address (shared only with assigned runner)")
     .fill("LOCAL BROWSER TEST PRIVATE ADDRESS");
@@ -91,6 +96,7 @@ test("role dashboards have separate capabilities", async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await login(page, role);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
     if (role === "vendor") {
       await expect(
         page.getByRole("heading", { name: "Your catalog" }),

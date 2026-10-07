@@ -63,3 +63,71 @@ test("webhook certificate URLs cannot inject arbitrary destinations", () => {
   ])
     assert.equal(validWebhookCertificate(u), false);
 });
+
+test("an attacker-associated PayPal order is never captured, and completed retries never recapture", async () => {
+  const { reconcileOwnedCapture } =
+    await import("../src/lib/payment-validation");
+  let calls = 0;
+  const order = { id: "LOCAL", paypalId: "PAYPAL", totalCents: 900 };
+  await assert.rejects(() =>
+    reconcileOwnedCapture(order, {
+      read: async () => ({
+        id: "PAYPAL",
+        status: "APPROVED",
+        purchase_units: [{ custom_id: "OTHER" }],
+      }),
+      capture: async () => {
+        calls++;
+        return {};
+      },
+    }),
+  );
+  assert.equal(calls, 0);
+  await assert.rejects(() =>
+    reconcileOwnedCapture(order, {
+      read: async () => ({
+        id: "PAYPAL",
+        status: "APPROVED",
+        purchase_units: [
+          {
+            custom_id: "LOCAL",
+            amount: { currency_code: "USD", value: "1.00" },
+          },
+        ],
+      }),
+      capture: async () => {
+        calls++;
+        return {};
+      },
+    }),
+  );
+  assert.equal(calls, 0);
+  const completed = {
+    id: "PAYPAL",
+    status: "COMPLETED",
+    purchase_units: [
+      {
+        custom_id: "LOCAL",
+        amount: { currency_code: "USD", value: "9.00" },
+        payments: {
+          captures: [
+            {
+              id: "CAPTURE",
+              status: "COMPLETED",
+              amount: { currency_code: "USD", value: "9.00" },
+            },
+          ],
+        },
+      },
+    ],
+  };
+  const result = await reconcileOwnedCapture(order, {
+    read: async () => completed,
+    capture: async () => {
+      calls++;
+      return completed;
+    },
+  });
+  assert.equal(result, "CAPTURE");
+  assert.equal(calls, 0);
+});

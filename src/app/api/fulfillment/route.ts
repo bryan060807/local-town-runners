@@ -1,3 +1,4 @@
+import { logEvent } from "@/lib/observability";
 import { z } from "zod";
 import { authenticated } from "@/lib/server/db";
 import { body, sameOrigin, failure, limited } from "@/lib/server/http";
@@ -16,6 +17,7 @@ export async function POST(req: Request) {
       target_state: p.state,
     });
     if (error) throw error;
+    logEvent("order_transition", { stage: p.state, outcome: "applied" });
     return Response.json({ order: data });
   } catch (e) {
     return failure(e);

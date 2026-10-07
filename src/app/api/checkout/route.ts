@@ -1,5 +1,9 @@
+import {
+  paymentMatchesOrder,
+  paymentMatchesTotal,
+} from "@/lib/payment-validation";
 import { z } from "zod";
-import { authenticated, HttpError } from "@/lib/server/db";
+import { authenticated, serviceDb, HttpError } from "@/lib/server/db";
 import { body, sameOrigin, failure, limited } from "@/lib/server/http";
 import { paypal } from "@/lib/server/paypal";
 import { paypalConfig } from "@/lib/server/env";
@@ -28,6 +32,21 @@ export async function POST(req: Request) {
         409,
       );
     const app = paypalConfig().app;
+    const service = serviceDb();
+    const { data: ready, error: readyError } = await service.rpc(
+      "phase2_payment_ready",
+    );
+    if (readyError || !ready)
+      throw new HttpError(
+        "Apply the Phase 2 database migration before checkout",
+        503,
+      );
+    const { error: preflight } = await service
+      .from("orders")
+      .select("id")
+      .eq("id", o.id)
+      .single();
+    if (preflight) throw new HttpError("Payment database unavailable", 503);
     const result = o.paypal_order_id
       ? await paypal(
           `/v2/checkout/orders/${encodeURIComponent(o.paypal_order_id)}`,
@@ -58,7 +77,15 @@ export async function POST(req: Request) {
           },
           `create-${o.id}`,
         );
-    const { error: save } = await client.rpc("attach_paypal_order", {
+    if (
+      typeof result.id !== "string" ||
+      !result.id ||
+      !paymentMatchesOrder(result, o.id, result.id) ||
+      !paymentMatchesTotal(result, o.total_cents)
+    )
+      throw new HttpError("Payment order mismatch", 409);
+    const { error: save } = await service.rpc("attach_verified_paypal_order", {
+      customer_id: user.id,
       order_id: o.id,
       paypal_id: result.id,
     });
@@ -66,7 +93,14 @@ export async function POST(req: Request) {
     const link = result.links?.find((l: { rel: string; href: string }) =>
       ["approve", "payer-action"].includes(l.rel),
     );
-    if (!link || !new URL(link.href).hostname.endsWith(".paypal.com"))
+    const approval = link ? new URL(link.href) : null;
+    if (
+      !approval ||
+      approval.protocol !== "https:" ||
+      approval.username ||
+      approval.password ||
+      !approval.hostname.endsWith(".paypal.com")
+    )
       throw Error("Approval link unavailable");
     return Response.json({ approvalUrl: link.href });
   } catch (e) {

@@ -15,3 +15,5 @@ Public coordinates are rounded in database triggers. Private pickup and delivery
 ## Operational gaps
 
 Pending-payment expiry/refunds need PayPal reconciliation before stock release. Rate-limit rows currently require scheduled retention cleanup in production. Audit/event data needs a retention policy. A production migration must be tested against the selected project's Auth/storage schema before applying. PGlite tests run migration/RLS semantics; the hosted project remains a separate integration boundary.
+
+Phase 2: migration 008 revokes browser payment-ID attachment, adds service-only verified attachment/readiness, bounds runner pickup approach and replaces previous active trips, and labels seeded runner provenance. Migration 009 adds public HTTPS website/social references. Apply both to the hosted database before deploying Phase 2 application changes; apply once, in order.
