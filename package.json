@@ -1,0 +1,76 @@
+{
+  "name": "local-town-runners",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "node --use-env-proxy --use-system-ca node_modules/next/dist/bin/next dev --hostname 0.0.0.0",
+    "build": "next build",
+    "start": "node --use-env-proxy --use-system-ca node_modules/next/dist/bin/next start --hostname 0.0.0.0",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "seed": "node --use-env-proxy --use-system-ca --import tsx --env-file=.env.local scripts/seed.ts",
+    "test:e2e": "playwright test",
+    "format": "prettier --write src tests e2e scripts docs *.ts *.json *.mjs",
+    "import:vendors": "node --use-env-proxy --use-system-ca --import tsx --env-file=.env.local scripts/import-vendors.ts",
+    "local:backend": "node scripts/local-backend.mjs",
+    "local:gateway": "node scripts/local-gateway.mjs",
+    "local:seed": "node --import tsx --env-file=.local-backend/app.env scripts/seed.ts",
+    "local:dev": "node scripts/with-local-env.mjs dev --hostname 0.0.0.0",
+    "local:start": "node scripts/with-local-env.mjs start --hostname 0.0.0.0",
+    "test:local": "node --import tsx --env-file=.local-backend/app.env scripts/local-smoke.ts",
+    "local:build": "node scripts/with-local-env.mjs build",
+    "test:e2e:local": "playwright test --config playwright.local.config.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bryan060807/local-town-runners.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/bryan060807/local-town-runners/issues"
+  },
+  "homepage": "https://github.com/bryan060807/local-town-runners#readme",
+  "dependencies": {
+    "@fontsource/dm-sans": "^5.3.0",
+    "@fontsource/manrope": "^5.3.0",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
+    "@tailwindcss/postcss": "^4.3.3",
+    "lucide-react": "^1.52.0",
+    "maplibre-gl": "^6.13.0",
+    "next": "^16.4.0",
+    "postcss": "^8.5.29",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "server-only": "^0.0.1",
+    "sharp": "^0.35.5",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.0",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3"
+  },
+  "private": true,
+  "engines": {
+    "node": "24.x"
+  },
+  "packageManager": "npm@11.9.0"
+}

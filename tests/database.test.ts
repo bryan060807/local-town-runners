@@ -1,0 +1,369 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { readFile, readdir } from "node:fs/promises";
+import { PGlite } from "@electric-sql/pglite";
+const customer = "11111111-1111-4111-8111-111111111111",
+  other = "22222222-2222-4222-8222-222222222222",
+  vendor = "33333333-3333-4333-8333-333333333333",
+  runner = "44444444-4444-4444-8444-444444444444",
+  shop = "55555555-5555-4555-8555-555555555555",
+  listing = "66666666-6666-4666-8666-666666666666";
+async function fixture() {
+  const db = new PGlite();
+  await db.exec(
+    `create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema public,auth to anon,authenticated,service_role;grant execute on function auth.uid() to anon,authenticated,service_role;`,
+  );
+  for (const file of (await readdir("supabase/migrations"))
+    .filter((f) => f.endsWith(".sql"))
+    .sort()) {
+    const sql = (await readFile(`supabase/migrations/${file}`, "utf8")).replace(
+      "create extension if not exists pgcrypto;",
+      "",
+    );
+    await db.exec(sql);
+  }
+  await db.exec(
+    `insert into auth.users values('${customer}'),('${other}'),('${vendor}'),('${runner}');insert into public.user_roles values('${vendor}','vendor'),('${runner}','runner');insert into public.vendors(id,owner_id,name,slug,category,public_lon,public_lat) values('${shop}','${vendor}','Demo','demo','Food',-91.051234,39.448923);insert into public.vendor_private values('${shop}','PRIVATE HOME',-91.051234,39.448923);insert into public.listings(id,vendor_id,title,category,mode,price_cents,inventory) values('${listing}','${shop}','Roll','Food','SELL',450,12);insert into public.runners(id,public_lon,public_lat,available_until,categories,visible) values('${runner}',-91.051234,39.448923,now()+interval '1 hour',array['Food'],true);`,
+  );
+  return db;
+}
+async function asUser(db: PGlite, id: string, sql: string) {
+  await db.exec(
+    `set role authenticated;select set_config('request.jwt.claim.sub','${id}',false);`,
+  );
+  try {
+    return await db.query(sql);
+  } finally {
+    await db.exec("reset role");
+  }
+}
+async function createOrder(db: PGlite) {
+  const r = await asUser(
+    db,
+    customer,
+    `select (public.prepare_order('${listing}',2,'77777777-7777-4777-8777-777777777777','PRIVATE DELIVERY ADDRESS')).*`,
+  );
+  return (r.rows[0] as { id: string }).id;
+}
+test("RLS protects private addresses and role escalation", async () => {
+  const db = await fixture();
+  try {
+    assert.equal(
+      (await asUser(db, other, "select * from vendor_private")).rows.length,
+      0,
+    );
+    assert.equal(
+      (await asUser(db, vendor, "select * from vendor_private")).rows.length,
+      1,
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `insert into user_roles values('${customer}','admin')`,
+      ),
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `update profiles set suspended=false where id='${customer}'`,
+      ),
+    );
+    const r = await asUser(
+      db,
+      other,
+      "select public_lon,public_lat from runners",
+    );
+    assert.equal(
+      Number((r.rows[0] as { public_lon: string }).public_lon),
+      -91.05,
+    );
+  } finally {
+    await db.close();
+  }
+});
+test("atomic order preparation reserves stock once and isolates ownership", async () => {
+  const db = await fixture();
+  try {
+    const id = await createOrder(db);
+    assert.equal(await createOrder(db), id);
+    const r = await db.query("select inventory from listings");
+    assert.equal((r.rows[0] as { inventory: number }).inventory, 10);
+    assert.equal(
+      (await asUser(db, other, "select * from orders")).rows.length,
+      0,
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        other,
+        `select public.transition_order('${id}','VENDOR_ACCEPTED')`,
+      ),
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `select public.confirm_payment('${id}','fake','fake',900)`,
+      ),
+    );
+    await assert.rejects(() =>
+      asUser(db, customer, `update orders set state='PAID' where id='${id}'`),
+    );
+  } finally {
+    await db.close();
+  }
+});
+test("confirmed payment is idempotent; fulfillment has role gates and exactly-once rewards", async () => {
+  const db = await fixture();
+  try {
+    const id = await createOrder(db);
+    await asUser(
+      db,
+      customer,
+      `select public.attach_paypal_order('${id}','PAYPAL-1')`,
+    );
+    await db.exec(
+      `select public.confirm_payment('${id}','CAPTURE-1','EVENT-1',900);select public.confirm_payment('${id}','CAPTURE-1','EVENT-1',900);select public.confirm_payment('${id}','CAPTURE-1','EVENT-2',900);`,
+    );
+    assert.equal((await db.query("select * from ledger")).rows.length, 4);
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `select public.transition_order('${id}','VENDOR_ACCEPTED')`,
+      ),
+    );
+    await asUser(
+      db,
+      vendor,
+      `select public.transition_order('${id}','VENDOR_ACCEPTED');`,
+    );
+    await asUser(
+      db,
+      vendor,
+      `select public.transition_order('${id}','RUNNER_MATCHING');`,
+    );
+    await asUser(db, runner, `select public.accept_run('${id}')`);
+    assert.equal(
+      (await asUser(db, runner, "select * from order_private")).rows.length,
+      1,
+    );
+    await asUser(
+      db,
+      vendor,
+      `select public.transition_order('${id}','READY_FOR_PICKUP');`,
+    );
+    for (const s of ["PICKED_UP", "OUT_FOR_DELIVERY", "DELIVERED"])
+      await asUser(
+        db,
+        runner,
+        `select public.transition_order('${id}','${s}')`,
+      );
+    await asUser(
+      db,
+      customer,
+      `select public.transition_order('${id}','COMPLETED')`,
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `select public.transition_order('${id}','COMPLETED')`,
+      ),
+    );
+    assert.equal(
+      (await asUser(db, runner, "select * from order_private")).rows.length,
+      0,
+    );
+    const r = await db.query("select reward_points from runners");
+    assert.equal(
+      Number((r.rows[0] as { reward_points: string }).reward_points),
+      10,
+    );
+  } finally {
+    await db.close();
+  }
+});
+test("admin-only moderation and expiry are enforced in PostgreSQL", async () => {
+  const db = await fixture();
+  try {
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `select public.moderate('listing','${listing}',true)`,
+      ),
+    );
+    await db.exec(
+      `update runners set available_until=now()-interval '1 second';`,
+    );
+    assert.equal(
+      (await asUser(db, other, "select * from runners")).rows.length,
+      0,
+    );
+    await db.exec(`insert into user_roles values('${other}','admin');`);
+    await asUser(
+      db,
+      other,
+      `select public.moderate('listing','${listing}',true)`,
+    );
+    assert.equal(
+      (await asUser(db, customer, "select * from listings")).rows.length,
+      0,
+    );
+  } finally {
+    await db.close();
+  }
+});
+
+test("private delivery addresses never leak to another customer or vendor", async () => {
+  const db = await fixture();
+  try {
+    await createOrder(db);
+    assert.equal(
+      (await asUser(db, other, "select * from order_private")).rows.length,
+      0,
+    );
+    assert.equal(
+      (await asUser(db, vendor, "select * from order_private")).rows.length,
+      0,
+    );
+    assert.equal(
+      (await asUser(db, runner, "select * from order_private")).rows.length,
+      0,
+    );
+    assert.equal(
+      (await asUser(db, customer, "select * from order_private")).rows.length,
+      1,
+    );
+  } finally {
+    await db.close();
+  }
+});
+test("direct API writes cannot create indefinite availability or edit another vendor", async () => {
+  const db = await fixture();
+  try {
+    await assert.rejects(() =>
+      asUser(
+        db,
+        runner,
+        `update runners set available_until=now()+interval '1 year' where id='${runner}'`,
+      ),
+    );
+    const result = await asUser(
+      db,
+      customer,
+      `update listings set inventory=999 where id='${listing}' returning id`,
+    );
+    assert.equal(result.rows.length, 0);
+    await asUser(
+      db,
+      vendor,
+      `update listings set inventory=8 where id='${listing}'`,
+    );
+    assert.equal(
+      (await db.query<{ inventory: number }>("select inventory from listings"))
+        .rows[0].inventory,
+      8,
+    );
+  } finally {
+    await db.close();
+  }
+});
+test("blocks prevent marketplace ordering and moderation hides suspended vendor inventory", async () => {
+  const db = await fixture();
+  try {
+    await asUser(
+      db,
+      customer,
+      `insert into blocks values('${customer}','${vendor}')`,
+    );
+    await assert.rejects(() => createOrder(db));
+    await db.exec(
+      `delete from blocks;update profiles set suspended=true where id='${vendor}';`,
+    );
+    assert.equal(
+      (await asUser(db, customer, "select * from listings")).rows.length,
+      0,
+    );
+    await assert.rejects(() => createOrder(db));
+  } finally {
+    await db.close();
+  }
+});
+
+test("vendor creation, listing ownership and role provisioning are server enforced", async () => {
+  const db = await fixture();
+  try {
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `select public.create_vendor('Unapproved','unapproved','Food',-91.05,39.45)`,
+      ),
+    );
+    const result = await asUser(
+      db,
+      vendor,
+      `select public.create_vendor('Demo Two','demo-two','Food',-91.05,39.45)`,
+    );
+    const v = (result.rows[0] as { create_vendor: string }).create_vendor;
+    const created = await asUser(
+      db,
+      vendor,
+      `select public.create_listing('${v}','Test roll','Demo description','Food','SELL',450,4,true)`,
+    );
+    assert.ok(created.rows.length);
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `select public.create_listing('${v}','Attack','Description','Food','SELL',1,999,true)`,
+      ),
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `select public.assign_role('${customer}','admin',-91.05,39.45)`,
+      ),
+    );
+    await db.exec(`insert into user_roles values('${other}','admin');`);
+    await asUser(
+      db,
+      other,
+      `select public.assign_role('${customer}','runner',-91.05,39.45)`,
+    );
+    assert.equal(
+      (await asUser(db, customer, `select public.has_role('runner')`)).rows
+        .length,
+      1,
+    );
+  } finally {
+    await db.close();
+  }
+});
+test("uncompleted orders cannot receive fabricated customer reviews", async () => {
+  const db = await fixture();
+  try {
+    const id = await createOrder(db);
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `insert into reviews(order_id,customer_id,rating,comment) values('${id}','${customer}',5,'Fake delivered review')`,
+      ),
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        other,
+        `insert into reviews(order_id,customer_id,rating,comment) values('${id}','${other}',5,'Another customer review')`,
+      ),
+    );
+  } finally {
+    await db.close();
+  }
+});

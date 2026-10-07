@@ -1,0 +1,9 @@
+# AI discovery
+
+With no AI credentials, the assistant deterministically searches the demo or connected catalog. Hunger/dinner, gifts under $40, cinnamon rolls and pickup questions select real available catalog rows. Unknown searches return an empty result. “Get me two” does not silently purchase; it opens an explicit review/preparation workflow.
+
+With `AI_API_KEY`, `AI_MODEL` and an HTTPS OpenAI-compatible `AI_BASE_URL`, the model selects a structured, validated catalog or order-read tool call. Each tool has its own strict schema: query/category/integer-cent budget, authorized listing/vendor IDs, quantity, comparison IDs or a customer order ID. These are validated strictly and executed against RLS-filtered marketplace rows. UI text and cards are generated from results; model prose cannot invent inventory, price or payment status.
+
+The registry exposes searchListings, searchVendors, searchServices, getNearbyActivity, getListingAvailability, getVendor, findCompatibleRunners, estimateFulfillment, compareOptions, prepareOrder and getOrderStatus. prepareOrder produces only an authenticated review quote; the explicit order route creates reservations. getOrderStatus reads only authenticated customer-owned records selected by RLS. Matching and estimates are approximate, not road routes. One tool is executed per turn. Selected-listing context is retained in the UI; durable chat history and richer multi-step planning remain extensions.
+
+The server enforces all write actions through separate authenticated routes. User text and listing descriptions are untrusted. Models receive no secret or private location data. Configured AI failures are shown as failures, not silently reported as a successful model response.
