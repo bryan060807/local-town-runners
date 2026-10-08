@@ -23,7 +23,7 @@ async function fixture() {
     await db.exec(sql);
   }
   await db.exec(
-    `insert into auth.users values('${customer}'),('${other}'),('${vendor}'),('${runner}');insert into public.user_roles values('${vendor}','vendor'),('${runner}','runner');insert into public.vendors(id,owner_id,name,slug,category,public_lon,public_lat) values('${shop}','${vendor}','Demo','demo','Food',-91.051234,39.448923);insert into public.vendor_private values('${shop}','PRIVATE HOME',-91.051234,39.448923);insert into public.listings(id,vendor_id,title,category,mode,price_cents,inventory) values('${listing}','${shop}','Roll','Food','SELL',450,12);insert into public.runners(id,public_lon,public_lat,available_until,categories,visible) values('${runner}',-91.051234,39.448923,now()+interval '1 hour',array['Food'],true);`,
+    `insert into auth.users values('${customer}'),('${other}'),('${vendor}'),('${runner}');update profiles set email_verified_at=now(),customer_terms=true,lifecycle='approved';update user_roles set status='approved';insert into public.user_roles(user_id,role) values('${vendor}','vendor'),('${runner}','runner');insert into public.vendors(id,owner_id,name,slug,category,public_lon,public_lat) values('${shop}','${vendor}','Demo','demo','Food',-91.051234,39.448923);insert into public.vendor_private values('${shop}','PRIVATE HOME',-91.051234,39.448923);insert into public.listings(id,vendor_id,title,category,mode,price_cents,inventory) values('${listing}','${shop}','Roll','Food','SELL',450,12);insert into public.runners(id,public_lon,public_lat,available_until,categories,visible) values('${runner}',-91.051234,39.448923,now()+interval '1 hour',array['Food'],true);`,
   );
   return db;
 }
@@ -60,7 +60,7 @@ test("RLS protects private addresses and role escalation", async () => {
       asUser(
         db,
         customer,
-        `insert into user_roles values('${customer}','admin')`,
+        `insert into user_roles(user_id,role) values('${customer}','admin')`,
       ),
     );
     await assert.rejects(() =>
@@ -215,7 +215,9 @@ test("admin-only moderation and expiry are enforced in PostgreSQL", async () => 
       (await asUser(db, other, "select * from runners")).rows.length,
       0,
     );
-    await db.exec(`insert into user_roles values('${other}','admin');`);
+    await db.exec(
+      `insert into user_roles(user_id,role) values('${other}','admin');`,
+    );
     await asUser(
       db,
       other,
@@ -342,16 +344,22 @@ test("vendor creation, listing ownership and role provisioning are server enforc
         `select public.assign_role('${customer}','admin',-91.05,39.45)`,
       ),
     );
-    await db.exec(`insert into user_roles values('${other}','admin');`);
-    await asUser(
-      db,
-      other,
-      `select public.assign_role('${customer}','runner',-91.05,39.45)`,
+    await db.exec(
+      `insert into user_roles(user_id,role) values('${other}','admin');`,
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        other,
+        `select public.assign_role('${customer}','runner',-91.05,39.45)`,
+      ),
     );
     assert.equal(
-      (await asUser(db, customer, `select public.has_role('runner')`)).rows
-        .length,
-      1,
+      (
+        (await asUser(db, customer, `select public.has_role('runner')`))
+          .rows[0] as { has_role: boolean }
+      ).has_role,
+      false,
     );
   } finally {
     await db.close();

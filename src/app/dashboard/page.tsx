@@ -22,6 +22,11 @@ export default async function Dashboard() {
     return (
       <main className="simple-page">
         <Link href="/">← {brand.name}</Link>
+        <nav className="account-links">
+          <Link href="/account">Real account settings</Link>
+          <Link href="/vendor/apply">Vendor application</Link>
+          <Link href="/runner/apply">Runner application</Link>
+        </nav>
         <h1>Your neighborhood hub.</h1>
         <p>
           Browse the demo marketplace today. Account dashboards require a
@@ -181,6 +186,9 @@ export default async function Dashboard() {
         <Link href="/">Explore marketplace</Link>
         <Link href="/cart">Shopping cart</Link>
         <Link href="/dashboard">Order tracking</Link>
+        {!profile?.demo_workspace && (
+          <Link href="/account">Account and applications</Link>
+        )}
       </div>
       {roleNames.includes("customer") && (
         <CustomerPreferences

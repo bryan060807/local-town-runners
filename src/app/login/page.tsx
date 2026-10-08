@@ -27,7 +27,7 @@ export default function Login() {
       if (!r.ok) throw Error(d.error);
       if (d.confirmationRequired)
         setStatus("Check your email to confirm your account, then sign in.");
-      else router.push("/dashboard");
+      else router.push(signup ? "/account" : "/dashboard");
     } catch (e) {
       setStatus(e instanceof Error ? e.message : "Could not sign in");
     } finally {
@@ -69,6 +69,29 @@ export default function Login() {
         </button>
       </form>
       <p role="status">{status}</p>
+      <p>
+        <Link href="/agreements">Read Terms and Privacy Notice</Link>
+      </p>
+      <button
+        type="button"
+        disabled={busy || !email}
+        onClick={async () => {
+          setBusy(true);
+          try {
+            const r = await fetch("/api/auth", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ action: "recover", email }),
+            });
+            const d = await r.json();
+            setStatus(d.message || d.error);
+          } finally {
+            setBusy(false);
+          }
+        }}
+      >
+        Request password recovery email
+      </button>
       <button onClick={() => setSignup((v) => !v)}>
         {signup ? "Already a neighbor? Sign in" : "New here? Create an account"}
       </button>

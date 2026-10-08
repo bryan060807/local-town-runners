@@ -1148,3 +1148,89 @@ footer span:first-child {
     gap: 12px;
   }
 }
+
+/* Phase 4 account and consent forms */
+.onboarding-page {
+  max-width: 850px;
+}
+.onboarding-page form {
+  display: grid;
+  gap: 16px;
+}
+.onboarding-page label {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+.onboarding-page fieldset {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #cdd5cf;
+  border-radius: 12px;
+  margin: 12px 0;
+}
+.onboarding-page input,
+.onboarding-page select,
+.onboarding-page textarea {
+  width: 100%;
+  min-height: 48px;
+  font-size: 16px;
+}
+.onboarding-page input[type="checkbox"] {
+  width: 24px;
+  min-height: 24px;
+  flex-shrink: 0;
+}
+.onboarding-page .check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.6;
+}
+.onboarding-page button {
+  min-height: 48px;
+  margin: 4px;
+  overflow-wrap: anywhere;
+}
+.agreement-section {
+  padding: 16px;
+  background: #f2f5ef;
+  border-radius: 12px;
+  margin: 14px 0;
+  line-height: 1.7;
+}
+.signature-pad {
+  width: 100%;
+  aspect-ratio: 3/1;
+  background: white;
+  border: 2px solid #537f65;
+  touch-action: none;
+  border-radius: 8px;
+  color: #14291e;
+}
+.signature-pad:focus-visible {
+  outline: 3px solid #bd6427;
+}
+.account-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 20px 0;
+}
+.application-details {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: inherit;
+}
+.onboarding-page p {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 430px) {
+  .onboarding-page {
+    padding: 20px 12px;
+  }
+  .onboarding-page fieldset,
+  .agreement-section {
+    padding: 12px;
+  }
+}

@@ -42,7 +42,24 @@ async function account(
   await checked(
     client.from("profiles").update({ display_name: name }).eq("id", id!),
   );
-  await checked(client.from("user_roles").upsert({ user_id: id, role }));
+  const phase4 = await client.rpc("phase4_ready");
+  if (phase4.data === true) {
+    await checked(
+      client
+        .from("profiles")
+        .update({
+          customer_terms: true,
+          email_verified_at: new Date().toISOString(),
+          lifecycle: "approved",
+        })
+        .eq("id", id!),
+    );
+    await checked(
+      client
+        .from("user_roles")
+        .upsert({ user_id: id, role, status: "approved" }),
+    );
+  } else await checked(client.from("user_roles").upsert({ user_id: id, role }));
   if (role === "runner")
     await checked(
       client.from("runners").upsert({

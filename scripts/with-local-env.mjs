@@ -21,6 +21,8 @@ const child = spawn(
     stdio: "inherit",
     env: {
       ...process.env,
+      RESEND_API_KEY: "",
+      ONBOARDING_EMAIL_FROM: "",
       PAYPAL_CLIENT_ID: "",
       PAYPAL_CLIENT_SECRET: "",
       PAYPAL_WEBHOOK_ID: "",

@@ -1,0 +1,50 @@
+[
+  {
+    "heading": "1. Purpose of This Permission",
+    "text": "Project: Local Town Runners\nPurpose: PayPal AI Hackathon demonstration and related project development\n\nLocal Town Runners is an experimental local-commerce platform being developed for a software hackathon and product demonstration.\n\nThe project is designed to demonstrate how customers could discover local businesses, products, makers, and service providers; receive AI-assisted recommendations; connect with local runners for fulfillment; and complete simulated/test transactions using payment sandbox technology.\n\nBy signing this form, I give Local Town Runners permission to include my business, products, services, and approved content in the project as described below.\n\nThis permission does not require me to accept real orders, make deliveries, provide services, or participate in real financial transactions."
+  },
+  {
+    "heading": "2. Business Information Permission",
+    "text": "I give Local Town Runners permission to display information I provide or approve about my business, including:\n\n● Business/vendor name ● Business description ● Business category\n\n● Public business location or approved general service area ● Public business hours ● Public website ● Public social-media pages ● Public contact information that I specifically approve for display ● Products and services ● Product/service descriptions ● Prices ● Availability ● Approximate inventory or availability information ● Customization options ● Typical preparation or fulfillment times\n\nPrivate information that I have not approved for public display, including a private home address, will not intentionally be displayed as public vendor information."
+  },
+  {
+    "heading": "3. Product and Service Listings",
+    "text": "I give Local Town Runners permission to create demonstration marketplace listings based on product and service information that I provide or approve.\n\nThese listings may include:\n\n● Product/service names ● Descriptions ● Prices ● Photos ● Categories ● Availability ● Inventory or quantity ● Custom-order information ● Pickup or fulfillment information ● Whether an item is locally made or produced ● Featured or recommended products\n\nI understand that inventory, availability, and similar information displayed during the hackathon may be demonstration data unless specifically maintained as current information."
+  },
+  {
+    "heading": "4. Photos, Logos, and Other Content",
+    "text": "I give Local Town Runners permission to use photos, logos, graphics, descriptions, menus, product information, and other business content that I voluntarily provide or specifically approve for use.\n\nI represent that I have the authority to provide or authorize the use of this material.\n\nI give Local Town Runners a non-exclusive, royalty-free permission to use this approved material for:\n\n● The Local Town Runners website/application ● Hackathon demonstrations ● Hackathon judging ● Project screenshots ● Demo videos ● Presentations ● Project documentation ● Hackathon submission pages ● Social-media or promotional material specifically related to demonstrating or presenting the Local Town Runners project\n\nI retain ownership of my business name, trademarks, photographs, logos, product information, and other content.\n\nThis permission does not transfer ownership of my content to Local Town Runners."
+  },
+  {
+    "heading": "5. AI Recommendations and Search",
+    "text": "I give Local Town Runners permission to include my approved business, products, and services in AI-powered search, discovery, comparison, and recommendation features.\n\nFor example, the system may respond to a customer asking:\n\n“What is made locally?”\n\n“What should I get for dinner?”\n\n“Find me a gift under $40.”\n\n“What does this business make?”\n\n“What can I get delivered?”\n\nThe AI may recommend or describe my products or services using the information that I provide or approve.\n\nLocal Town Runners will make reasonable efforts to ensure that factual information such as price, inventory, and availability comes from the marketplace data rather than being invented by the AI."
+  },
+  {
+    "heading": "6. Hackathon Screenshots and Video",
+    "text": "I give Local Town Runners permission to show my approved business information, products, services, logo, and/or photographs in screenshots and recorded demonstrations created for the project.\n\nI understand that these materials may be submitted to hackathon organizers, judges, technology partners, or displayed publicly as part of the project's hackathon submission or portfolio.\n\nBecause hackathon submissions, screenshots, videos, and presentations may remain publicly available after the event, I understand that previously published materials may not always be removable from third-party websites or copies after publication."
+  },
+  {
+    "heading": "7. Demo Transactions",
+    "text": "I understand that Local Town Runners is currently being demonstrated using test/sandbox payment technology.\n\nMy participation in this demonstration:\n\n● Does not authorize Local Town Runners to charge customers on my behalf using real payment credentials. ● Does not require me to fulfill demonstration orders. ● Does not authorize Local Town Runners to withdraw money from or access my financial accounts. ● Does not require me to provide banking credentials, PayPal credentials, tax information, or other financial login information. ● Does not create a promise that I will receive payment from demonstration transactions.\n\nVendor and runner earnings displayed during the hackathon may be simulated for demonstration purposes."
+  },
+  {
+    "heading": "8. No Endorsement Requirement",
+    "text": "My participation allows Local Town Runners to demonstrate my business and approved products or services.\n\nIt does not require me to publicly endorse Local Town Runners, PayPal, OpenAI, the hackathon, or any other company or technology provider."
+  },
+  {
+    "heading": "9. Accuracy and Updates",
+    "text": "Local Town Runners may format, shorten, organize, or lightly edit information I provide so that it works within the application, provided that the meaning is not intentionally changed.\n\nI may notify the project owner if important business information shown in the application is inaccurate.\n\nPrices, inventory, hours, availability, and similar information may change over time. I understand that demonstration information may not represent real-time business availability unless explicitly stated."
+  },
+  {
+    "heading": "10. Participation Is Voluntary",
+    "text": "My participation is voluntary.\n\nI may ask Local Town Runners to stop using my business or content in future versions of the application or future promotional materials.\n\nLocal Town Runners will make reasonable efforts to remove the business/content from materials and systems under its control.\n\nI understand that this may not remove copies that were already included in submitted hackathon materials, previously published videos or screenshots, third-party websites, archived materials, or materials outside Local Town Runners' control."
+  },
+  {
+    "heading": "11. No Commercial Vendor Agreement",
+    "text": "This document provides permission for demonstration, development, testing, hackathon submission, and related presentation of the Local Town Runners project.\n\nIt is not a commercial vendor agreement.\n\nIf Local Town Runners later begins processing real customer purchases, real vendor payouts, commercial deliveries, subscription fees, commissions, or other production transactions involving my business, separate terms may be required before my business participates in those activities."
+  },
+  {
+    "heading": "12. Permission",
+    "text": "By signing below, I confirm that:\n\n● I am the business owner or have authority to grant these permissions. ● I voluntarily authorize the uses described in this document. ● I have had an opportunity to read this document before signing.\n\n● I understand that the current project is a hackathon/demo system and not currently processing real transactions for my business.\n\nVendor / Authorized Representative\n\nPrinted Name: __________________________________________________________\n\nBusiness Name: _________________________________________________________\n\nSignature: ______________________________________________________________\n\nDate: ______________________\n\nProject Representative\n\nPrinted Name: __________________________________________________________\n\nSignature: ______________________________________________________________\n\nDate: ______________________\n\nOptional Featured Product\n\nIf someone asks the Local Town Runners AI what they should try or buy from your business, what product or service would you most want recommended?\n\nWhy is this one special?"
+  }
+]
