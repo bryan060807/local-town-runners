@@ -316,6 +316,30 @@ test("actual local Auth token confirmation and recovery; administrator review re
       .locator("article.simple-card")
       .filter({ hasText: applicationId });
     await expect(card).toContainText("submitted");
+    await expect(card).toContainText("Admin notification: pending");
+    await expect(card).toContainText("Last attempt:");
+    await expect(card).toContainText("Inbox delivery is unconfirmed.");
+    await card
+      .getByRole("button", { name: "Resend Notification", exact: true })
+      .click();
+    await expect(card).toContainText("EMAIL_NOT_CONFIGURED");
+    expect(
+      await admin.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    const forbiddenRetry = await page.request.post("/api/admin/onboarding", {
+      headers: { Origin: origin },
+      data: {
+        action: "resend_notification",
+        submissionId: receipt.submissionId,
+      },
+    });
+    expect(forbiddenRetry.status()).toBe(403);
+    const forbiddenDocument = await page.request.get(
+      `/api/onboarding/documents?id=${receipt.submissionId}&presentation=1`,
+    );
+    expect(forbiddenDocument.status()).toBe(403);
     await card
       .getByLabel("Internal review notes")
       .fill("LOCAL TEST review; no live storage");

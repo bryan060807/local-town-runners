@@ -41,6 +41,7 @@ export default async function Page({
     profiles,
     audit,
     assets,
+    presentations,
   ] = await Promise.all([
     query,
     a.client
@@ -65,6 +66,7 @@ export default async function Page({
       .order("created_at", { ascending: false })
       .limit(100),
     a.client.from("application_assets").select("id,application_id"),
+    a.client.from("agreement_presentations").select("submission_id"),
   ]);
   const filtered = apps.data?.filter(
     (x) =>
@@ -129,15 +131,33 @@ export default async function Page({
                   {d?.path ? "ready" : (d?.error_code ?? "pending")}
                 </p>
                 <PrivateDocument id={s.id} />
+                {presentations.data?.some((p) => p.submission_id === s.id) && (
+                  <PrivateDocument id={s.id} presentation />
+                )}
                 <p>
-                  Admin notification: {n?.status ?? "not queued"} · Attempts{" "}
+                  Admin notification:{" "}
+                  {n?.job_status ?? n?.status ?? "not queued"} · Attempts{" "}
                   {n?.attempts ?? 0} · {n?.error_code}
+                  <br />
+                  Last attempt: {n?.last_attempt_at ?? "Not recorded"}
+                  <br />
+                  Provider:{" "}
+                  {n?.provider_event ??
+                    (n?.provider_id ? "accepted" : "unconfirmed")}{" "}
+                  · Message ID: {n?.provider_id ?? "none"}
+                  <br />
+                  {n?.provider_event === "delivered"
+                    ? "Provider reports delivery; inbox placement is not confirmed."
+                    : "Inbox delivery is unconfirmed."}
                 </p>
               </>
             )}
             <OnboardingReview
               applicationId={x.id}
               submissionId={s?.id}
+              notificationRetry={
+                !!n && !n.provider_id && n.status !== "accepted"
+              }
               finalized={["draft", "approved", "rejected"].includes(x.status)}
             />
             {decisions.data

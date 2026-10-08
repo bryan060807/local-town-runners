@@ -7,12 +7,14 @@ export default function OnboardingReview({
   userId,
   suspended = false,
   finalized = false,
+  notificationRetry = false,
 }: {
   applicationId?: string;
   submissionId?: string;
   userId?: string;
   suspended?: boolean;
   finalized?: boolean;
+  notificationRetry?: boolean;
 }) {
   const [notes, setNotes] = useState(""),
     [status, setStatus] = useState(""),
@@ -29,11 +31,13 @@ export default function OnboardingReview({
       const d = await r.json();
       if (!r.ok) throw Error(d.error);
       setStatus(
-        d.notification
-          ? `Document ready: ${d.documentReady}. Notification: ${d.notification}.`
-          : d.photoPublication
-            ? `Review action saved. Photo publication: ${d.photoPublication}.`
-            : "Review action saved.",
+        d.email
+          ? `Notification: ${d.email.job_status}. Provider: ${d.email.provider_event ?? "unconfirmed"}. ${d.email.error_code ?? ""}`
+          : d.notification
+            ? `Document ready: ${d.documentReady}. Notification: ${d.notification}.`
+            : d.photoPublication
+              ? `Review action saved. Photo publication: ${d.photoPublication}.`
+              : "Review action saved.",
       );
       router.refresh();
     } catch (e) {
@@ -79,6 +83,22 @@ export default function OnboardingReview({
           onClick={() => post({ action: "retry", submissionId })}
         >
           Retry PDF and notification
+        </button>
+      )}
+      {submissionId && notificationRetry && (
+        <button
+          disabled={busy}
+          onClick={() => post({ action: "resend_notification", submissionId })}
+        >
+          Resend Notification
+        </button>
+      )}
+      {submissionId && (
+        <button
+          disabled={busy}
+          onClick={() => post({ action: "presentation", submissionId })}
+        >
+          Create readable presentation copy
         </button>
       )}
       {userId && (

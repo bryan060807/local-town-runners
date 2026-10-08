@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   realUser,
+  adminUser,
   privateBucket,
   assertPrivateStorage,
 } from "@/lib/server/onboarding";
@@ -9,7 +10,9 @@ import { failure } from "@/lib/server/http";
 export async function GET(req: Request) {
   try {
     const id = z.uuid().parse(new URL(req.url).searchParams.get("id"));
-    const { client } = await realUser();
+    const presentation =
+      new URL(req.url).searchParams.get("presentation") === "1";
+    const { client } = presentation ? await adminUser() : await realUser();
     const s = await client
       .from("agreement_submissions")
       .select("id")
@@ -17,7 +20,7 @@ export async function GET(req: Request) {
       .single();
     if (s.error) throw new HttpError("Document unavailable", 404);
     const d = await client
-      .from("agreement_documents")
+      .from(presentation ? "agreement_presentations" : "agreement_documents")
       .select("path")
       .eq("submission_id", id)
       .single();
@@ -26,7 +29,7 @@ export async function GET(req: Request) {
     const signed = await serviceDb()
       .storage.from(privateBucket)
       .createSignedUrl(d.data.path, 60, {
-        download: `LTR-agreement-${id}.pdf`,
+        download: `LTR-${presentation ? "presentation" : "agreement"}-${id}.pdf`,
       });
     if (signed.error) throw new HttpError("Private storage unavailable", 503);
     return Response.json(

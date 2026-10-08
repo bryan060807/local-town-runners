@@ -12,6 +12,7 @@ export type ConsentPDF = {
   text_snapshot: { heading: string; text: string }[];
   signature: number[][][];
   application?: unknown;
+  presentation?: boolean;
 };
 export async function consentPdf(s: ConsentPDF) {
   const doc = await PDFDocument.create();
@@ -51,31 +52,101 @@ export async function consentPdf(s: ConsentPDF) {
     y -= 8;
   }
   paragraph("Local Town Runners — Completed electronic agreement", 16);
+  if (s.presentation)
+    paragraph("Presentation copy — original signed evidence retained", 11);
   paragraph(
-    `Submission: ${s.id}\nAgreement: ${s.kind} ${s.version}\nAccepted: ${s.created_at}\nSource SHA256: ${s.source_sha256}\nSigner: ${s.typed_name}\nVerified email: ${s.verified_email ?? "not recorded"}\nExplicit affirmative consent recorded. Drawn signature is electronic evidence, not a cryptographically certified signature.`,
+    `Agreement: ${s.kind} ${s.version}\nSubmission: ${s.id}\nSource SHA256: ${s.source_sha256}`,
   );
-  for (const section of s.text_snapshot) {
-    paragraph(section.heading, 13);
-    paragraph(section.text);
-  }
-  paragraph("Completed application information", 13);
-  paragraph(JSON.stringify(s.application ?? {}, null, 2));
+  // Keep identity, affirmative consent, timestamp and signature together before legal text.
+  paragraph(
+    `Signer: ${s.typed_name}\nAuthenticated email: ${s.verified_email ?? "not recorded"}\nAccepted: ${s.created_at}\nExplicit affirmative consent recorded. Drawn signature is electronic evidence, not a cryptographically certified signature.`,
+  );
   if (s.signature.length) {
-    if (y < 220) {
-      page = doc.addPage([595, 842]);
-      y = 790;
-    }
     paragraph("Drawn signature", 13);
     for (const stroke of s.signature)
       for (let i = 1; i < stroke.length; i++) {
         const a = stroke[i - 1],
           b = stroke[i];
         page.drawLine({
-          start: { x: 42 + a[0] * 0.8, y: y - a[1] * 0.8 },
-          end: { x: 42 + b[0] * 0.8, y: y - b[1] * 0.8 },
+          start: { x: 42 + a[0] * 0.65, y: y - a[1] * 0.65 },
+          end: { x: 42 + b[0] * 0.65, y: y - b[1] * 0.65 },
           thickness: 1.5,
         });
       }
+    y -= 145;
   }
+  for (const section of s.text_snapshot) {
+    if (y < 130) {
+      page = doc.addPage([595, 842]);
+      y = 790;
+    }
+    paragraph(section.heading, 13);
+    paragraph(section.text);
+  }
+  const application =
+    s.application && typeof s.application === "object"
+      ? (s.application as Record<string, unknown>)
+      : {};
+  const value = (v: unknown): string =>
+    typeof v === "string" || typeof v === "number"
+      ? String(v)
+      : Array.isArray(v)
+        ? v.filter((x) => typeof x === "string").join(", ")
+        : "Not provided";
+  const field = (label: string, v: unknown) =>
+    paragraph(`${label}: ${value(v) || "Not provided"}`);
+  paragraph(
+    s.kind === "vendor"
+      ? "Completed Vendor Application"
+      : "Completed Application",
+    14,
+  );
+  for (const [label, key] of [
+    ["Business Name", "name"],
+    ["Authorized Representative", "representative"],
+    ["Contact Information", "phone"],
+    ["Vendor Category", "category"],
+    ["Business Description", "description"],
+    ["Service Area", "serviceArea"],
+    ["Additional Business Information", "businessInfo"],
+  ]) {
+    if (s.kind === "vendor" || application[key] !== undefined)
+      field(label, application[key]);
+  }
+  for (const [label, key] of [
+    ["Transportation", "transportation"],
+    ["Availability", "availability"],
+    ["Radius (miles)", "radius"],
+    ["Maximum Detour (miles)", "maxDetour"],
+    ["Travel Areas", "travelAreas"],
+    ["Pickup Areas", "pickupAreas"],
+    ["Route Preferences", "routePreferences"],
+    ["Delivery Types", "deliveryTypes"],
+    ["Eligibility Information", "eligibility"],
+  ])
+    if (application[key] !== undefined) field(label, application[key]);
+  if (Array.isArray(application.products))
+    for (const [index, product] of application.products.entries()) {
+      if (!product || typeof product !== "object") continue;
+      if (y < 160) {
+        page = doc.addPage([595, 842]);
+        y = 790;
+      }
+      paragraph(`Product or Service ${index + 1}`, 13);
+      field("Product or Service Name", product.title);
+      field("SELL / MAKE / DO", product.mode);
+      field("Description", product.description);
+      field(
+        "Price (USD)",
+        typeof product.priceCents === "number"
+          ? new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+            }).format(product.priceCents / 100)
+          : undefined,
+      );
+      field("Inventory", product.inventory);
+      field("Availability", product.availability);
+    }
   return Buffer.from(await doc.save());
 }

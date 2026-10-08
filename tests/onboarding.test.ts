@@ -556,3 +556,142 @@ test("Phase 4 email retries keep the same idempotency key and never infer provid
     true,
   );
 });
+
+test("Phase 4.1 durable jobs isolate admin retries, preserve receipts and record ordered delivery events", async () => {
+  const db = await setup();
+  try {
+    const { s } = await submit(db);
+    const n = (
+      await db.query<{ id: string }>(
+        "select id from notification_deliveries where submission_id=$1",
+        [s],
+      )
+    ).rows[0].id;
+    assert.equal(
+      (
+        await db.query<{ job_status: string }>(
+          "select job_status from notification_deliveries where id=$1",
+          [n],
+        )
+      ).rows[0].job_status,
+      "pending",
+    );
+    await assert.rejects(() =>
+      as(db, alice, "select claim_notification_v41($1,true)", [n]),
+    );
+    await db.query<Record<string, unknown>>(
+      "update notification_deliveries set auto_dispatch=false where id=$1",
+      [n],
+    );
+    assert.equal(
+      (
+        await db.query<Record<string, unknown>>(
+          "select (claim_notification_v41($1,false)).id id",
+          [n],
+        )
+      ).rows[0].id,
+      null,
+    );
+    assert.equal(
+      (
+        await db.query<Record<string, unknown>>(
+          "select (claim_notification_v41($1,true)).id id",
+          [n],
+        )
+      ).rows[0].id,
+      n,
+    );
+    assert.equal(
+      (
+        await db.query<Record<string, unknown>>(
+          "select (claim_notification_v41($1,true)).id id",
+          [n],
+        )
+      ).rows[0].id,
+      null,
+    );
+    await db.query<Record<string, unknown>>(
+      "update notification_deliveries set status='accepted',provider_id='UNIT-ID',lease_until=null where id=$1",
+      [n],
+    );
+    assert.equal(
+      (
+        await db.query<Record<string, unknown>>(
+          "select (claim_notification_v41($1,true)).id id",
+          [n],
+        )
+      ).rows[0].id,
+      null,
+    );
+    await db.query<Record<string, unknown>>(
+      "select record_notification_event('UNIT-EVENT','UNIT-ID','email.delivered','2026-10-08T12:00:00Z')",
+    );
+    await db.query<Record<string, unknown>>(
+      "select record_notification_event('UNIT-EVENT','UNIT-ID','email.delivered','2026-10-08T12:00:00Z')",
+    );
+    await db.query<Record<string, unknown>>(
+      "select record_notification_event('UNIT-OLD','UNIT-ID','email.sent','2026-10-08T11:00:00Z')",
+    );
+    const row = (
+      await db.query<Record<string, unknown>>(
+        "select job_status,provider_event from notification_deliveries where id=$1",
+        [n],
+      )
+    ).rows[0];
+    assert.equal(row.job_status, "sent");
+    assert.equal(row.provider_event, "delivered");
+    assert.equal(
+      (
+        await db.query<Record<string, unknown>>(
+          "select count(*)::int n from notification_provider_events where id='UNIT-EVENT'",
+        )
+      ).rows[0].n,
+      1,
+    );
+    await assert.rejects(() =>
+      as(
+        db,
+        alice,
+        "select record_notification_event('x','UNIT-ID','email.sent',now())",
+      ),
+    );
+    await assert.rejects(() =>
+      as(
+        db,
+        alice,
+        "insert into agreement_presentations(submission_id,format_version,path,sha256) values($1,'readable-v1','test.pdf','abc')",
+        [s],
+      ),
+    );
+    await db.query<Record<string, unknown>>(
+      "insert into agreement_presentations(submission_id,format_version,path,sha256) values($1,'readable-v1','test.pdf','abc')",
+      [s],
+    );
+    assert.equal(
+      (await as(db, alice, "select * from agreement_presentations")).rows
+        .length,
+      0,
+    );
+    assert.equal(
+      (await as(db, admin, "select * from agreement_presentations")).rows
+        .length,
+      1,
+    );
+    await assert.rejects(() =>
+      db.query<Record<string, unknown>>(
+        "update agreement_presentations set path='other.pdf'",
+      ),
+    );
+    assert.equal(
+      (
+        await db.query<Record<string, unknown>>(
+          "select count(*)::int n from agreement_submissions where id=$1",
+          [s],
+        )
+      ).rows[0].n,
+      1,
+    );
+  } finally {
+    await db.close();
+  }
+});

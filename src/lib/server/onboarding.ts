@@ -107,9 +107,16 @@ export async function generateDocument(id: string) {
     return { ready: false };
   }
 }
-export async function deliverNotification(id: string) {
+export async function deliverNotification(
+  id: string,
+  manual = false,
+  transport: typeof fetch = fetch,
+) {
   const c = serviceDb();
-  const claim = await c.rpc("claim_notification", { delivery_id: id });
+  const claim = await c.rpc("claim_notification_v41", {
+    delivery_id: id,
+    manual,
+  });
   if (claim.error) throw Error("Queue unavailable");
   const n = claim.data;
   if (!n?.id) return;
@@ -127,24 +134,64 @@ export async function deliverNotification(id: string) {
         available_at: new Date(
           Date.now() + Math.min(3600000, 30000 * 2 ** Math.min(n.attempts, 6)),
         ).toISOString(),
-        ...(provider_id ? { provider_id } : {}),
+        ...(provider_id
+          ? {
+              provider_id,
+              accepted_at: new Date().toISOString(),
+              provider_event: "accepted",
+              provider_event_at: new Date().toISOString(),
+            }
+          : {}),
       })
       .eq("id", n.id);
     if (r.error) throw Error("Notification receipt could not be recorded");
+    if (provider_id) {
+      // A delivery webhook can arrive before the send response is persisted.
+      const event = await c
+        .from("notification_provider_events")
+        .select("event_type,event_at")
+        .eq("message_id", provider_id)
+        .neq("event_type", "email.sent")
+        .order("event_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (event.error) return; // Acceptance is already durable; delivery stays unconfirmed.
+      if (event.data) {
+        const states: Record<string, string> = {
+          "email.sent": "accepted",
+          "email.delivered": "delivered",
+          "email.bounced": "bounced",
+          "email.failed": "rejected",
+          "email.complained": "complained",
+          "email.delivery_delayed": "delayed",
+        };
+        await c
+          .from("notification_deliveries")
+          .update({
+            provider_event: states[event.data.event_type],
+            provider_event_at: event.data.event_at,
+          })
+          .eq("id", n.id)
+          .eq("provider_event", "accepted");
+      }
+    }
   };
   if (!process.env.RESEND_API_KEY || !process.env.ONBOARDING_EMAIL_FROM) {
     await finish("blocked", "EMAIL_NOT_CONFIGURED");
     return;
   }
   // Resend deduplication expires after 24h. Never blindly retry an uncertain older delivery.
-  if (uncertainDeliveryTooOld(n.created_at, n.attempts)) {
+  if (
+    n.first_provider_attempt_at &&
+    uncertainDeliveryTooOld(n.first_provider_attempt_at, 2)
+  ) {
     await finish("blocked", "PROVIDER_RECONCILIATION_REQUIRED");
     return;
   }
   try {
     const s = await c
       .from("agreement_submissions")
-      .select("application_id,kind")
+      .select("application_id,kind,typed_name,created_at")
       .eq("id", n.submission_id)
       .single();
     if (s.error) throw Error("Consent missing");
@@ -157,21 +204,71 @@ export async function deliverNotification(id: string) {
       await finish("failed", "PDF_PENDING");
       return;
     }
-    const url = new URL("/admin/onboarding", process.env.APP_URL!).toString();
-    const receipt = await sendApplicationEmail({
-      id: n.id,
-      kind: s.data.kind,
-      applicationId: s.data.application_id,
-      adminUrl: url,
-      apiKey: process.env.RESEND_API_KEY!,
+    const application = await c
+      .from("role_applications")
+      .select("payload,status")
+      .eq("id", s.data.application_id)
+      .single();
+    if (application.error) throw Error("Application unavailable");
+    const url = new URL("/admin/onboarding", process.env.APP_URL!);
+    url.searchParams.set("q", s.data.application_id);
+    const recipient = process.env.ONBOARDING_EMAIL_TO;
+    if (recipient !== "aibrymusic@gmail.com") {
+      await finish("blocked", "ADMIN_RECIPIENT_NOT_CONFIGURED");
+      return;
+    }
+    const payload = n.email_payload ?? {
       from: process.env.ONBOARDING_EMAIL_FROM!,
-    });
+      to: [recipient],
+      subject: `Local Town Runners — New ${s.data.kind === "vendor" ? "Vendor" : "Runner"} Application`,
+      text: `A new ${s.data.kind} application has been received.\nBusiness name: ${application.data.payload.name}\nApplicant name: ${s.data.typed_name}\nSubmitted: ${s.data.created_at}\nSubmission ID: ${n.submission_id}\nApplication status: ${application.data.status}\nReview and download the private completed PDF after administrator sign-in: ${url.toString()}`,
+    };
+    // Persist the exact provider body and first send boundary before network I/O.
+    const prepared = await c
+      .from("notification_deliveries")
+      .update({
+        email_payload: payload,
+        first_provider_attempt_at:
+          n.first_provider_attempt_at ?? new Date().toISOString(),
+      })
+      .eq("id", n.id);
+    if (prepared.error) throw Error("Provider boundary unavailable");
+    const receipt = await sendApplicationEmail(
+      {
+        id: n.id,
+        kind: s.data.kind,
+        applicationId: s.data.application_id,
+        adminUrl: url.toString(),
+        payload,
+        apiKey: process.env.RESEND_API_KEY!,
+        from: process.env.ONBOARDING_EMAIL_FROM!,
+      },
+      transport,
+    );
+    if (
+      receipt.error &&
+      [
+        "PROVIDER_HTTP_400",
+        "PROVIDER_HTTP_401",
+        "PROVIDER_HTTP_403",
+        "PROVIDER_HTTP_422",
+        "PROVIDER_HTTP_429",
+      ].includes(receipt.error)
+    ) {
+      // Explicit validation/auth/rate-limit rejection cannot have accepted this message.
+      // Retain the frozen body/key, but safely allow a fresh provider retry window.
+      const rejected = await c
+        .from("notification_deliveries")
+        .update({ first_provider_attempt_at: null })
+        .eq("id", n.id);
+      if (rejected.error) throw Error("Provider rejection receipt unavailable");
+    }
     await finish(receipt.status, receipt.error, receipt.providerId);
   } catch {
     await finish("failed", "DELIVERY_UNCONFIRMED");
   }
 }
-export async function processSubmission(id: string) {
+export async function processSubmission(id: string, manual = false) {
   const pdf = await generateDocument(id);
   const n = await serviceDb()
     .from("notification_deliveries")
@@ -179,7 +276,7 @@ export async function processSubmission(id: string) {
     .eq("submission_id", id)
     .maybeSingle();
   if (n.error) throw Error("Queue read unavailable");
-  if (n.data && pdf.ready) await deliverNotification(n.data.id);
+  if (n.data && pdf.ready) await deliverNotification(n.data.id, manual);
   const after = await serviceDb()
     .from("notification_deliveries")
     .select("status")
@@ -256,4 +353,54 @@ export async function publishApprovedPhotos(applicationId: string) {
   } catch {
     return { photoPublication: "pending" };
   }
+}
+
+export async function createPresentation(id: string) {
+  const c = serviceDb();
+  const existing = await c
+    .from("agreement_presentations")
+    .select("path")
+    .eq("submission_id", id)
+    .maybeSingle();
+  if (existing.error) throw Error("Presentation registry unavailable");
+  if (existing.data) return;
+  const s = await c
+    .from("agreement_submissions")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (s.error) throw Error("Consent unavailable");
+  const app = await c
+    .from("role_applications")
+    .select("payload")
+    .eq("id", s.data.application_id)
+    .single();
+  if (app.error) throw Error("Application unavailable");
+  await assertPrivateStorage();
+  const path = `presentations/${id}/readable-v1.pdf`;
+  let bytes = await consentPdf({
+    ...s.data,
+    application: app.data.payload,
+    presentation: true,
+  });
+  const upload = await c.storage
+    .from(privateBucket)
+    .upload(path, bytes, { contentType: "application/pdf", upsert: false });
+  if (upload.error) {
+    const old = await c.storage.from(privateBucket).download(path);
+    if (old.error) throw Error("Presentation storage unavailable");
+    bytes = Buffer.from(await old.data.arrayBuffer());
+    if (!bytes.subarray(0, 4).equals(Buffer.from("%PDF")))
+      throw Error("Invalid presentation");
+  }
+  const saved = await c.from("agreement_presentations").upsert(
+    {
+      submission_id: id,
+      format_version: "readable-v1",
+      path,
+      sha256: createHash("sha256").update(bytes).digest("hex"),
+    },
+    { onConflict: "submission_id,format_version", ignoreDuplicates: true },
+  );
+  if (saved.error) throw Error("Presentation receipt unavailable");
 }

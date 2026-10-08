@@ -21,6 +21,13 @@ export async function sendApplicationEmail(
     adminUrl: string;
     apiKey: string;
     from: string;
+    to?: string;
+    businessName?: string;
+    applicantName?: string;
+    submittedAt?: string;
+    submissionId?: string;
+    applicationStatus?: string;
+    payload?: { from: string; to: string[]; subject: string; text: string };
   },
   transport: typeof fetch = fetch,
 ): Promise<EmailResult> {
@@ -32,15 +39,30 @@ export async function sendApplicationEmail(
         "Content-Type": "application/json",
         "Idempotency-Key": notificationKey(input.id),
       },
-      body: JSON.stringify({
-        from: input.from,
-        to: ["aibrymusic@gmail.com"],
-        subject: `LTR ${input.kind} application submitted`,
-        text: `Application ${input.applicationId}\nConsent saved; completed PDF is available only after administrator sign-in.\nReview securely: ${input.adminUrl}\nNo applicant contact details or signature are included in this email.`,
-      }),
+      body: JSON.stringify(
+        input.payload
+          ? {
+              from: input.payload.from,
+              to: input.payload.to,
+              subject: input.payload.subject,
+              text: input.payload.text,
+            }
+          : {
+              from: input.from,
+              to: [input.to ?? "aibrymusic@gmail.com"],
+              subject: `Local Town Runners — New ${input.kind === "vendor" ? "Vendor" : "Runner"} Application`,
+              text: `A new ${input.kind} application has been received.\nBusiness name: ${input.businessName ?? "See application"}\nApplicant name: ${input.applicantName ?? "See application"}\nSubmitted: ${input.submittedAt ?? "See application"}\nSubmission ID: ${input.submissionId ?? input.id}\nApplication status: ${input.applicationStatus ?? "submitted"}\nReview and download the private completed PDF after administrator sign-in: ${input.adminUrl}`,
+            },
+      ),
       signal: AbortSignal.timeout(15000),
     });
-    if (!r.ok) return { status: "failed", error: `PROVIDER_HTTP_${r.status}` };
+    if (!r.ok)
+      return {
+        status: [400, 401, 403, 409, 422].includes(r.status)
+          ? "blocked"
+          : "failed",
+        error: `PROVIDER_HTTP_${r.status}`,
+      };
     const receipt = await r.json();
     if (
       typeof receipt.id !== "string" ||

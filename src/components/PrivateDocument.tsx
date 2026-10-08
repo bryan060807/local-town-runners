@@ -3,9 +3,11 @@ import { useState } from "react";
 export default function PrivateDocument({
   id,
   photo = false,
+  presentation = false,
 }: {
   id: string;
   photo?: boolean;
+  presentation?: boolean;
 }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -13,7 +15,7 @@ export default function PrivateDocument({
     setBusy(true);
     try {
       const r = await fetch(
-        `/api/onboarding/${photo ? "photos" : "documents"}?id=${id}`,
+        `/api/onboarding/${photo ? "photos" : "documents"}?id=${id}${presentation ? "&presentation=1" : ""}`,
       );
       const d = await r.json();
       if (!r.ok) throw Error(d.error);
@@ -31,7 +33,9 @@ export default function PrivateDocument({
           ? "Preparing secure link…"
           : photo
             ? "View private photograph"
-            : "Download private agreement PDF"}
+            : presentation
+              ? "Download private presentation copy"
+              : "Download private agreement PDF"}
       </button>
       <span role="status">{error}</span>
     </>
