@@ -1,6 +1,6 @@
 # Phase 4 implementation and operations
 
-Phase 4 extends the existing Next.js/Supabase application. Phase 3 demo workspaces and PayPal Sandbox restrictions are retained. This release is **implemented**; deployment, provider acceptance and live workflows require separately recorded evidence.
+Phase 4 extends the existing Next.js/Supabase application. Phase 3 demo workspaces and PayPal Sandbox restrictions are retained. This release is **implemented and deployed** on October 8, 2026 after hosted migration, agreement seeding and the user-authorized verified admin bootstrap. Hosted private Storage and public agreement/demo/access-denial smoke checks passed. Real applicant workflows, provider acceptance and inbox delivery still require separately recorded live evidence.
 
 ## Accounts and authorization
 
