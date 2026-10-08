@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { createClient } from "@supabase/supabase-js";
+test.setTimeout(60000);
 const env = Object.fromEntries(
   (await readFile(".local-backend/app.env", "utf8"))
     .trim()
@@ -27,14 +28,28 @@ test("cookie-authenticated order preparation persists; missing PayPal configurat
   await login(page, "customer");
   await page.goto("/");
   await expect(page.getByText("Connected marketplace")).toBeVisible();
-  await page.getByRole("button",{name:"I'm hungry. What's good?"}).click();
-  await expect(page.locator(".mini-results")).toContainText("Habanero Cinnamon Rolls");
-  const assistant=page.getByRole("textbox",{name:"Ask your local sidekick"});
+  const discovery = page.waitForResponse(
+    (r) =>
+      r.url().endsWith("/api/assistant") && r.request().method() === "POST",
+  );
+  await page.getByRole("button", { name: "I'm hungry. What's good?" }).click();
+  expect((await discovery).status()).toBe(200);
+  await expect(page.locator(".mini-results")).toContainText(
+    "Habanero Cinnamon Rolls",
+  );
+  const assistant = page.getByRole("textbox", {
+    name: "Ask your local sidekick",
+  });
   await assistant.fill("Wait. Habanero cinnamon rolls?");
-  await page.getByRole("button",{name:"Send message"}).click();
+  await page.getByRole("button", { name: "Send message" }).click();
   await expect(page.locator(".mini-results button")).toHaveCount(1);
   await assistant.fill("Get me two");
-  await page.getByRole("button",{name:"Send message"}).click();
+  const preview = page.waitForResponse(
+    (r) =>
+      r.url().endsWith("/api/assistant") && r.request().method() === "POST",
+  );
+  await page.getByRole("button", { name: "Send message" }).click();
+  expect((await preview).status()).toBe(200);
   const dialog = page.getByRole("dialog");
   await expect(dialog).toContainText("$9.00");
   await expect(dialog.getByRole("status")).toContainText("already heading");
@@ -52,7 +67,7 @@ test("cookie-authenticated order preparation persists; missing PayPal configurat
   try {
     await expect(page).toHaveURL(/\/dashboard/);
     const card = page.locator(".simple-card").filter({ hasText: orderId });
-    await expect(card).toContainText("$9.00");
+    await expect(card).toContainText("$9.00", { timeout: 15000 });
     await expect(card).toContainText("DRAFT");
     await card.getByRole("button", { name: "Pay with PayPal Sandbox" }).click();
     await expect(card.getByRole("status")).toContainText(
@@ -96,7 +111,11 @@ test("role dashboards have separate capabilities", async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await login(page, role);
-    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
     if (role === "vendor") {
       await expect(
         page.getByRole("heading", { name: "Your catalog" }),

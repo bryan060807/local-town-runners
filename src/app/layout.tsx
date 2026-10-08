@@ -4,6 +4,7 @@ import "@fontsource/dm-sans/600.css";
 import "@fontsource/dm-sans/700.css";
 import "@fontsource/manrope/700.css";
 import "@fontsource/manrope/800.css";
+import DemoSwitcher from "@/components/DemoSwitcher";
 import type { Metadata } from "next";
 import "./globals.css";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -20,7 +21,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <DemoSwitcher />
+        {children}
+      </body>
     </html>
   );
 }

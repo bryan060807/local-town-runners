@@ -3,7 +3,9 @@ import { z } from "zod";
 import { authenticated, HttpError } from "@/lib/server/db";
 import { body, sameOrigin, failure, limited } from "@/lib/server/http";
 const schema = z.discriminatedUnion("action", [
-  z.object({ action: z.literal("accept"), orderId: z.uuid() }).strict(),
+  z
+    .object({ action: z.enum(["accept", "decline"]), orderId: z.uuid() })
+    .strict(),
   z
     .object({
       action: z.literal("availability"),
@@ -13,6 +15,9 @@ const schema = z.discriminatedUnion("action", [
         .min(1)
         .max(6),
       maxDetour: z.number().min(0).max(50),
+      transportation: z
+        .enum(["Bicycle (demo)", "Bicycle", "Walking", "Car"])
+        .optional(),
     })
     .strict(),
   z
@@ -30,12 +35,17 @@ export async function POST(req: Request) {
     const p = await body(req, schema);
     const { client, user } = await authenticated();
     await limited(client, "runner");
-    if (p.action === "accept") {
-      const { data, error } = await client.rpc("accept_run", {
-        order_id: p.orderId,
-      });
+    if (p.action === "accept" || p.action === "decline") {
+      const { data, error } = await client.rpc(
+        p.action === "accept" ? "accept_run" : "decline_run",
+        {
+          order_id: p.orderId,
+        },
+      );
       if (error) throw error;
-      logEvent("runner_assignment", { outcome: "accepted" });
+      logEvent("runner_assignment", {
+        outcome: p.action === "accept" ? "accepted" : "declined",
+      });
       return Response.json({ order: data });
     }
     if (p.action === "trip") {
@@ -46,7 +56,7 @@ export async function POST(req: Request) {
         note: p.note,
       });
       if (error) throw error;
-    } else {
+    } else if (p.action === "availability") {
       const { data, error } = await client
         .from("runners")
         .update({
@@ -55,6 +65,7 @@ export async function POST(req: Request) {
           ).toISOString(),
           categories: p.categories,
           max_detour_miles: p.maxDetour,
+          ...(p.transportation ? { transportation: p.transportation } : {}),
           visible: p.minutes > 0,
         })
         .eq("id", user.id)

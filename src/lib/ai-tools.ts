@@ -17,6 +17,7 @@ const search = z
     ]),
     maxPriceCents: z.number().int().min(0).max(10000000),
     madeLocal: z.boolean().optional(),
+    secondhand: z.boolean().optional(),
   })
   .strict();
 export const toolSchemas = {
@@ -102,6 +103,7 @@ export function executeTool(
           (args.category === "All" || l.category === args.category) &&
           l.price <= (args.maxPriceCents as number) &&
           (!args.madeLocal || l.local) &&
+          (!args.secondhand || l.secondhand) &&
           (!words.length ||
             words.some((w) =>
               `${l.title} ${l.description} ${l.category}`
@@ -111,7 +113,7 @@ export function executeTool(
       )
       .slice(0, 4);
     text = result.length
-      ? `I found ${result.length} available options: ${result.map((l) => `${l.title} (${money(l.price)})`).join(", ")}.`
+      ? `I found ${result.length} available options: ${result.map((l) => `${l.title} (${l.mode === "SELL" ? money(l.price) : "quote required"})`).join(", ")}.`
       : "No available listings match. Try a broader search.";
   } else if (name === "searchVendors" || name === "getVendor") {
     const ids = context.vendors
@@ -134,13 +136,16 @@ export function executeTool(
   ) {
     const l = listing(args.listingId);
     result = [l];
-    text = `${l.title}: ${l.inventory} available at ${money(l.price)} each. ${l.description}`;
+    text =
+      l.mode === "SELL"
+        ? `${l.title}: ${l.inventory} available at ${money(l.price)} each. ${l.description}`
+        : `${l.title}: a vendor quote is required before any purchase or delivery. ${l.description}`;
   } else if (name === "compareOptions") {
     result = [...new Set(args.listingIds as string[])].map(listing);
     text = result
       .map(
         (l) =>
-          `${l.title}: ${money(l.price)}, ${l.mode}, ${l.inventory} available. ${l.description}`,
+          `${l.title}: ${l.mode === "SELL" ? money(l.price) : "quote required"}, ${l.mode}, ${l.inventory} available. ${l.description}`,
       )
       .join(" ");
   } else if (
@@ -165,6 +170,11 @@ export function executeTool(
     if (!context.authenticated)
       throw new HttpError("Sign in to prepare an order", 401);
     const l = listing(args.listingId);
+    if (l.mode !== "SELL")
+      throw new HttpError(
+        "Request a vendor quote for custom work or services",
+        409,
+      );
     const quantity = args.quantity as number;
     if (quantity > l.inventory)
       throw new HttpError("Insufficient inventory", 409);

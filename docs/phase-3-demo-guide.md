@@ -1,0 +1,18 @@
+# Three-profile hackathon walkthrough
+
+Prerequisites: Phase 3 migrations applied, `npm run seed:phase3` completed, deployed application, configured Sandbox REST app/webhook, and a separate Sandbox personal buyer account. No real goods or real address are involved. Public template browsing is fictional; entering Demo Mode creates your private workspace.
+
+1. Visit `https://runners.aibrylabs.com` and select **Enter Demo Mode**. The active identity is **Alex Carter**. Use one browser throughout; the six-hour ticket preserves shared workspace state across roles.
+2. Ask **What's available around me?**, **Find a birthday gift under $40**, **Show me locally made products**, or **Show me secondhand items**. Open a result. Prices, stock and map points come from that workspace's database. Delivery estimates describe compatible candidates rather than commitments.
+3. Choose two SELL products from **Riverbend Market & Goods** and **Add to cart**. Review the vendor basket and fixed fictional delivery address. **Prepare this vendor order** reserves stock and creates a draft; it does not pay. Multi-vendor baskets are separate orders. MAKE/DO listings instead offer **Request a quote**.
+4. In the dashboard choose **Pay with PayPal Sandbox**. Approve using a Sandbox personal buyer account, never the seller account. After returning, choose **Confirm approved payment** if capture is not already reconciled. Verify the order says **PAID**, has a capture record in history, and retains the reviewed total. A canceled/failed checkout must remain unpaid.
+5. Switch to **vendor — Riverbend Market & Goods**. The same order appears. Choose **Accept paid order**, then **Find a runner**. To demonstrate catalog synchronization, edit an unused product's price/stock, save, switch back to customer and refresh its storefront. Existing orders retain their original prices.
+6. Switch to **runner — Jordan Ellis**. Review temporary availability, transportation, detour and the seeded downtown trip. Choose **Accept run**. The private fictional delivery address appears only after assignment. **Decline run** hides an unaccepted offer without canceling it.
+7. Switch to vendor and choose **Mark ready for pickup**. Switch to runner and choose **Confirm pickup**, **Start delivery**, then **Confirm delivered**.
+8. Switch to customer and open the dashboard. Verify the timeline and choose **Confirm order complete**. Switch back to runner to see one completed run and ten demo reward points. Vendor/runner earnings move from pending to completed-order allocations. **Actual payouts stay $0.00** and are explicitly simulated.
+9. Optional quote: customer requests custom work, vendor responds in **Quote inquiries and notifications**, customer sees the response. No purchase or delivery order is created from the quote.
+10. Optional refund: create and genuinely pay a second order, then as vendor choose **Decline and refund Sandbox payment** before assigning a runner. Check completed refund, canceled order, restored stock, negative refund entry and provider refund ID. Pending refunds require reconciliation and block fulfillment.
+
+Reset for another judge: **Exit demo**, then **Enter Demo Mode** creates fresh identities and state. The developer command in the implementation guide expires all visitor demos when needed. Reset does not refund external payments or erase their history. Exiting demo signs out; sign in again to return to a normal account.
+
+If payment approval is unavailable, demonstrate catalog, cart, quote and role switching, then state plainly that real capture/delivery acceptance remains unverified. There is no production button to manufacture a paid order.

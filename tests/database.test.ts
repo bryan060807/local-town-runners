@@ -462,3 +462,295 @@ test("runner cannot accept distant pickups and trip replacement has only one act
     await db.close();
   }
 });
+
+test("Phase 3 cart snapshots multiple items, reserves once, and cancellation restores every line", async () => {
+  const db = await fixture();
+  try {
+    const second = "99999999-9999-4999-8999-999999999999";
+    await db.exec(
+      `insert into listings(id,vendor_id,title,category,mode,price_cents,inventory) values('${second}','${shop}','Second product','Food','SELL',650,5)`,
+    );
+    await asUser(
+      db,
+      customer,
+      `insert into cart_items values('${customer}','${listing}',2),('${customer}','${second}',1)`,
+    );
+    const sql = `select (prepare_cart('${shop}','aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','PRIVATE DELIVERY')).*`;
+    const row = (await asUser(db, customer, sql)).rows[0] as {
+      id: string;
+      total_cents: number;
+    };
+    assert.equal(Number(row.total_cents), 1550);
+    assert.equal(
+      ((await asUser(db, customer, sql)).rows[0] as { id: string }).id,
+      row.id,
+    );
+    assert.equal((await db.query("select * from order_items")).rows.length, 2);
+    assert.equal(
+      (await asUser(db, customer, "select * from cart_items")).rows.length,
+      0,
+    );
+    await assert.rejects(() =>
+      asUser(db, other, `select cancel_draft('${row.id}')`),
+    );
+    await asUser(db, customer, `select cancel_draft('${row.id}')`);
+    await asUser(db, customer, `select cancel_draft('${row.id}')`);
+    const stock = (
+      await db.query<{ inventory: number }>(
+        "select inventory from listings order by inventory",
+      )
+    ).rows;
+    assert.deepEqual(
+      stock.map((x) => x.inventory),
+      [5, 12],
+    );
+  } finally {
+    await db.close();
+  }
+});
+test("Phase 3 workspace isolation, immutable roles, expiration, and fictional addresses", async () => {
+  const db = await fixture();
+  try {
+    const scope = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+    await db.exec(
+      `update demo_settings set enabled=true;insert into demo_workspaces(id,expires_at) values('${scope}',now()+interval '1 hour');update profiles set demo_workspace='${scope}' where id in ('${customer}','${vendor}','${runner}');update vendors set demo_workspace='${scope}',demo=true where id='${shop}'`,
+    );
+    assert.equal(
+      (await asUser(db, other, "select * from listings")).rows.length,
+      0,
+    );
+    assert.equal(
+      (await asUser(db, customer, "select * from listings")).rows.length,
+      1,
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        other,
+        `select prepare_order('${listing}',1,gen_random_uuid(),'REAL ADDRESS')`,
+      ),
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `update profiles set demo_workspace=null where id='${customer}'`,
+      ),
+    );
+    const id = await createOrder(db);
+    const address = (
+      await asUser(db, customer, "select delivery_address from order_private")
+    ).rows[0] as { delivery_address: string };
+    assert.match(address.delivery_address, /DEMO TEST ADDRESS/);
+    const newshop = (
+      await asUser(
+        db,
+        vendor,
+        `select create_vendor('Fictional scoped shop','scoped-shop','Food',-91.05,39.45)`,
+      )
+    ).rows[0] as { create_vendor: string };
+    assert.equal(
+      (
+        await asUser(
+          db,
+          other,
+          `select * from vendors where id='${newshop.create_vendor}'`,
+        )
+      ).rows.length,
+      0,
+    );
+    await db.exec(`update demo_settings set enabled=false`);
+    await assert.rejects(() =>
+      asUser(db, customer, `select cancel_draft('${id}')`),
+    );
+    assert.equal(
+      (await asUser(db, customer, "select * from listings")).rows.length,
+      0,
+    );
+    await db.exec(
+      `update demo_settings set enabled=true;update demo_workspaces set expires_at=now()-interval '1 second'`,
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `select prepare_order('${listing}',1,gen_random_uuid(),'REAL ADDRESS')`,
+      ),
+    );
+  } finally {
+    await db.close();
+  }
+});
+test("Phase 3 quotes cannot become checkout and entry rate limits are service-only", async () => {
+  const db = await fixture();
+  try {
+    await db.exec(`update listings set mode='MAKE'`);
+    await assert.rejects(() => createOrder(db));
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `insert into cart_items values('${customer}','${listing}',1)`,
+      ),
+    );
+    await asUser(
+      db,
+      customer,
+      `insert into inquiries(customer_id,listing_id,message) values('${customer}','${listing}','Fictional quote request')`,
+    );
+    assert.equal(
+      (await asUser(db, other, "select * from inquiries")).rows.length,
+      0,
+    );
+    await asUser(
+      db,
+      vendor,
+      "update inquiries set response='Estimated quote',status='RESPONDED'",
+    );
+    assert.equal(
+      (await asUser(db, customer, "select * from inquiries")).rows.length,
+      1,
+    );
+    await assert.rejects(() =>
+      asUser(db, customer, "select consume_demo_entry('hashed-key')"),
+    );
+    for (let i = 0; i < 5; i++)
+      await db.exec("select consume_demo_entry('hashed-key')");
+    await assert.rejects(() =>
+      db.exec("select consume_demo_entry('hashed-key')"),
+    );
+  } finally {
+    await db.close();
+  }
+});
+test("Phase 3 verified refunds restore stock and ledger exactly once; pending refunds block fulfillment", async () => {
+  const db = await fixture();
+  try {
+    const id = await createOrder(db);
+    await db.exec(
+      `select attach_verified_paypal_order('${id}','PAYPAL','${customer}');select confirm_payment('${id}','CAPTURE','EVENT',900)`,
+    );
+    await assert.rejects(() =>
+      asUser(db, customer, `select begin_refund('${id}')`),
+    );
+    await db.exec(`select begin_refund('${id}')`);
+    await assert.rejects(() =>
+      asUser(db, vendor, `select transition_order('${id}','VENDOR_ACCEPTED')`),
+    );
+    await assert.rejects(() =>
+      db.exec(`select confirm_refund('${id}','REFUND',1)`),
+    );
+    await db.exec(
+      `select confirm_refund('${id}','REFUND',900);select confirm_refund('${id}','REFUND',900)`,
+    );
+    assert.equal(
+      (await db.query<{ inventory: number }>("select inventory from listings"))
+        .rows[0].inventory,
+      12,
+    );
+    assert.equal(
+      (await db.query("select * from ledger where kind='REFUND'")).rows.length,
+      1,
+    );
+    assert.equal(
+      (await db.query<{ state: string }>("select state from orders")).rows[0]
+        .state,
+      "CANCELLED",
+    );
+  } finally {
+    await db.close();
+  }
+});
+
+test("Phase 3 runner can decline only visible offers without canceling customer orders", async () => {
+  const db = await fixture();
+  try {
+    const id = await createOrder(db);
+    await db.exec(
+      `select attach_verified_paypal_order('${id}','PAYPAL','${customer}');select confirm_payment('${id}','CAPTURE','EVENT',900)`,
+    );
+    await asUser(
+      db,
+      vendor,
+      `select transition_order('${id}','VENDOR_ACCEPTED')`,
+    );
+    await asUser(
+      db,
+      vendor,
+      `select transition_order('${id}','RUNNER_MATCHING')`,
+    );
+    assert.equal(
+      (await asUser(db, runner, "select * from available_runs()")).rows.length,
+      1,
+    );
+    await assert.rejects(() =>
+      asUser(db, customer, `select decline_run('${id}')`),
+    );
+    await asUser(db, runner, `select decline_run('${id}')`);
+    assert.equal(
+      (await asUser(db, runner, "select * from available_runs()")).rows.length,
+      0,
+    );
+    assert.equal(
+      (await db.query<{ state: string }>("select state from orders")).rows[0]
+        .state,
+      "RUNNER_MATCHING",
+    );
+  } finally {
+    await db.close();
+  }
+});
+
+test("Phase 3 assignment requires compatibility with every cart line", async () => {
+  const db = await fixture();
+  try {
+    const second = "99999999-9999-4999-8999-999999999999";
+    await db.exec(
+      `insert into listings(id,vendor_id,title,category,mode,price_cents,inventory) values('${second}','${shop}','Gift item','Gifts','SELL',650,5)`,
+    );
+    await asUser(
+      db,
+      customer,
+      `insert into cart_items values('${customer}','${listing}',1),('${customer}','${second}',1)`,
+    );
+    const o = (
+      await asUser(
+        db,
+        customer,
+        `select (prepare_cart('${shop}','bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','PRIVATE DELIVERY')).*`,
+      )
+    ).rows[0] as { id: string; total_cents: number };
+    await db.exec(
+      `select attach_verified_paypal_order('${o.id}','PAYPAL','${customer}');select confirm_payment('${o.id}','CAPTURE','EVENT',${o.total_cents})`,
+    );
+    await asUser(
+      db,
+      vendor,
+      `select transition_order('${o.id}','VENDOR_ACCEPTED')`,
+    );
+    await asUser(
+      db,
+      vendor,
+      `select transition_order('${o.id}','RUNNER_MATCHING')`,
+    );
+    assert.equal(
+      (await asUser(db, runner, "select * from available_runs()")).rows.length,
+      0,
+    );
+    await assert.rejects(() =>
+      asUser(db, runner, `select accept_run('${o.id}')`),
+    );
+    await asUser(
+      db,
+      runner,
+      "update runners set categories=array['Food','Gifts']",
+    );
+    assert.equal(
+      (await asUser(db, runner, "select * from available_runs()")).rows.length,
+      1,
+    );
+    await asUser(db, runner, `select accept_run('${o.id}')`);
+  } finally {
+    await db.close();
+  }
+});

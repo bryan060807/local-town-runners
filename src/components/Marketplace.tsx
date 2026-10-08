@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { demoAddress } from "@/lib/demo-catalog";
 import Link from "next/link";
 import { PublicRunner } from "@/lib/map-types";
 import dynamic from "next/dynamic";
@@ -47,11 +48,13 @@ export default function Marketplace({
   vendors,
   runners,
   demo,
+  isolatedDemo = false,
 }: {
   listings: Listing[];
   vendors: Vendor[];
   runners: PublicRunner[];
   demo: boolean;
+  isolatedDemo?: boolean;
 }) {
   const router = useRouter();
   const hydrated = useSyncExternalStore(
@@ -59,6 +62,10 @@ export default function Marketplace({
     () => true,
     () => false,
   );
+  const featuredVendor = vendors.find(
+    (v) => v.demo && v.name === "Riverbend Market & Goods",
+  );
+  const [storefront, setStorefront] = useState<string | null>(null);
   const [category, setCategory] = useState("All");
   const [localOnly, setLocalOnly] = useState(false);
   const [query, setQuery] = useState("");
@@ -99,7 +106,7 @@ export default function Marketplace({
       previous?.focus();
     };
   }, [selected]);
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState(isolatedDemo ? demoAddress : "");
   const [message, setMessage] = useState("");
   const [reply, setReply] = useState(
     "Ask me what’s good, what’s local, or who’s already heading your way.",
@@ -185,7 +192,7 @@ export default function Marketplace({
       const d = await res.json();
       if (!res.ok) throw Error(d.error);
       if (d.order) {
-        router.push("/dashboard");
+        router.push("/dashboard?prepared=" + d.order.id);
         return;
       }
       setNotice(`${d.formatted} · ${d.message}`);
@@ -195,9 +202,42 @@ export default function Marketplace({
       setPreparing(false);
     }
   }
+  async function addToCart() {
+    if (!selected || preparing) return;
+    setPreparing(true);
+    try {
+      const r = await fetch(
+        selected.mode === "SELL" ? "/api/cart" : "/api/inquiries",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(
+            selected.mode === "SELL"
+              ? { listingId: selected.id, quantity }
+              : {
+                  listingId: selected.id,
+                  message: `Please share availability and a quote for ${selected.title}.`,
+                },
+          ),
+        },
+      );
+      const j = await r.json();
+      if (!r.ok) throw Error(j.error);
+      if (selected.mode === "SELL") router.push("/cart");
+      else
+        setNotice(
+          "Inquiry sent to the vendor. No order or payment was created.",
+        );
+    } catch (e) {
+      setNotice(e instanceof Error ? e.message : "Action unavailable");
+    } finally {
+      setPreparing(false);
+    }
+  }
   const shown = listings.filter(
     (l) =>
       l.active &&
+      (!storefront || l.vendorId === storefront) &&
       (!localOnly || l.local) &&
       l.inventory > 0 &&
       (category === "All" || l.category === category) &&
@@ -319,7 +359,12 @@ export default function Marketplace({
                           setNotice("");
                         }}
                       >
-                        {l.emoji} {l.title} <strong>{money(l.price)}</strong>
+                        {l.emoji} {l.title}{" "}
+                        <strong>
+                          {l.mode === "SELL"
+                            ? money(l.price)
+                            : "Quote required"}
+                        </strong>
                       </button>
                     ))}
                   </div>
@@ -360,7 +405,43 @@ export default function Marketplace({
             <span>Demo vendors are fictional. Real Louisiana geography.</span>
           </div>
         </section>
+        {featuredVendor && (
+          <section className="demo-storefront">
+            {featuredVendor.coverUrl && (
+              <Image
+                src={featuredVendor.coverUrl}
+                alt="Fictional Riverbend storefront illustration"
+                width={960}
+                height={420}
+              />
+            )}
+            <div>
+              <span className="demo-tag">FICTIONAL DEMO VENDOR</span>
+              <h2>{featuredVendor.name}</h2>
+              <p>{featuredVendor.description}</p>
+              <Link
+                href="#local"
+                onClick={() => {
+                  setStorefront(featuredVendor.id);
+                  setCategory("All");
+                  setLocalOnly(false);
+                  setQuery("");
+                }}
+              >
+                Explore this storefront →
+              </Link>
+            </div>
+          </section>
+        )}
         <section id="local" className="catalog">
+          {storefront && (
+            <p>
+              Viewing {vendors.find((v) => v.id === storefront)?.name}{" "}
+              <button onClick={() => setStorefront(null)}>
+                Show all vendors
+              </button>
+            </p>
+          )}
           <div className="section-top">
             <div>
               <div className="eyebrow">FROM AROUND THE CORNER</div>
@@ -432,7 +513,9 @@ export default function Marketplace({
                   <h3>{l.title}</h3>
                   <p>{l.description}</p>
                   <div className="product-bottom">
-                    <strong>{money(l.price)}</strong>
+                    <strong>
+                      {l.mode === "SELL" ? money(l.price) : "Quote required"}
+                    </strong>
                     <span>
                       <Leaf size={12} />{" "}
                       {l.local ? "Made local" : "Around town"}
@@ -527,17 +610,22 @@ export default function Marketplace({
               >
                 <Plus size={16} />
               </button>
-              <strong>{money(selected.price * quantity)}</strong>
+              <strong>
+                {selected.mode === "SELL"
+                  ? money(selected.price * quantity)
+                  : "Quote required"}
+              </strong>
             </div>
             <Link href={`/listings/${selected.id}`}>
               View shareable listing →
             </Link>
-            {!demo && (
+            {!demo && selected.mode === "SELL" && (
               <label>
                 Private delivery address
                 <input
                   style={{ width: "100%", padding: 12, margin: "12px 0" }}
                   value={address}
+                  readOnly={isolatedDemo}
                   onChange={(e) => setAddress(e.target.value)}
                   maxLength={500}
                   autoComplete="street-address"
@@ -545,11 +633,26 @@ export default function Marketplace({
                 />
               </label>
             )}
-            <button className="primary" onClick={prepare} disabled={preparing}>
-              <ShoppingBag size={17} />{" "}
-              {demo ? "Preview order" : "Prepare order"}{" "}
-              <ChevronRight size={17} />
-            </button>
+            {!demo && (
+              <button
+                className="primary"
+                onClick={addToCart}
+                disabled={preparing}
+              >
+                {selected.mode === "SELL" ? "Add to cart" : "Request a quote"}
+              </button>
+            )}
+            {(demo || selected.mode === "SELL") && (
+              <button
+                className="primary"
+                onClick={prepare}
+                disabled={preparing}
+              >
+                <ShoppingBag size={17} />{" "}
+                {demo ? "Preview order" : "Prepare order"}{" "}
+                <ChevronRight size={17} />
+              </button>
+            )}
             {notice && (
               <p role="status" className="notice">
                 {notice}

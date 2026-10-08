@@ -8,6 +8,7 @@ export type Listing = {
   price: number;
   inventory: number;
   local: boolean;
+  secondhand?: boolean;
   active: boolean;
   emoji: string;
   photos?: string[];

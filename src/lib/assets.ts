@@ -3,6 +3,7 @@ export function safeAssetUrl(
   projectUrl: string,
 ): string | undefined {
   if (typeof value !== "string") return;
+  if (value === "/demo/riverbend-cover.webp") return value;
   try {
     const url = new URL(value),
       project = new URL(projectUrl);

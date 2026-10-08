@@ -4,7 +4,7 @@ import BlockUser from "@/components/BlockUser";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { configured } from "@/lib/server/env";
-import { createClient } from "@supabase/supabase-js";
+import { db } from "@/lib/server/db";
 import { supabaseConfig } from "@/lib/server/env";
 import { demoRunners } from "@/lib/runners";
 export default async function RunnerPage({
@@ -28,11 +28,11 @@ export default async function RunnerPage({
     );
   }
   const e = supabaseConfig();
-  const client = createClient(e.url, e.key);
+  const client = await db(true);
   const { data: r } = await client
     .from("runners")
     .select(
-      "id,display_name,bio,categories,available_until,completed_runs,avatar_url",
+      "id,display_name,bio,categories,available_until,completed_runs,avatar_url,demo,transportation,max_detour_miles",
     )
     .eq("id", id)
     .single();
@@ -48,7 +48,12 @@ export default async function RunnerPage({
           height={100}
         />
       )}
+      {r.demo && <span className="demo-tag">FICTIONAL DEMO RUNNER</span>}
       <h1>{r.display_name}</h1>
+      <p>
+        Transportation: {r.transportation} · Maximum detour:{" "}
+        {r.max_detour_miles} miles.
+      </p>
       <p>{r.bio}</p>
       <p>
         Accepts: {r.categories.join(", ")} · {r.completed_runs} completed runs.

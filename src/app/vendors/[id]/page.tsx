@@ -76,7 +76,8 @@ export default async function VendorPage({
           <div key={l.id} className="simple-card">
             <Link href={`/listings/${l.id}`}>
               <h2>
-                {l.emoji} {l.title} · {money(l.price)}
+                {l.emoji} {l.title} ·{" "}
+                {l.mode === "SELL" ? money(l.price) : "Quote required"}
               </h2>
               <p>{l.description}</p>
             </Link>

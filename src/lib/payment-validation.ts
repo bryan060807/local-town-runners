@@ -81,3 +81,19 @@ export function paymentMatchesTotal(payment: unknown, total: number) {
     p.purchase_units[0].amount?.value === (total / 100).toFixed(2)
   );
 }
+
+export function validRefund(value: unknown, total: number) {
+  const r = value as {
+    id?: string;
+    status?: string;
+    amount?: { currency_code?: string; value?: string };
+  };
+  return (
+    typeof r?.id === "string" &&
+    r.id.length > 0 &&
+    r.id.length <= 100 &&
+    r.status === "COMPLETED" &&
+    r.amount?.currency_code === "USD" &&
+    r.amount.value === (total / 100).toFixed(2)
+  );
+}

@@ -3,7 +3,8 @@ import { logEvent } from "@/lib/observability";
 import { safeAssetUrl, safeWebsiteUrl } from "@/lib/assets";
 import { demoRunners } from "@/lib/runners";
 import { PublicRunner } from "@/lib/map-types";
-import { createClient } from "@supabase/supabase-js";
+import { db } from "./db";
+import { templateWorkspace } from "@/lib/demo-catalog";
 import { supabaseConfig, configured } from "./env";
 import {
   vendors as demoVendors,
@@ -27,32 +28,39 @@ export async function publicCatalog() {
       demo: true,
     };
   const e = supabaseConfig();
-  const c = createClient(e.url, e.key, { auth: { persistSession: false } });
-  const [v, l, r, t] = await Promise.all([
-    c
-      .from("vendors")
-      .select(
-        "id,name,category,public_lon,public_lat,demo,verified,description,hours,website_url,social_urls,logo_url,cover_url",
-      )
-      .eq("active", true),
-    c
-      .from("listings")
-      .select(
-        "id,vendor_id,title,description,category,mode,price_cents,inventory,made_local,active,emoji,photos",
-      )
-      .eq("active", true)
-      .eq("prohibited", false)
-      .gt("inventory", 0),
+  const c = await db(true);
+  const v = await c
+    .from("vendors")
+    .select(
+      "id,name,category,public_lon,public_lat,demo,verified,description,hours,website_url,social_urls,logo_url,cover_url,demo_workspace",
+    )
+    .eq("active", true);
+  const vendorIds = (v.data || []).map((row) => row.id);
+  const [l, r, t] = await Promise.all([
+    vendorIds.length
+      ? c
+          .from("listings")
+          .select(
+            "id,vendor_id,title,description,category,mode,price_cents,inventory,made_local,active,emoji,photos,secondhand",
+          )
+          .eq("active", true)
+          .eq("prohibited", false)
+          .gt("inventory", 0)
+          .in("vendor_id", vendorIds)
+      : { data: [], error: null },
     c
       .from("runners")
       .select("id,display_name,public_lon,public_lat,available_until,demo")
       .eq("visible", true)
       .gt("available_until", new Date().toISOString()),
-    c
-      .from("runner_trips")
-      .select("runner_id,destination_vendor_id,expires_at")
-      .order("expires_at", { ascending: false })
-      .gt("expires_at", new Date().toISOString()),
+    vendorIds.length
+      ? c
+          .from("runner_trips")
+          .select("runner_id,destination_vendor_id,expires_at")
+          .order("expires_at", { ascending: false })
+          .gt("expires_at", new Date().toISOString())
+          .in("destination_vendor_id", vendorIds)
+      : { data: [], error: null },
   ]);
   if (v.error || l.error || r.error || t.error) {
     logEvent("catalog_failure", {
@@ -63,6 +71,12 @@ export async function publicCatalog() {
   }
   return {
     demo: false,
+    isolatedDemo: Boolean(
+      v.data?.length &&
+      v.data[0].demo_workspace &&
+      v.data[0].demo_workspace !== templateWorkspace &&
+      v.data.every((row) => row.demo_workspace === v.data[0].demo_workspace),
+    ),
     runners: r.data!.map((row) => ({
       id: row.id,
       name: row.display_name,
@@ -106,6 +120,7 @@ export async function publicCatalog() {
       price: Number(row.price_cents),
       inventory: row.inventory,
       local: row.made_local,
+      secondhand: row.secondhand,
       active: row.active,
       emoji: row.emoji,
       photos: (row.photos || [])

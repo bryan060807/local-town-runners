@@ -12,14 +12,15 @@ export default function DashboardActions({
   async function action(a: string) {
     setBusy(true);
     try {
-      const endpoint =
-        a === "Cancel draft"
+      const endpoint = a.includes("refund")
+        ? "refunds"
+        : a === "Cancel draft"
           ? "orders"
           : a === "Pay with PayPal Sandbox"
             ? "checkout"
             : a === "Confirm approved payment"
               ? "capture"
-              : a === "Accept run"
+              : a === "Accept run" || a === "Decline run"
                 ? "runner"
                 : "fulfillment";
       const r = await fetch(`/api/${endpoint}`, {
@@ -30,7 +31,7 @@ export default function DashboardActions({
           ...(endpoint === "fulfillment"
             ? { state: a }
             : endpoint === "runner"
-              ? { action: "accept" }
+              ? { action: a === "Decline run" ? "decline" : "accept" }
               : {}),
         }),
       });
@@ -49,7 +50,17 @@ export default function DashboardActions({
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         {actions.map((a) => (
           <button key={a} disabled={busy} onClick={() => action(a)}>
-            {a.replaceAll("_", " ")}
+            {(
+              {
+                VENDOR_ACCEPTED: "Accept paid order",
+                RUNNER_MATCHING: "Find a runner",
+                READY_FOR_PICKUP: "Mark ready for pickup",
+                PICKED_UP: "Confirm pickup",
+                OUT_FOR_DELIVERY: "Start delivery",
+                DELIVERED: "Confirm delivered",
+                COMPLETED: "Confirm order complete",
+              } as Record<string, string>
+            )[a] || a.replaceAll("_", " ")}
           </button>
         ))}
       </div>

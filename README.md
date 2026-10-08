@@ -8,7 +8,7 @@ Next.js App Router / TypeScript / React, MapLibre, Zod, Supabase SSR authenticat
 
 Without Supabase configuration, browsing uses a fixed illustrative catalog. Order previews neither persist nor charge. Without an AI key, discovery uses deterministic catalog search and matching, labeled as demo discovery. Connected AI uses a validated catalog/order-read tool registry; order preparation creates a quote for explicit review. No model can confirm payments or invoke protected writes.
 
-**Not yet a verified live hackathon submission:** PayPal payment, cloud Supabase authentication, AI-provider requests, and Vercel deployment require external credentials and separate live validation. See `docs/build-notes.md` for actual results and remaining work.
+Phase 2 is deployed at https://runners.aibrylabs.com. Phase 3 adds isolated fictional demo identities, carts, quote inquiries and explicit simulated earnings. See [Phase 3 implementation](docs/phase-3-implementation.md), [judge walkthrough](docs/phase-3-demo-guide.md) and [current test report](docs/phase-3-test-report.md). Actual Sandbox capture and refunds require a buyer-approved hosted test.
 
 ## Development
 

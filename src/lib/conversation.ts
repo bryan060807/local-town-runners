@@ -29,7 +29,9 @@ export function conversationTool(
     args: { query: "", category, maxPriceCents, madeLocal },
   });
   if (
-    /made (?:here|local|around)|made locally|actually made|independent/.test(q)
+    /made (?:here|local|around)|made locally|locally made|actually made|independent/.test(
+      q,
+    )
   ) {
     if (prior.length)
       return {
@@ -45,6 +47,16 @@ export function conversationTool(
       };
     return search("All", 10000000, true);
   }
+  if (/secondhand|second.hand|used items/.test(q))
+    return {
+      name: "searchListings",
+      args: {
+        query: "",
+        category: "All",
+        maxPriceCents: 10000000,
+        secondhand: true,
+      },
+    };
   if (named && !/get me|buy|order|bring|deliver/.test(q))
     return { name: "getListingDetails", args: { listingId: named.id } };
   if (/get me|buy (?:one|two|\d+)|order (?:one|two|\d+)/.test(q)) {
@@ -76,8 +88,10 @@ export function conversationTool(
     const budget = q.match(/(?:\$|under\s+|around\s+)(\d+)/);
     return search("Gifts", budget ? Number(budget[1]) * 100 : 4000);
   }
+  if (/deliver(?:ed|y)?.*(?:today|tonight)/.test(q) && !selected)
+    return search();
   if (/hungry|food|dinner/.test(q)) return search("Food", 2500);
-  if (/happening|around (?:me|here)|what.s good/.test(q))
+  if (/happening|available around|around (?:me|here)|what.s good/.test(q))
     return { name: "getNearbyActivity", args: {} };
   return null;
 }

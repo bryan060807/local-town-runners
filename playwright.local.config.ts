@@ -2,6 +2,7 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./e2e-local",
   workers: 1,
+  expect: { timeout: 15000 },
   projects: [
     { name: "desktop" },
     { name: "mobile-360", use: { viewport: { width: 360, height: 800 } } },

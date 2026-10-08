@@ -31,7 +31,9 @@ export default async function ListingPage({
       <h1>{l.title}</h1>
       <p>{l.description}</p>
       <h2>
-        {money(l.price)} · {l.inventory} available
+        {l.mode === "SELL"
+          ? `${money(l.price)} · ${l.inventory} available`
+          : "Quote required — send an inquiry in the marketplace"}
       </h2>
       <p>
         <Link href={`/vendors/${vendor.id}`}>{vendor.name} →</Link>

@@ -27,7 +27,12 @@
     "local:build": "node scripts/with-local-env.mjs build",
     "test:e2e:local": "playwright test --config playwright.local.config.ts",
     "local:reset": "node scripts/local-reset.mjs",
-    "test:imports": "node scripts/with-local-env.mjs --script scripts/local-import-smoke.ts"
+    "test:imports": "node scripts/with-local-env.mjs --script scripts/local-import-smoke.ts",
+    "seed:phase3": "node --use-env-proxy --use-system-ca --import tsx scripts/seed-phase3.ts",
+    "local:seed:phase3": "node scripts/with-local-env.mjs --script scripts/seed-phase3.ts",
+    "reset:phase3": "node --use-env-proxy --use-system-ca --import tsx scripts/reset-phase3.ts",
+    "verify:phase3": "node --use-env-proxy --use-system-ca --import tsx scripts/verify-phase3.ts",
+    "test:phase3-reset": "node scripts/with-local-env.mjs --script scripts/local-phase3-reset-smoke.ts"
   },
   "repository": {
     "type": "git",

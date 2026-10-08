@@ -1,3 +1,7 @@
+import PaymentSummary from "@/components/PaymentSummary";
+import CustomerPreferences from "@/components/CustomerPreferences";
+import InquiryCard from "@/components/InquiryCard";
+import { demoAddress } from "@/lib/demo-catalog";
 import UploadAsset from "@/components/UploadAsset";
 import Link from "next/link";
 import ReviewOrder from "@/components/ReviewOrder";
@@ -40,21 +44,21 @@ export default async function Dashboard() {
         <Link href="/">Explore the demo →</Link>
       </main>
     );
-  const client = await db();
+  const client = await db(true);
   const {
     data: { user },
   } = await client.auth.getUser();
   if (!user) redirect("/login");
   const [
-    { data: roles },
-    { data: profile },
-    { data: orders },
-    { data: ledger },
+    { data: roles, error: roleError },
+    { data: profile, error: profileError },
+    { data: orders, error: ordersError },
+    { data: owned, error: ownedError },
   ] = await Promise.all([
     client.from("user_roles").select("role").eq("user_id", user.id),
     client
       .from("profiles")
-      .select("display_name,suspended")
+      .select("display_name,suspended,demo_workspace")
       .eq("id", user.id)
       .single(),
     client
@@ -62,11 +66,10 @@ export default async function Dashboard() {
       .select("*")
       .order("created_at", { ascending: false })
       .limit(50),
-    client
-      .from("ledger")
-      .select("order_id,kind,amount_cents,simulated")
-      .limit(100),
+    client.from("vendors").select("id,name").eq("owner_id", user.id),
   ]);
+  if (roleError || profileError || ordersError || ownedError)
+    throw roleError || profileError || ordersError || ownedError;
   if (profile?.suspended)
     return (
       <main className="simple-page">
@@ -75,53 +78,136 @@ export default async function Dashboard() {
       </main>
     );
   const roleNames = roles?.map((r) => r.role) || [];
-  const { data: events, error: eventError } = await client
-    .from("order_events")
-    .select("id,order_id,event,created_at")
-    .order("created_at", { ascending: true })
-    .limit(200);
-  if (eventError) throw eventError;
-  const [{ data: deliveryAddresses }, { data: pickupAddresses }] =
-    await Promise.all([
-      client.from("order_private").select("order_id,delivery_address"),
-      client.from("vendor_private").select("vendor_id,pickup_address"),
-    ]);
-  const { data: owned } = await client
-    .from("vendors")
-    .select("id,name")
-    .eq("owner_id", user.id);
   const ownedIds = owned?.map((v) => v.id) || [];
-  const { data: vendorListings } = ownedIds.length
-    ? await client
-        .from("listings")
-        .select("id,vendor_id,title,inventory,price_cents,active")
-        .in("vendor_id", ownedIds)
-    : { data: [] };
-  const { data: publicVendors } = await client
-    .from("vendors")
-    .select("id,name")
-    .eq("active", true);
-  const { data: runnerProfile } = roleNames.includes("runner")
-    ? await client
-        .from("runners")
-        .select("completed_runs,reward_points")
-        .eq("id", user.id)
-        .single()
-    : { data: null };
-  const { data: runs } = roleNames.includes("runner")
-    ? await client.rpc("available_runs")
-    : { data: [] };
-  const { data: audit } = roleNames.includes("admin")
-    ? await client
-        .from("audit_events")
-        .select("id,event,created_at")
-        .order("created_at", { ascending: false })
-        .limit(30)
-    : { data: [] };
+  const orderIds = orders?.map((o) => o.id) || [];
+  const pickupIds = [
+    ...new Set([...ownedIds, ...(orders || []).map((o) => o.vendor_id)]),
+  ];
+  const [
+    { data: preferences },
+    { data: inquiries },
+    { data: lineItems },
+    { data: events, error: eventError },
+    { data: ledger, error: ledgerError },
+    { data: deliveryAddresses },
+    { data: pickupAddresses },
+    { data: vendorListings },
+    { data: publicVendors },
+    { data: runnerProfile },
+    { data: runs },
+    { data: audit },
+  ] = await Promise.all([
+    roleNames.includes("customer")
+      ? client
+          .from("customer_preferences")
+          .select("delivery_address,delivery_notes")
+          .eq("customer_id", user.id)
+          .maybeSingle()
+      : { data: null },
+    client
+      .from("inquiries")
+      .select("id,customer_id,message,response,status")
+      .order("created_at", { ascending: false })
+      .limit(30),
+    orderIds.length
+      ? client
+          .from("order_items")
+          .select("order_id,listing_id,title,quantity,unit_price_cents")
+          .in("order_id", orderIds)
+      : { data: [] },
+    orderIds.length
+      ? client
+          .from("order_events")
+          .select("id,order_id,event,created_at")
+          .in("order_id", orderIds)
+          .order("created_at", { ascending: true })
+          .limit(500)
+      : { data: [], error: null },
+    orderIds.length
+      ? client
+          .from("ledger")
+          .select("order_id,kind,amount_cents,simulated")
+          .in("order_id", orderIds)
+          .limit(250)
+      : { data: [], error: null },
+    orderIds.length
+      ? client
+          .from("order_private")
+          .select("order_id,delivery_address")
+          .in("order_id", orderIds)
+      : { data: [] },
+    pickupIds.length
+      ? client
+          .from("vendor_private")
+          .select("vendor_id,pickup_address")
+          .in("vendor_id", pickupIds)
+      : { data: [] },
+    ownedIds.length
+      ? client
+          .from("listings")
+          .select("id,vendor_id,title,inventory,price_cents,active")
+          .in("vendor_id", ownedIds)
+      : { data: [] },
+    roleNames.includes("runner")
+      ? client.from("vendors").select("id,name").eq("active", true)
+      : { data: [] },
+    roleNames.includes("runner")
+      ? client
+          .from("runners")
+          .select(
+            "completed_runs,reward_points,transportation,max_detour_miles,available_until",
+          )
+          .eq("id", user.id)
+          .single()
+      : { data: null },
+    roleNames.includes("runner") ? client.rpc("available_runs") : { data: [] },
+    roleNames.includes("admin")
+      ? client
+          .from("audit_events")
+          .select("id,event,created_at")
+          .order("created_at", { ascending: false })
+          .limit(30)
+      : { data: [] },
+  ]);
+  if (eventError || ledgerError) throw eventError || ledgerError;
   return (
     <main className="simple-page">
       <Link href="/">← {brand.name}</Link>
+      {profile?.demo_workspace && (
+        <span className="demo-tag">ISOLATED FICTIONAL DEMO</span>
+      )}
       <h1>Hello, {profile?.display_name || "neighbor"}.</h1>
+      <div className="role-navigation">
+        <Link href="/">Explore marketplace</Link>
+        <Link href="/cart">Shopping cart</Link>
+        <Link href="/dashboard">Order tracking</Link>
+      </div>
+      {roleNames.includes("customer") && (
+        <CustomerPreferences
+          address={
+            preferences?.delivery_address ||
+            (profile?.demo_workspace ? demoAddress : "")
+          }
+          notes={preferences?.delivery_notes || ""}
+          demo={Boolean(profile?.demo_workspace)}
+        />
+      )}
+      <PaymentSummary
+        role={
+          roleNames.includes("vendor")
+            ? "vendor"
+            : roleNames.includes("runner")
+              ? "runner"
+              : "customer"
+        }
+        ledger={ledger || []}
+        orders={orders || []}
+        configured={Boolean(
+          process.env.PAYPAL_CLIENT_ID &&
+          process.env.PAYPAL_CLIENT_SECRET &&
+          process.env.PAYPAL_WEBHOOK_ID,
+        )}
+      />
       <p>
         Your roles: {roleNames.join(", ")}. Roles are assigned by an
         administrator, never by browser state.
@@ -129,7 +215,19 @@ export default async function Dashboard() {
       {roleNames.includes("runner") && (
         <div className="simple-card">
           <h2>Runner availability</h2>
-          <RunnerControls />
+          <Link href={`/runners/${user.id}`}>
+            View your public runner profile →
+          </Link>
+          <p>
+            Transportation: {runnerProfile?.transportation || "Walking"} ·
+            Maximum detour: {runnerProfile?.max_detour_miles ?? 3} miles ·
+            Availability expires:{" "}
+            {runnerProfile?.available_until || "Not available"}
+          </p>
+          <RunnerControls
+            initialTransportation={runnerProfile?.transportation || "Walking"}
+            initialDetour={Number(runnerProfile?.max_detour_miles ?? 3)}
+          />
           <UploadAsset label="Runner avatar" data={{ target: "runner" }} />
           <RunnerTrip vendors={publicVendors || []} />
           <p>
@@ -142,7 +240,10 @@ export default async function Dashboard() {
                 Pickup at {r.vendor_name} · exact delivery address stays private
                 until assignment.
               </p>
-              <DashboardActions orderId={r.id} actions={["Accept run"]} />
+              <DashboardActions
+                orderId={r.id}
+                actions={["Accept run", "Decline run"]}
+              />
             </div>
           ))}
         </div>
@@ -180,7 +281,18 @@ export default async function Dashboard() {
         if (o.customer_id === user.id && o.state === "PENDING_PAYMENT")
           actions.push("Confirm approved payment");
         if (ownedIds.includes(o.vendor_id)) {
-          if (o.state === "PAID") actions.push("VENDOR_ACCEPTED");
+          if (o.state === "PAID" && o.refund_state === "NONE")
+            actions.push("VENDOR_ACCEPTED");
+          if (
+            ["PAID", "VENDOR_ACCEPTED", "RUNNER_MATCHING"].includes(o.state) &&
+            !o.runner_id &&
+            o.refund_state !== "COMPLETED"
+          )
+            actions.push(
+              o.refund_state === "PENDING"
+                ? "Retry refund reconciliation"
+                : "Decline and refund Sandbox payment",
+            );
           if (o.state === "VENDOR_ACCEPTED") actions.push("RUNNER_MATCHING");
           if (o.state === "RUNNER_ASSIGNED") actions.push("READY_FOR_PICKUP");
         }
@@ -196,6 +308,18 @@ export default async function Dashboard() {
             <h2>
               {money(Number(o.total_cents))} · {o.state.replaceAll("_", " ")}
             </h2>
+            {lineItems
+              ?.filter((i) => i.order_id === o.id)
+              .map((i) => (
+                <p key={i.listing_id}>
+                  {i.quantity} × {i.title} · {money(Number(i.unit_price_cents))}{" "}
+                  each
+                </p>
+              ))}
+            <p>
+              Refund:{" "}
+              {o.refund_state === "NONE" ? "None requested" : o.refund_state}
+            </p>
             <p>
               Order {o.id} · Quantity {o.quantity}
             </p>
@@ -223,6 +347,11 @@ export default async function Dashboard() {
             )}
             <details>
               <summary>Financial allocations and event history</summary>
+              <p>
+                PayPal order: {o.paypal_order_id || "Not created"} · Capture:{" "}
+                {o.paypal_capture_id || "Not captured"} · Refund:{" "}
+                {o.paypal_refund_id || "None"}
+              </p>
               {events
                 ?.filter((e) => e.order_id === o.id)
                 .map((e) => (
@@ -244,6 +373,22 @@ export default async function Dashboard() {
           </div>
         );
       })}
+      <h2>Quote inquiries and notifications</h2>
+      {!inquiries?.length && (
+        <p>
+          No quote inquiries yet. Order events above are your fulfillment
+          notifications.
+        </p>
+      )}
+      {inquiries?.map((i) => (
+        <InquiryCard
+          key={i.id}
+          id={i.id}
+          message={i.message}
+          response={i.response}
+          vendor={i.customer_id !== user.id}
+        />
+      ))}
       {roleNames.includes("admin") && <AdminPanel />}
       {roleNames.includes("admin") && (
         <div className="simple-card">
