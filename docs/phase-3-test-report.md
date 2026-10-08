@@ -13,11 +13,11 @@ Local fulfillment tests deliberately use service-only `LOCAL-TEST-*` capture fix
 
 ## Release status
 
-Phase 3 code is prepared on `codex/phase-3-demo`; production release awaits the hosted migration. The current production homepage returns HTTP 200, and `/api/demo` returns 404 because Phase 3 is not released there yet. Updated cloud startup instructions were saved as a draft; environment publication is separate.
+On October 8, 2026, the hosted upgrade was verified (`phase3_ready=true`), the fictional template was seeded and verified, and application commit `4478214` was released to `main`. The live homepage and `/api/demo` return HTTP 200. A separate live smoke test verified genuine authenticated Customer → Vendor → Runner → Customer switching, customer cart access and sign-out on `https://runners.aibrylabs.com`. No payment was manufactured or attempted by that smoke test. Updated cloud startup instructions were saved as a draft; environment publication is separate.
 
 ## External prerequisites and unverified checks
 
-Hosted Supabase reports Phase 3 readiness RPC missing (`PGRST202`), so migrations must be applied before seed/deployment. The SQL Editor artifact is `docs/sql/phase-3-upgrade.sql`; database management credentials are not supplied to this environment. Application deployment must not replace Phase 2 with schema-dependent code before that upgrade.
+The user applied `docs/sql/phase-3-upgrade.sql` through the hosted SQL Editor. Hosted schema, enabled demo mode, four fictional unverified template vendors and 25 persisted listings are verified. Database management credentials are not supplied to this environment; subsequent schema changes still require the SQL Editor or another authorized migration workflow.
 
 Actual Sandbox buyer approval, completed capture, genuine webhook reconciliation and provider refund have **not passed** in this phase. A browser buyer approval is required. OAuth/REST configuration alone is insufficient. Vendor/runner transfers are intentionally simulated and actual payouts remain zero.
 
