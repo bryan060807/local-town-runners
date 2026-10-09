@@ -1,6 +1,6 @@
 # Local Town Runners
 
-An evolving local commerce MVP: a Louisiana, Missouri map, catalog-grounded discovery, independent vendors, and neighbor-powered pickups. Branding and geography are centralized in `src/lib/brand.ts`. All seeded vendors are fictional and labeled DEMO.
+An evolving local commerce MVP: a Louisiana, Missouri map, catalog-grounded discovery, independent vendors, and neighbor-powered pickups. Branding and geography are centralized in `src/lib/brand.ts`. All seeded vendors are fictional and labeled DEMO. 
 
 ## Current capabilities
 
