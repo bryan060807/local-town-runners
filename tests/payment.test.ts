@@ -128,6 +128,7 @@ test("an attacker-associated PayPal order is never captured, and completed retri
       return completed;
     },
   });
-  assert.equal(result, "CAPTURE");
+  assert.equal(result.phase, "captured");
+  assert.equal(result.captureId, "CAPTURE");
   assert.equal(calls, 0);
 });

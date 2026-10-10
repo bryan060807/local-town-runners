@@ -64,7 +64,7 @@ export default function DashboardActions({
           </button>
         ))}
       </div>
-      <p role="status">{status}</p>
+      {status && <p role="status">{status}</p>}
     </>
   );
 }

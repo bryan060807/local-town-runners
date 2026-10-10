@@ -1,3 +1,4 @@
+import PaymentActions from "@/components/PaymentActions";
 import PaymentSummary from "@/components/PaymentSummary";
 import CustomerPreferences from "@/components/CustomerPreferences";
 import InquiryCard from "@/components/InquiryCard";
@@ -281,13 +282,6 @@ export default async function Dashboard() {
         const actions: string[] = [];
         if (o.customer_id === user.id && o.state === "DRAFT")
           actions.push("Cancel draft");
-        if (
-          o.customer_id === user.id &&
-          ["DRAFT", "PENDING_PAYMENT"].includes(o.state)
-        )
-          actions.push("Pay with PayPal Sandbox");
-        if (o.customer_id === user.id && o.state === "PENDING_PAYMENT")
-          actions.push("Confirm approved payment");
         if (ownedIds.includes(o.vendor_id)) {
           if (o.state === "PAID" && o.refund_state === "NONE")
             actions.push("VENDOR_ACCEPTED");
@@ -334,6 +328,13 @@ export default async function Dashboard() {
             <p>
               Vendor/runner allocations are simulated. No payout is disbursed.
             </p>
+            {o.customer_id === user.id &&
+              ["DRAFT", "PENDING_PAYMENT"].includes(o.state) && (
+                <PaymentActions
+                  orderId={o.id}
+                  pending={o.state === "PENDING_PAYMENT"}
+                />
+              )}
             <DashboardActions orderId={o.id} actions={actions} />
             <details>
               <summary>
@@ -357,8 +358,9 @@ export default async function Dashboard() {
               <summary>Financial allocations and event history</summary>
               <p>
                 PayPal order: {o.paypal_order_id || "Not created"} · Capture:{" "}
-                {o.paypal_capture_id || "Not captured"} · Refund:{" "}
-                {o.paypal_refund_id || "None"}
+                {o.paypal_capture_id ||
+                  "No completed capture confirmed locally"}{" "}
+                · Refund: {o.paypal_refund_id || "None"}
               </p>
               {events
                 ?.filter((e) => e.order_id === o.id)

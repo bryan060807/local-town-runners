@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { adminUser } from "@/lib/server/onboarding";
+import AdminPaymentRecovery from "@/components/AdminPaymentRecovery";
 import PayPalDiagnostics from "@/components/PayPalDiagnostics";
 export const dynamic = "force-dynamic";
 export default async function Page() {
@@ -23,6 +24,7 @@ export default async function Page() {
         never displayed. The fingerprint identifies the public client ID only.
       </p>
       <PayPalDiagnostics />
+      <AdminPaymentRecovery />
     </main>
   );
 }

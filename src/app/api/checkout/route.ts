@@ -7,6 +7,7 @@ import { z } from "zod";
 import { authenticated, serviceDb, HttpError } from "@/lib/server/db";
 import { body, sameOrigin, failure, limited } from "@/lib/server/http";
 import { paypal } from "@/lib/server/paypal";
+import { recoverPayment } from "@/lib/server/payment-recovery";
 import { paypalConfig } from "@/lib/server/env";
 export async function POST(req: Request) {
   try {
@@ -34,12 +35,11 @@ export async function POST(req: Request) {
       );
     const app = paypalConfig().app;
     const service = serviceDb();
-    const { data: ready, error: readyError } = await service.rpc(
-      "phase2_payment_ready",
-    );
+    const { data: ready, error: readyError } =
+      await service.rpc("phase42_ready");
     if (readyError || !ready)
       throw new HttpError(
-        "Apply the Phase 2 database migration before checkout",
+        "Apply the Phase 4.2 database migration before checkout",
         503,
       );
     const { error: preflight } = await service
@@ -48,6 +48,18 @@ export async function POST(req: Request) {
       .eq("id", o.id)
       .single();
     if (preflight) throw new HttpError("Payment database unavailable", 503);
+    if (o.paypal_order_id) {
+      const current = await recoverPayment({
+        id: o.id,
+        paypalId: o.paypal_order_id,
+        totalCents: Number(o.total_cents),
+      });
+      if (current.payment.phase !== "awaiting_approval")
+        return Response.json(current, {
+          status: current.payment.phase === "confirmed" ? 200 : 202,
+          headers: { "Cache-Control": "private, no-store" },
+        });
+    }
     const result = o.paypal_order_id
       ? await paypal(
           `/v2/checkout/orders/${encodeURIComponent(o.paypal_order_id)}`,

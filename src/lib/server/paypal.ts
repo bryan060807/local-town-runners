@@ -63,8 +63,9 @@ export async function verifyWebhook(headers: Headers, event: unknown) {
     "paypal-transmission-time",
   ];
   if (required.some((h) => !headers.get(h))) return false;
-  const cert = new URL(headers.get("paypal-cert-url")!);
-  if (!validWebhookCertificate(cert.toString())) return false;
+  const certificate = headers.get("paypal-cert-url")!;
+  if (!validWebhookCertificate(certificate)) return false;
+  const cert = new URL(certificate);
   const result = await paypal("/v1/notifications/verify-webhook-signature", {
     auth_algo: headers.get("paypal-auth-algo"),
     cert_url: cert.toString(),

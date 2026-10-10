@@ -23,6 +23,14 @@ test("Sandbox diagnostics restrict access and report missing local credentials w
       })
     ).status(),
   ).toBe(401);
+  expect(
+    (
+      await page.request.post("/api/admin/payment-recovery", {
+        headers: { Origin: "http://127.0.0.1:3000" },
+        data: { orderId: "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c" },
+      })
+    ).status(),
+  ).toBe(401);
   await page.goto("/login");
   await page
     .getByLabel("Email", { exact: true })
@@ -36,6 +44,14 @@ test("Sandbox diagnostics restrict access and report missing local credentials w
     (
       await page.request.post("/api/admin/paypal-diagnostics", {
         headers: { Origin: "http://127.0.0.1:3000" },
+      })
+    ).status(),
+  ).toBe(403);
+  expect(
+    (
+      await page.request.post("/api/admin/payment-recovery", {
+        headers: { Origin: "http://127.0.0.1:3000" },
+        data: { orderId: "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c" },
       })
     ).status(),
   ).toBe(403);
@@ -62,6 +78,20 @@ test("Sandbox diagnostics restrict access and report missing local credentials w
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
+  await expect(
+    page.getByRole("heading", { name: "Recover an existing payment" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Check and reconcile existing payment" }),
+  ).toBeDisabled();
+  expect(
+    (
+      await page.request.post("/api/admin/payment-recovery", {
+        headers: { Origin: "http://127.0.0.1:3000" },
+        data: { orderId: "invalid" },
+      })
+    ).status(),
+  ).toBe(400);
   const r = await page.request.post("/api/admin/paypal-diagnostics", {
     headers: { Origin: "http://127.0.0.1:3000" },
   });

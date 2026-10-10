@@ -8,6 +8,8 @@ export function logEvent(
     outcome?: string;
     code?: string;
     operation?: string;
+    orderId?: string;
+    capturePresent?: boolean;
   } = {},
 ) {
   console.info(JSON.stringify({ event, ...fields }));

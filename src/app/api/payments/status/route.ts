@@ -7,18 +7,15 @@ export async function POST(req: Request) {
     sameOrigin(req);
     const p = await body(req, z.object({ orderId: z.uuid() }).strict());
     const { client, user } = await authenticated();
-    await limited(client, "capture");
+    await limited(client, "payment_status");
     const { data: o } = await client
       .from("orders")
-      .select(
-        "id,state,customer_id,paypal_order_id,paypal_capture_id,total_cents",
-      )
+      .select("id,state,paypal_order_id,paypal_capture_id,total_cents")
       .eq("id", p.orderId)
       .eq("customer_id", user.id)
       .single();
     if (!o || !o.paypal_order_id) throw new HttpError("Order unavailable", 404);
-    if (o.state !== "PENDING_PAYMENT") {
-      if (!o.paypal_capture_id) throw new HttpError("Order not payable", 409);
+    if (o.paypal_capture_id)
       return Response.json(
         {
           state: o.state,
@@ -27,17 +24,14 @@ export async function POST(req: Request) {
         },
         { headers: { "Cache-Control": "private, no-store" } },
       );
-    }
-    const result = await recoverPayment(
-      {
-        id: o.id,
-        paypalId: o.paypal_order_id,
-        totalCents: Number(o.total_cents),
-      },
-      true,
-    );
+    if (o.state !== "PENDING_PAYMENT")
+      throw new HttpError("Order is not awaiting payment", 409);
+    const result = await recoverPayment({
+      id: o.id,
+      paypalId: o.paypal_order_id,
+      totalCents: Number(o.total_cents),
+    });
     return Response.json(result, {
-      status: result.payment.phase === "confirmed" ? 200 : 202,
       headers: { "Cache-Control": "private, no-store" },
     });
   } catch (e) {

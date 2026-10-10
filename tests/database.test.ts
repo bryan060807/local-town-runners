@@ -8,13 +8,16 @@ const customer = "11111111-1111-4111-8111-111111111111",
   runner = "44444444-4444-4444-8444-444444444444",
   shop = "55555555-5555-4555-8555-555555555555",
   listing = "66666666-6666-4666-8666-666666666666";
-async function fixture() {
+async function fixture(includePaymentRecovery = true) {
   const db = new PGlite();
   await db.exec(
     `create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema public,auth to anon,authenticated,service_role;grant execute on function auth.uid() to anon,authenticated,service_role;`,
   );
   for (const file of (await readdir("supabase/migrations"))
-    .filter((f) => f.endsWith(".sql"))
+    .filter(
+      (f) =>
+        f.endsWith(".sql") && (includePaymentRecovery || !f.startsWith("014_")),
+    )
     .sort()) {
     const sql = (await readFile(`supabase/migrations/${file}`, "utf8")).replace(
       "create extension if not exists pgcrypto;",
@@ -758,6 +761,183 @@ test("Phase 3 assignment requires compatibility with every cart line", async () 
       1,
     );
     await asUser(db, runner, `select accept_run('${o.id}')`);
+  } finally {
+    await db.close();
+  }
+});
+
+test("payment recovery serializes capture claims and rejects conflicting capture/event IDs without extra ledger credits", async () => {
+  const db = await fixture();
+  try {
+    const id = await createOrder(db);
+    await db.exec(
+      `select public.attach_verified_paypal_order('${id}','PAYPAL-RECOVERY','${customer}')`,
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `select public.claim_payment_capture('${id}','PAYPAL-RECOVERY')`,
+      ),
+    );
+    const claims = await Promise.all([
+      db.query<{ claimed: boolean }>(
+        `select public.claim_payment_capture('${id}','PAYPAL-RECOVERY') as claimed`,
+      ),
+      db.query<{ claimed: boolean }>(
+        `select public.claim_payment_capture('${id}','PAYPAL-RECOVERY') as claimed`,
+      ),
+    ]);
+    assert.deepEqual(claims.map((r) => r.rows[0].claimed).sort(), [
+      false,
+      true,
+    ]);
+    await Promise.all([
+      db.exec(
+        `select public.confirm_payment('${id}','CAPTURE-RECOVERY','MANUAL-RECOVERY',900)`,
+      ),
+      db.exec(
+        `select public.confirm_payment('${id}','CAPTURE-RECOVERY','WEBHOOK-RECOVERY',900)`,
+      ),
+    ]);
+    await db.exec(
+      `select public.confirm_payment('${id}','CAPTURE-RECOVERY','WEBHOOK-RECOVERY',900)`,
+    );
+    await assert.rejects(() =>
+      db.exec(`select public.confirm_payment('${id}','CONFLICT','THIRD',900)`),
+    );
+    await assert.rejects(() =>
+      db.exec(`select public.confirm_payment('${id}','','EMPTY',900)`),
+    );
+    const ledger = (
+      await db.query<{
+        kind: string;
+        amount_cents: number;
+        simulated: boolean;
+      }>(
+        `select kind,amount_cents,simulated from ledger where order_id='${id}'`,
+      )
+    ).rows;
+    assert.equal(ledger.length, 4);
+    assert.equal(
+      ledger
+        .filter((l) => l.kind !== "CUSTOMER_PAYMENT")
+        .every((l) => l.simulated),
+      true,
+    );
+    assert.equal(
+      ledger.find((l) => l.kind === "CUSTOMER_PAYMENT")?.simulated,
+      false,
+    );
+    assert.equal(
+      (await db.query(`select * from payment_events where order_id='${id}'`))
+        .rows.length,
+      2,
+    );
+    assert.equal(
+      (
+        await db.query(
+          `select * from order_events where order_id='${id}' and event='PAYMENT_CONFIRMED'`,
+        )
+      ).rows.length,
+      1,
+    );
+    assert.equal(
+      (
+        await db.query<{ state: string }>(
+          `select state from orders where id='${id}'`,
+        )
+      ).rows[0].state,
+      "PAID",
+    );
+    const second = (
+      await asUser(
+        db,
+        customer,
+        `select (public.prepare_order('${listing}',1,'99999999-9999-4999-8999-999999999999','PRIVATE DELIVERY ADDRESS')).*`,
+      )
+    ).rows[0] as { id: string };
+    await db.exec(
+      `select public.attach_verified_paypal_order('${second.id}','PAYPAL-SECOND','${customer}')`,
+    );
+    await assert.rejects(() =>
+      db.exec(
+        `select public.confirm_payment('${second.id}','SECOND-CAPTURE','MANUAL-RECOVERY',450)`,
+      ),
+    );
+    await assert.rejects(() =>
+      db.exec(
+        `select public.confirm_payment('${second.id}','CAPTURE-RECOVERY','SECOND-EVENT',450)`,
+      ),
+    );
+    assert.equal(
+      (await db.query(`select * from ledger where order_id='${second.id}'`))
+        .rows.length,
+      0,
+    );
+    assert.equal(
+      (
+        await asUser(
+          db,
+          other,
+          `select * from payment_recovery where order_id='${id}'`,
+        )
+      ).rows.length,
+      0,
+    );
+    await assert.rejects(() =>
+      asUser(
+        db,
+        customer,
+        `update payment_recovery set capture_attempted_at=null where order_id='${id}'`,
+      ),
+    );
+  } finally {
+    await db.close();
+  }
+});
+
+test("payment upgrade preserves historical pending orders and blocks uncertain historical capture retries", async () => {
+  const db = await fixture(false);
+  try {
+    const id = await createOrder(db);
+    await db.exec(
+      `select attach_verified_paypal_order('${id}','HISTORICAL','${customer}')`,
+    );
+    await db.exec(
+      await readFile(
+        "supabase/migrations/014_phase42_payment_recovery.sql",
+        "utf8",
+      ),
+    );
+    assert.equal(
+      (
+        await db.query<{ claimed: boolean }>(
+          `select claim_payment_capture('${id}','HISTORICAL') as claimed`,
+        )
+      ).rows[0].claimed,
+      false,
+    );
+    const row = (
+      await db.query<{ state: string; paypal_capture_id: string | null }>(
+        `select state,paypal_capture_id from orders where id='${id}'`,
+      )
+    ).rows[0];
+    assert.equal(row.state, "PENDING_PAYMENT");
+    assert.equal(row.paypal_capture_id, null);
+    assert.equal(
+      (await db.query(`select * from ledger where order_id='${id}'`)).rows
+        .length,
+      0,
+    );
+    await db.exec(
+      `select confirm_payment('${id}','VERIFIED-HISTORICAL','RECOVERY',900)`,
+    );
+    assert.equal(
+      (await db.query(`select * from ledger where order_id='${id}'`)).rows
+        .length,
+      4,
+    );
   } finally {
     await db.close();
   }

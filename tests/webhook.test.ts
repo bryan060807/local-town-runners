@@ -11,9 +11,11 @@ const event = {
 };
 const canonical = {
   id: "PAYPAL",
+  status: "COMPLETED",
   purchase_units: [
     {
       custom_id: "ORDER",
+      amount: { currency_code: "USD", value: "9.00" },
       payments: {
         captures: [
           {
@@ -83,4 +85,95 @@ test("simulator event with no application order requests retry and never creates
     },
   });
   assert.equal(r.status, 503);
+});
+
+test("pending eCheck and out-of-order events never credit unsettled funds", async () => {
+  let confirms = 0;
+  const pending = {
+    ...canonical,
+    purchase_units: [
+      {
+        ...canonical.purchase_units[0],
+        payments: {
+          captures: [
+            {
+              ...canonical.purchase_units[0].payments.captures[0],
+              status: "PENDING",
+            },
+          ],
+        },
+      },
+    ],
+  };
+  const services = {
+    verify: async () => true,
+    findOrder: async () => ({ id: "ORDER", total_cents: 900 }),
+    canonical: async () => pending,
+    confirm: async () => {
+      confirms++;
+    },
+  };
+  assert.equal(
+    (
+      await processWebhook(
+        { ...event, event_type: "PAYMENT.CAPTURE.PENDING" },
+        services,
+      )
+    ).status,
+    200,
+  );
+  assert.equal((await processWebhook(event, services)).status, 503);
+  assert.equal(confirms, 0);
+  assert.equal(
+    (
+      await processWebhook(
+        { ...event, event_type: "PAYMENT.CAPTURE.PENDING" },
+        { ...services, canonical: async () => canonical },
+      )
+    ).status,
+    200,
+  );
+  assert.equal(confirms, 1);
+});
+test("webhook amount association and capture IDs cannot be taken from the event alone", async () => {
+  let confirms = 0;
+  const services = {
+    verify: async () => true,
+    findOrder: async () => ({ id: "ORDER", total_cents: 900 }),
+    canonical: async () => canonical,
+    confirm: async () => {
+      confirms++;
+    },
+  };
+  assert.equal(
+    (
+      await processWebhook(
+        { ...event, resource: { ...event.resource, id: "OTHER" } },
+        services,
+      )
+    ).status,
+    409,
+  );
+  assert.equal(
+    (
+      await processWebhook(event, {
+        ...services,
+        canonical: async () => ({
+          ...canonical,
+          purchase_units: [
+            {
+              ...canonical.purchase_units[0],
+              amount: { currency_code: "USD", value: "1.00" },
+            },
+          ],
+        }),
+      })
+    ).status,
+    409,
+  );
+  assert.equal(
+    (await processWebhook({ ...event, id: "" }, services)).status,
+    400,
+  );
+  assert.equal(confirms, 0);
 });
