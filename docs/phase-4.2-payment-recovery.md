@@ -50,13 +50,13 @@ The established confirm_payment RPC remains the financial state authority. It lo
 
 The $35 order began PENDING_PAYMENT with no local capture, payment event or ledger. While PayPal reports PENDING/ECHECK, its correct state remains PENDING_PAYMENT with no payment credit. The status observer records the receiver capture and pending reason separately; these observations do not constitute confirmation. Once PayPal reports a matching COMPLETED capture, the status/admin/webhook paths can invoke the existing RPC without recapturing.
 
-## E. Verification — Tested / release checks pending
+## E. Verification — Tested / Deployed / Verified
 
 - 79 automated tests passed, zero failures or skips: amount/currency/association, response shape differences, pending funds, timeouts, database failure recovery, conflicting IDs, replay, concurrency and RLS, plus existing project regression coverage.
 - 32 connected browser tests passed at desktop and 360/390/430 widths, including new pending/confirmed UI fixtures, hidden duplicate-payment controls, real unauthorized endpoint checks, and existing onboarding/vendor/runner/customer flows. UI fixtures are not actual Sandbox success evidence.
 - Four additional administrator browser checks passed across all viewports, covering anonymous/nonadministrator denial, UUID validation, recovery form and existing diagnostics.
 - Real local Auth/PostgREST/PostgreSQL integration made one mocked capture under concurrent requests, recovered a simulated timeout through canonical read, preserved the attempt boundary, and created exactly four ledger entries despite manual/webhook replay. A separately claimed uncertain order stayed under review with zero further capture calls. No remote provider was used by these fixtures.
-- Final lint and type checking passed. Production build and deployment evidence are appended after release checks.
+- Final lint and type checking passed. The final production build passed. Code revision dd2e4258b962387236de01e2a602e18c5686980b is deployed in READY production deployment dpl_5repaNX6pU53CaokGHvhJyiJFUcA, and the production domain alias points to that deployment.
 
 The first browser run was stopped after identifying an empty duplicate status region; that defect was corrected and the complete 32-test rerun passed. An initial new database test fixture used an address below the existing minimum length; the fixture was corrected and the complete suite passed. No protection or assertion was disabled.
 
@@ -71,3 +71,13 @@ Authenticated customer/administrator production viewing requires their own sessi
 ## Hosted recovery observation — Verified
 
 After schema readiness was confirmed, the trusted server recovery function ran with capture disabled against the actual $35 order. It returned capture_pending, providerStatus PENDING, pendingReason ECHECK, captureId 2RA30218PE716183N and the message: “PayPal is processing your eCheck. Your payment has not completed yet. Please do not pay again.” The same safe observation was persisted. A follow-up database read confirmed PENDING_PAYMENT, paypal_capture_id null, payout_status SIMULATED and an empty ledger. The historical attempt guard remained present. This is actual provider/database evidence, not a UI fixture or a claim that funds completed.
+
+## Production release checks — Verified
+
+The homepage, agreements and protected administrator page return HTTP 200; the original No Commercial Vendor Agreement clause is retained. Anonymous POSTs to /api/capture, /api/checkout, /api/payments/status and /api/admin/payment-recovery return HTTP 401. A webhook request without signature headers returns HTTP 401. These requests verify route availability and guards, not an authenticated successful payment. The operator has been asked to check the original order through the new administrator recovery form; the operator confirmed that the live administrator recovery form returned “PayPal is processing your eCheck.” This verifies the deployed authenticated recovery path with Vercel credentials and the pending-payment display, without another capture.
+
+No financial capture, refund, live payment or payout was initiated by this work. Hosted original vendor consent and its authoritative PDF were rechecked independently; both hashes remain unchanged, and the fabricated vendor application is currently rejected and unapproved. This repair did not change its application or activate/publish it. Schema and service observations are verified; pending eCheck settlement and signed real webhook delivery remain external blockers to a completed-payment end-to-end claim.
+
+## Final readiness
+
+The payment is conclusively accounted for as an existing pending eCheck. The repair is Implemented, Tested and Deployed; production pending-status recovery is Verified. A completed $35 capture and PAID/ledger reconciliation are Blocked on provider completion. Signed Sandbox webhook delivery remains Blocked on app configuration. No new capture was used to produce a success claim. Phase 4.2 is not declared complete under the brief's completed-payment end-to-end requirement until those external conditions are verified.
