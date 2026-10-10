@@ -54,3 +54,5 @@ Vercel project/deployment/environment-name read access works. Its documented run
 Current validation and production release results are recorded in phase-4.1-production-results.md. Deployed/verified status is never inferred from a build, local fixture or absence of streamed logs.
 
 The selected original notification retry was accepted by Resend as 01a1230e-17df-7825-a4aa-531cef325e5d. Persisted job_status is sent, provider_event accepted, attempts 2, error_code null. This dispatch ran through the trusted cloud server, not Vercel. Inbox delivery and the newly entered Vercel key remain separate verification items. A separate immutable readable-v1 presentation is stored privately, 26,688 bytes, SHA256 31b1076b16025d70227e0ca90eabd4b97f5f28e75e1a406247f7dff3f2a7a9ca. After these operations both original hashes above still match and the application remains submitted.
+
+The operator confirmed the original notification arrived in aibrymusic@gmail.com. Release 8e866cf is active in READY deployment dpl_4J1zvTMTvc1UfSw4RUkrnNNtUook. Final results distinguish this actual delivery from the unverified new Vercel-key dispatch path.

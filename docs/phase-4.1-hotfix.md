@@ -1,5 +1,7 @@
 # Phase 4.1 notification and PDF hotfix
 
+Historical implementation report. For the subsequent production audit, actual deployment, selected original notification delivery, and updated configuration evidence, see [production results](phase-4.1-production-results.md). The rollout limitations below describe the earlier run.
+
 ## Root cause and preserved baseline
 
 The production submission `6e9127ae-b6cf-4875-bb92-1e21355c21bd` has one existing notification job. It was blocked on its first server attempt with `EMAIL_NOT_CONFIGURED`; no provider message ID was recorded. The Phase 4 sender emits that error when its API key or sender identity is missing. Therefore this job was queued but never reached the provider from that attempt. This does not identify which Vercel variable was absent; Vercel's environment/log API is not available to this workspace. Current cloud configuration is distinct from Vercel.
