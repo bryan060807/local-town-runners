@@ -22,7 +22,11 @@ create function public.claim_payment_capture(order_id uuid,paypal_id text) retur
 declare o public.orders; attempted timestamptz;
 begin
 select * into o from public.orders where id=order_id for update;
-if not found or o.state<>'PENDING_PAYMENT' or o.paypal_order_id is distinct from paypal_id or paypal_id is null then raise exception 'Order not payable'; end if;
+if not found or o.paypal_order_id is distinct from paypal_id or paypal_id is null then raise exception 'Order not payable'; end if;
+if o.state<>'PENDING_PAYMENT' then
+  if o.paypal_capture_id is not null then return false; end if;
+  raise exception 'Order not payable';
+end if;
 insert into public.payment_recovery(order_id) values(o.id) on conflict do nothing;
 select capture_attempted_at into attempted from public.payment_recovery where payment_recovery.order_id=o.id for update;
 if attempted is not null then return false; end if;
