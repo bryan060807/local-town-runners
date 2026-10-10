@@ -1,3 +1,4 @@
+import { DatabaseOperationError } from "@/lib/server/errors";
 import { z } from "zod";
 import { realUser, processSubmission } from "@/lib/server/onboarding";
 import { sameOrigin, failure, limited } from "@/lib/server/http";
@@ -53,7 +54,8 @@ export async function POST(req: Request) {
         application_role: p.role,
         application_payload: payload,
       });
-      if (r.error) throw r.error;
+      if (r.error)
+        throw new DatabaseOperationError(r.error, "save_application");
       return Response.json({ applicationId: r.data });
     }
     let submissionId: string;
@@ -93,14 +95,16 @@ export async function POST(req: Request) {
         signature: p.signature,
         acknowledgments: a.data.sections,
       });
-      if (r.error) throw r.error;
+      if (r.error)
+        throw new DatabaseOperationError(r.error, "submit_application");
       submissionId = r.data;
     } else if (p.action === "customer") {
       const r = await client.rpc("accept_customer_terms", {
         agreement_id: p.agreementId,
         typed_name: p.typedName,
       });
-      if (r.error) throw r.error;
+      if (r.error)
+        throw new DatabaseOperationError(r.error, "accept_customer_terms");
       submissionId = r.data;
     } else {
       const s = await client

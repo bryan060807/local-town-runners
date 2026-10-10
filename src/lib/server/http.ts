@@ -1,3 +1,4 @@
+import { DatabaseOperationError } from "./errors";
 import "server-only";
 import { logEvent, ProviderError } from "@/lib/observability";
 import { readLimited } from "@/lib/request-body";
@@ -41,7 +42,12 @@ export function failure(e: unknown) {
       ? e.code
       : undefined;
   if (code) {
-    logEvent("database_failure", { code });
+    logEvent("database_failure", {
+      code,
+      ...(e instanceof DatabaseOperationError
+        ? { operation: e.operation }
+        : {}),
+    });
     if (code === "42501")
       return Response.json(
         { error: "You do not have permission for this action." },

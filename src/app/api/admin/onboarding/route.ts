@@ -1,3 +1,4 @@
+import { DatabaseOperationError } from "@/lib/server/errors";
 import { z } from "zod";
 import {
   adminUser,
@@ -97,7 +98,11 @@ export async function POST(req: Request) {
             resource_id: p.userId,
             disabled: p.suspended,
           });
-    if (r.error) throw r.error;
+    if (r.error)
+      throw new DatabaseOperationError(
+        r.error,
+        p.action === "review" ? "review_application" : "moderate",
+      );
     return Response.json({
       ok: true,
       ...(p.action === "review" && p.decision === "approved"

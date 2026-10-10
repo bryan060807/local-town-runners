@@ -1,3 +1,4 @@
+import { DatabaseOperationError } from "@/lib/server/errors";
 import { readLimited } from "@/lib/request-body";
 import { processWebhook } from "@/lib/webhook-processing";
 import { serviceDb } from "@/lib/server/db";
@@ -26,7 +27,7 @@ export async function POST(req: Request) {
           event_id: event,
           amount_cents: o.total_cents,
         });
-        if (error) throw error;
+        if (error) throw new DatabaseOperationError(error, "confirm_payment");
       },
     });
     return Response.json({ message: result.body }, { status: result.status });

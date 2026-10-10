@@ -79,6 +79,9 @@ export default async function Page({
     <main className="simple-page onboarding-page">
       <Link href="/account">← Account</Link>
       <h1>Onboarding administration</h1>
+      <Link href="/admin/payments">
+        PayPal Sandbox authentication diagnostics
+      </Link>
       <p>
         Approval activates Sandbox participation only. Identity, insurance and
         background checks remain unverified. Email “accepted” means the provider

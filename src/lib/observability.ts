@@ -7,6 +7,7 @@ export function logEvent(
     tool?: string;
     outcome?: string;
     code?: string;
+    operation?: string;
   } = {},
 ) {
   console.info(JSON.stringify({ event, ...fields }));

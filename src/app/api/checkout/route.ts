@@ -1,3 +1,4 @@
+import { DatabaseOperationError } from "@/lib/server/errors";
 import {
   paymentMatchesOrder,
   paymentMatchesTotal,
@@ -89,7 +90,8 @@ export async function POST(req: Request) {
       order_id: o.id,
       paypal_id: result.id,
     });
-    if (save) throw save;
+    if (save)
+      throw new DatabaseOperationError(save, "attach_verified_paypal_order");
     const link = result.links?.find((l: { rel: string; href: string }) =>
       ["approve", "payer-action"].includes(l.rel),
     );

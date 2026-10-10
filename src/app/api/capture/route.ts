@@ -1,3 +1,4 @@
+import { DatabaseOperationError } from "@/lib/server/errors";
 import { reconcileOwnedCapture } from "@/lib/payment-validation";
 import { z } from "zod";
 import { authenticated, serviceDb, HttpError } from "@/lib/server/db";
@@ -59,7 +60,7 @@ export async function POST(req: Request) {
       event_id: `capture-${captureId}`,
       amount_cents: o.total_cents,
     });
-    if (error) throw error;
+    if (error) throw new DatabaseOperationError(error, "confirm_payment");
     return Response.json({ state: "PAID" });
   } catch (e) {
     return failure(e);

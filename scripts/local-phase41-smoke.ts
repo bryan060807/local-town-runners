@@ -126,6 +126,19 @@ const count = await service
   .select("id", { count: "exact", head: true })
   .eq("id", id);
 assert.equal(count.count, 1);
+// Reproduce a specific P0001 safely against this local fixture only.
+const immutableDraft = await user.rpc("save_application", {
+  application_role: "vendor",
+  application_payload: payload,
+});
+assert.equal(immutableDraft.error?.code, "P0001");
+assert.equal(
+  immutableDraft.error?.message,
+  "Submitted applications are immutable",
+);
+console.log(
+  "Local P0001 reproduction passed: save_application rejects editing an already submitted application; no production request or payment mutation.",
+);
 console.log(
   "Local queue integration passed: temporary failure persisted, frozen retry accepted, early delivery event reconciled, third send refused, one consent retained. No remote email sent.",
 );
