@@ -1,0 +1,18 @@
+{
+  "source": "operator-supplied Business seller Sandbox Activity screenshots",
+  "marketplaceOrderId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+  "paypalOrderId": "5B5018099M173722J",
+  "merchantCaptureId": "17M125027B131373Y",
+  "grossCents": 450,
+  "feeCents": 65,
+  "netHeldCents": 385,
+  "currency": "USD",
+  "status": "On hold",
+  "heldDate": "2026-10-11",
+  "displayedReleaseDate": "2026-10-12",
+  "dateIsSettlementGuarantee": false,
+  "notice": "We\u2019re taking a closer look at this payment. It\u2019s required for some payments and normally takes up to 3 business days. Don\u2019t ship until we tell you it\u2019s ok.",
+  "visibleMenuActions": ["Add tracking", "Refund", "Archive"],
+  "acceptApproveReleaseActionVisible": false,
+  "additionalFinancialOperationsPerformed": false
+}

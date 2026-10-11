@@ -1,0 +1,201 @@
+{
+  "recordedAt": "2026-10-11T05:51:24.834Z",
+  "financialMutations": 0,
+  "oauth": "Sandbox HTTP 200",
+  "existing": [
+    {
+      "capture": {
+        "id": "2RA30218PE716183N",
+        "status": "PENDING",
+        "pendingReason": "ECHECK",
+        "amount": {
+          "currency_code": "USD",
+          "value": "35.00"
+        },
+        "paypalOrderId": "2H896866K62686904"
+      },
+      "canonical": {
+        "id": "2H896866K62686904",
+        "status": "COMPLETED",
+        "intent": "CAPTURE",
+        "paymentSourceKinds": ["paypal"],
+        "buyerDistinctFromSeller": true,
+        "sellerMerchantIds": ["K6S8CVBZ2FSVL"],
+        "purchaseUnits": [
+          {
+            "custom_id": "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c",
+            "amount": {
+              "currency_code": "USD",
+              "value": "35.00"
+            },
+            "captures": [
+              {
+                "id": "2RA30218PE716183N",
+                "status": "PENDING",
+                "pendingReason": "ECHECK",
+                "amount": {
+                  "currency_code": "USD",
+                  "value": "35.00"
+                },
+                "final_capture": true
+              }
+            ]
+          }
+        ],
+        "localAssociationMatches": true
+      },
+      "local": {
+        "order": {
+          "id": "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c",
+          "state": "PENDING_PAYMENT",
+          "total_cents": 3500,
+          "paypal_order_id": "2H896866K62686904",
+          "paypal_capture_id": null,
+          "payout_status": "SIMULATED"
+        },
+        "ledger": [],
+        "paymentEvents": [],
+        "snapshotHash": "ae543499a4f40721e9b15c58eba112d31708adc6f73afef453a85d4cb35f869e"
+      }
+    },
+    {
+      "capture": {
+        "id": "44G98547CY6197247",
+        "status": "PENDING",
+        "pendingReason": "PENDING_REVIEW",
+        "amount": {
+          "currency_code": "USD",
+          "value": "4.50"
+        },
+        "paypalOrderId": "6H801422XW275760H"
+      },
+      "canonical": {
+        "id": "6H801422XW275760H",
+        "status": "COMPLETED",
+        "intent": "CAPTURE",
+        "paymentSourceKinds": ["paypal"],
+        "buyerDistinctFromSeller": true,
+        "sellerMerchantIds": ["K6S8CVBZ2FSVL"],
+        "purchaseUnits": [
+          {
+            "custom_id": "3e48d73e-3ee5-4102-8877-7eaae17ea8b4",
+            "amount": {
+              "currency_code": "USD",
+              "value": "4.50",
+              "breakdown": {}
+            },
+            "captures": [
+              {
+                "id": "44G98547CY6197247",
+                "status": "PENDING",
+                "pendingReason": "PENDING_REVIEW",
+                "amount": {
+                  "currency_code": "USD",
+                  "value": "4.50"
+                },
+                "final_capture": true
+              }
+            ]
+          }
+        ],
+        "localAssociationMatches": true
+      },
+      "local": {
+        "order": {
+          "id": "3e48d73e-3ee5-4102-8877-7eaae17ea8b4",
+          "state": "PENDING_PAYMENT",
+          "total_cents": 450,
+          "paypal_order_id": "6H801422XW275760H",
+          "paypal_capture_id": null,
+          "payout_status": "SIMULATED"
+        },
+        "ledger": [],
+        "paymentEvents": [],
+        "snapshotHash": "83edd7d60119c4a16f8ea2e64aee164e20f72824ed0f77fb2285d491bd5ef7b8"
+      }
+    }
+  ],
+  "webhooks": [
+    {
+      "id": "5K366015HE7061019",
+      "url": "https://runners.aibrylabs.com/api/webhooks/paypal",
+      "events": [
+        "CHECKOUT.CHECKOUT.BUYER-APPROVED",
+        "CHECKOUT.ORDER.APPROVED",
+        "CHECKOUT.ORDER.COMPLETED",
+        "CHECKOUT.ORDER.DECLINED",
+        "PAYMENT.CAPTURE.COMPLETED",
+        "PAYMENT.CAPTURE.DENIED",
+        "PAYMENT.CAPTURE.PENDING",
+        "PAYMENT.CAPTURE.REFUNDED",
+        "PAYMENT.CAPTURE.REVERSED"
+      ],
+      "productionUrlMatches": true,
+      "configuredIdMatches": true
+    }
+  ],
+  "testOrder": {
+    "local": {
+      "order": {
+        "id": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+        "state": "PENDING_PAYMENT",
+        "total_cents": 450,
+        "paypal_order_id": "5B5018099M173722J",
+        "paypal_capture_id": null,
+        "payout_status": "SIMULATED"
+      },
+      "ledger": [],
+      "paymentEvents": [],
+      "snapshotHash": "4817a7091f34062bf83f6bdbf5cde33bc1e2346b0548f024cf16366dd1573ccf"
+    },
+    "canonical": {
+      "id": "5B5018099M173722J",
+      "status": "COMPLETED",
+      "intent": "CAPTURE",
+      "paymentSourceKinds": ["paypal"],
+      "buyerDistinctFromSeller": true,
+      "sellerMerchantIds": ["K6S8CVBZ2FSVL"],
+      "purchaseUnits": [
+        {
+          "custom_id": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+          "amount": {
+            "currency_code": "USD",
+            "value": "4.50",
+            "breakdown": {}
+          },
+          "captures": [
+            {
+              "id": "17M125027B131373Y",
+              "status": "PENDING",
+              "pendingReason": "PENDING_REVIEW",
+              "amount": {
+                "currency_code": "USD",
+                "value": "4.50"
+              },
+              "final_capture": true
+            }
+          ]
+        }
+      ],
+      "localAssociationMatches": true
+    },
+    "webhookHistory": [
+      {
+        "id": "WH-48X53773VB742825H-3H41842089926113H",
+        "event_type": "PAYMENT.CAPTURE.PENDING",
+        "captureId": "17M125027B131373Y",
+        "captureStatus": "PENDING",
+        "amount": {
+          "currency_code": "USD",
+          "value": "4.50"
+        },
+        "delivery_status": null,
+        "localEventRecorded": false
+      }
+    ],
+    "webhookHistoryPaging": {
+      "returned": 2,
+      "hasMore": false
+    }
+  }
+}
