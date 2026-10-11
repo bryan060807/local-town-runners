@@ -1,0 +1,21 @@
+{
+  "source": "operator-provided PayPal dashboard event JSON; corroborated by provider GET and production runtime log",
+  "eventId": "WH-48X53773VB742825H-3H41842089926113H",
+  "eventType": "PAYMENT.CAPTURE.PENDING",
+  "captureId": "17M125027B131373Y",
+  "paypalOrderId": "5B5018099M173722J",
+  "marketplaceOrderId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+  "status": "PENDING",
+  "pendingReason": "PENDING_REVIEW",
+  "amount": {
+    "currency_code": "USD",
+    "value": "4.50"
+  },
+  "transmission": {
+    "url": "https://runners.aibrylabs.com/api/webhooks/paypal",
+    "httpStatus": 200,
+    "status": "SUCCESS",
+    "sentAt": "2026-10-11T05:28:23Z",
+    "responseDate": "2026-10-11T05:28:27Z"
+  }
+}

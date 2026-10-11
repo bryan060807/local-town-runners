@@ -1,0 +1,24 @@
+{
+  "orderId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+  "allowCapture": false,
+  "observations": [
+    {
+      "payment": {
+        "captureId": "17M125027B131373Y",
+        "providerStatus": "PENDING",
+        "phase": "capture_pending",
+        "pendingReason": "PENDING_REVIEW"
+      },
+      "message": "PayPal is processing your payment. It has not completed yet. Please do not pay again."
+    },
+    {
+      "payment": {
+        "captureId": "17M125027B131373Y",
+        "providerStatus": "PENDING",
+        "phase": "capture_pending",
+        "pendingReason": "PENDING_REVIEW"
+      },
+      "message": "PayPal is processing your payment. It has not completed yet. Please do not pay again."
+    }
+  ]
+}

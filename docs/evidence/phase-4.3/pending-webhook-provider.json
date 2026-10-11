@@ -1,0 +1,16 @@
+{
+  "source": "independent PayPal Sandbox GET by exact operator-supplied event ID",
+  "recordedAt": "2026-10-11T05:33:24.689Z",
+  "id": "WH-48X53773VB742825H-3H41842089926113H",
+  "event_type": "PAYMENT.CAPTURE.PENDING",
+  "createdAt": "2026-10-11T05:28:14.037Z",
+  "captureId": "17M125027B131373Y",
+  "status": "PENDING",
+  "pendingReason": "PENDING_REVIEW",
+  "amount": {
+    "currency_code": "USD",
+    "value": "4.50"
+  },
+  "customId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+  "paypalOrderId": "5B5018099M173722J"
+}

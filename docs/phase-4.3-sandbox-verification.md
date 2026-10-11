@@ -1,6 +1,6 @@
 # Phase 4.3 — accelerated Sandbox verification
 
-October 11, 2026 (America/Chicago). **Preflight and unpaid test draft verified; new payment awaits explicit authorization.** No new PayPal order, approval, capture, refund, payout or financial reconciliation was initiated by this phase.
+October 11, 2026 (America/Chicago). **One explicitly authorized $4.50 Sandbox test was attempted; completed-payment verification is blocked on PayPal PENDING_REVIEW.** The operator performed checkout and capture through production. The agent made no financial API call, extra charge, refund or payout; follow-up reconciliation of this new test used capture disabled. Both original pending transactions remain untouched.
 
 ## Actual read-only findings
 
@@ -33,7 +33,7 @@ Official sources retrieved successfully over verified HTTPS during this phase:
 
 ## Prepared test specification
 
-Label: **PHASE 4.3 — SINGLE BALANCE-FUNDED SANDBOX VERIFICATION**.
+Label: **PHASE 4.3 — SINGLE SANDBOX VERIFICATION (PAYPAL BALANCE UNAVAILABLE)**. Balance funding was the proposed method, but the operator's checkout screenshot shows that PayPal disabled it. The operator confirms selecting a **Sandbox credit card** for this one authorized test.
 
 Product: **Habanero Cinnamon Rolls**, fictional Demo Hearth Bakery. Quantity **1**, total **$4.50 USD**, using existing stock and price. The public template listing is `7197dfe0-af15-40ee-a7e7-ecd7f783601e`; an isolated customer workspace has its own copy and listing ID. Use its displayed price, not a hard-coded client price. Do not add other cart items or change either existing pending order.
 
@@ -51,17 +51,17 @@ The operator prepared marketplace order **`29945be0-236d-4a80-845a-36cf43b4fb1a`
 
 ## Completion evidence required after authorization
 
-| Check                                                              | Present result                                                      |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| New marketplace draft and operator authorization                   | Draft verified; explicit authorization pending                      |
-| Buyer-selected PayPal balance                                      | Awaiting operator                                                   |
-| PayPal order COMPLETED and exactly one capture COMPLETED           | Not yet attempted                                                   |
-| One purchase unit; matching custom_id, provider binding, USD $4.50 | Not yet verified for new order                                      |
-| Local PAID with same merchant capture                              | Not yet verified                                                    |
-| Authentic signed capture-completed webhook accepted                | Not yet verified                                                    |
-| Exactly one CUSTOMER_PAYMENT ledger row, amount 450 cents          | Not yet verified                                                    |
-| Repeated read-only reconciliation leaves capture/ledger unchanged  | Not yet verified                                                    |
-| Vendor and runner earnings simulated; no payout                    | Existing implementation verified by regression; new records pending |
+| Check                                                              | Present result                                                    |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| New marketplace draft and operator authorization                   | Verified; operator explicitly authorized this one $4.50 test      |
+| Buyer-selected PayPal balance                                      | Unavailable in the actual PayPal checkout                         |
+| PayPal order COMPLETED and exactly one capture COMPLETED           | Parent COMPLETED; one capture PENDING / PENDING_REVIEW            |
+| One purchase unit; matching custom_id, provider binding, USD $4.50 | Verified                                                          |
+| Local PAID with same merchant capture                              | Blocked; local PENDING_PAYMENT correctly retained                 |
+| Authentic signed capture-completed webhook accepted                | Pending webhook verified; completed event not available           |
+| Exactly one CUSTOMER_PAYMENT ledger row, amount 450 cents          | Blocked; zero payment credit is correct while capture is pending  |
+| Repeated read-only reconciliation leaves capture/ledger unchanged  | Verified for pending capture; paid-ledger replay still unverified |
+| Vendor and runner earnings simulated; no payout                    | payout_status SIMULATED; no allocations credited or payout made   |
 
 The existing financial schema intentionally stores **four total ledger rows** on first payment: one CUSTOMER_PAYMENT plus simulated vendor, runner and platform allocations. For $4.50 they must be 450, 360, 67 and 23 cents respectively. The customer row records actual Sandbox proof; it does not represent a Live charge. A requirement for one payment entry is satisfied by one CUSTOMER_PAYMENT, not by deleting established allocation rows.
 
@@ -82,4 +82,20 @@ Use the genuine provider event ID and local payment-event association, together 
 
 Preserve it and report the canonical pending reason. Do not repeat payment or force PAID. If buyer balance is unavailable, prepare/configure a suitable Personal Sandbox buyer before requesting a separately authorized attempt. If PayPal reviews balance-funded captures, inspect new-test seller/buyer readiness and any supported Sandbox review settings, or seek PayPal developer support. A different Sandbox merchant/app would require explicit configuration changes and retention of access to the old merchant's transactions; it is not an automatic shortcut. Continue demonstrating truthful pending status plus local fixture tests labeled as simulated until a genuine COMPLETED Sandbox capture is observed.
 
-**Definition of done remains open.** No new financial transaction has been authorized or executed; completed capture, signed delivery, PAID transition and new-order exactly-once payment evidence remain pending.
+## Authorized test result and live webhook evidence
+
+The operator explicitly replied **“Authorize this one $4.50 Sandbox test”** for marketplace order `29945be0-236d-4a80-845a-36cf43b4fb1a`. Its new PayPal order is **`5B5018099M173722J`**, with one merchant capture **`17M125027B131373Y`**. Actual canonical and direct capture reads both show **PENDING / PENDING_REVIEW**, USD **4.50**; the parent order is COMPLETED. The sole purchase unit correctly binds the marketplace UUID and seller `K6S8CVBZ2FSVL`. Local state remains PENDING_PAYMENT, capture confirmation null, ledger and completed payment events empty.
+
+The operator supplied checkout evidence showing **PayPal balance — $5,000.00 available — Unavailable at this time** and a subsequent marketplace screenshot showing this exact new order pending. The app sends a PayPal-wallet USD order and does not specify a funding preference excluding balance. The provider confirms a US buyer; it does not expose the granular reason for this checkout's balance ineligibility or the internal wallet funding choice. The report therefore does not attribute the restriction to insufficient funds, an app-forced bank payment, an unsupported-balance claim or a specific unverified account flag.
+
+The documented Vercel runtime stream responded HTTP 200 and returned actual production records for this exact order: approved status, pending capture reconciliation, and **webhook_pending** from `/api/webhooks/paypal` at `2026-10-11T05:28:27.202Z`. The deployed handler reaches that log only after PayPal's signature verification succeeds, canonical order/amount/custom_id verification passes and the event capture ID matches. This verifies **authentic signed pending-event processing in production**. It does not prove completed-event processing. The function log records have status -1, rather than a recorded HTTP response status; the pending handler's documented response is 200. The bounded live stream later timed out after collecting those records; neither historical log completeness nor absence of other errors is inferred.
+
+Two actual shared recovery calls with **allowCapture=false** returned the same capture_pending / PENDING_REVIEW assessment and same capture ID. They cannot create a PayPal order or call capture. Follow-up provider/database evidence confirms the sole capture and zero ledger credit remain; repeated observation writes are confined to the new test's recovery metadata. Before/after hashes for the two original orders, recovery records, ledger and payment events remain equal.
+
+The initial provider event-history query had not yet indexed the new pending event. The operator subsequently supplied genuine dashboard delivery details for **PAYMENT.CAPTURE.PENDING event `WH-48X53773VB742825H-3H41842089926113H`**, showing SUCCESS and **HTTP 200** delivery to the production webhook at `2026-10-11T05:28:23Z`, with the response dated `2026-10-11T05:28:27Z`. An independent PayPal GET by that exact event ID verifies the capture ID, marketplace custom_id, PayPal order ID, USD amount and PENDING_REVIEW reason. These actual provider, operator delivery and production runtime records corroborate signed pending-event processing. The separate operator-supplied CHECKOUT.ORDER.APPROVED event `WH-6V316584PH625881U-5D603060LW171523D` also shows HTTP 200 delivery; its delivery SUCCESS means notification delivery, not capture completion. Buyer account VERIFIED in that approval event likewise does not constitute completed-payment proof.
+
+The operator confirms using a **Sandbox credit card**, so this new test did not select the bank-funded eCheck shown as a default in the earlier screenshot. Their buyer receipt independently identifies transaction **`2AD46134PY6720315`**, Visa credit ending 0026, and USD 4.50. Actual GET `/v2/payments/captures/2AD46134PY6720315` returns **COMPLETED**, USD 4.50, related order `5B5018099M173722J`. A contemporaneous actual GET of canonical merchant capture **`17M125027B131373Y`** returns **PENDING / PENDING_REVIEW** for that same order and amount. This is a material distinction: buyer-side completion is verified, while canonical merchant-side completion remains blocked. The two side-specific resource IDs are not treated as duplicate capture attempts, and the buyer's COMPLETED resource is not substituted into the merchant order to bypass its pending-review proof boundary.
+
+The wording/actions in the **Business seller's Sandbox Activity** for this specific new capture remain requested from the operator; the buyer receipt and webhook event JSON do not expose those seller account UI actions. Its capture resource exposes self/refund/up links; no supported REST review-acceptance action is exposed there. No such action was invented or invoked. If the seller UI provides an explicit action, verify it pertains only to this newly authorized capture before assessing it; the two preserved captures must not be changed. No additional test payment is authorized.
+
+**Definition of done remains open.** The authorized attempt is genuinely accounted for, signed pending delivery is verified, and pending reconciliation is idempotent. A COMPLETED capture, PAID transition, one customer-payment ledger entry and completed-event replay remain blocked on PayPal review. No mock success is represented as completed Sandbox payment.

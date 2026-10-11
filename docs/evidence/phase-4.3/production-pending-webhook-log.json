@@ -1,0 +1,63 @@
+{
+  "deployment": "dpl_6taLk9mw9BiKujoEonwXhrehV2Sm",
+  "records": [
+    {
+      "path": "/api/payments/status",
+      "method": "POST",
+      "status": -1,
+      "source": "function",
+      "time": 1791696480005,
+      "event": "payment_recovery",
+      "stage": "approved",
+      "outcome": "verified",
+      "orderId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+      "capturePresent": false
+    },
+    {
+      "path": "/api/payments/status",
+      "method": "POST",
+      "status": -1,
+      "source": "function",
+      "time": 1791696480067,
+      "event": "payment_recovery",
+      "stage": "reconciliation",
+      "outcome": "approved",
+      "orderId": "29945be0-236d-4a80-845a-36cf43b4fb1a"
+    },
+    {
+      "path": "/api/capture",
+      "method": "POST",
+      "status": -1,
+      "source": "function",
+      "time": 1791696491172,
+      "event": "payment_recovery",
+      "stage": "capture_pending",
+      "outcome": "PENDING",
+      "orderId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+      "capturePresent": true
+    },
+    {
+      "path": "/api/capture",
+      "method": "POST",
+      "status": -1,
+      "source": "function",
+      "time": 1791696491239,
+      "event": "payment_recovery",
+      "stage": "reconciliation",
+      "outcome": "capture_pending",
+      "orderId": "29945be0-236d-4a80-845a-36cf43b4fb1a"
+    },
+    {
+      "path": "/api/webhooks/paypal",
+      "method": "POST",
+      "status": -1,
+      "source": "function",
+      "time": 1791696507202,
+      "event": "webhook_pending",
+      "stage": "capture_pending",
+      "orderId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+      "capturePresent": true
+    }
+  ],
+  "streamStatus": "HTTP 200; TimeoutError"
+}

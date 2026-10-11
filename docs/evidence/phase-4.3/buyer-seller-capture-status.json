@@ -1,0 +1,27 @@
+{
+  "source": "actual read-only Sandbox capture-resource responses; buyer receipt ID supplied in operator screenshot",
+  "recordedAt": "2026-10-11T05:34:36.672Z",
+  "reads": [
+    {
+      "requestedId": "2AD46134PY6720315",
+      "id": "2AD46134PY6720315",
+      "status": "COMPLETED",
+      "amount": {
+        "currency_code": "USD",
+        "value": "4.50"
+      },
+      "paypalOrderId": "5B5018099M173722J"
+    },
+    {
+      "requestedId": "17M125027B131373Y",
+      "id": "17M125027B131373Y",
+      "status": "PENDING",
+      "pendingReason": "PENDING_REVIEW",
+      "amount": {
+        "currency_code": "USD",
+        "value": "4.50"
+      },
+      "paypalOrderId": "5B5018099M173722J"
+    }
+  ]
+}
