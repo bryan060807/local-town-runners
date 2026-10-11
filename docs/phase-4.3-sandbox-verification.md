@@ -1,6 +1,6 @@
 # Phase 4.3 — accelerated Sandbox verification
 
-October 11, 2026 (America/Chicago). **Preflight verified; new payment awaits operator preparation and explicit authorization.** No new PayPal order, approval, capture, refund, payout or financial reconciliation was initiated by this phase.
+October 11, 2026 (America/Chicago). **Preflight and unpaid test draft verified; new payment awaits explicit authorization.** No new PayPal order, approval, capture, refund, payout or financial reconciliation was initiated by this phase.
 
 ## Actual read-only findings
 
@@ -37,7 +37,7 @@ Label: **PHASE 4.3 — SINGLE BALANCE-FUNDED SANDBOX VERIFICATION**.
 
 Product: **Habanero Cinnamon Rolls**, fictional Demo Hearth Bakery. Quantity **1**, total **$4.50 USD**, using existing stock and price. The public template listing is `7197dfe0-af15-40ee-a7e7-ecd7f783601e`; an isolated customer workspace has its own copy and listing ID. Use its displayed price, not a hard-coded client price. Do not add other cart items or change either existing pending order.
 
-The operator was asked to prepare one unpaid draft in their own customer session and provide its new marketplace UUID. That UUID will be the exact test association and report label. **No new persisted test-order UUID is available yet.** Preparing it requires the operator's session so the order remains accessible to them; no operator account was impersonated and no old demo identity was reopened. Draft preparation reserves fictional inventory and does not call PayPal. The app's anonymous Preview order does not create a persistent draft.
+The operator prepared marketplace order **`29945be0-236d-4a80-845a-36cf43b4fb1a`** in their own session. The hosted read verifies state DRAFT, quantity 1, total 450 cents, Habanero Cinnamon Rolls from fictional Demo Hearth Bakery, an active customer workspace matching the vendor workspace, no suspension, null PayPal order/capture IDs, zero ledger/payment events and payout_status SIMULATED. This is the exact Phase 4.3 test association. The operator reports approximately $5,000 in their Personal buyer's PayPal balance; that is operator-reported evidence, not a merchant-API balance read. Final checkout funding-source selection still requires inspection in PayPal. No operator account was impersonated and no old demo identity was reopened. Draft preparation reserves fictional inventory and does not call PayPal. The app's anonymous Preview order does not create a persistent draft.
 
 ## Operator steps, with a transaction boundary
 
@@ -53,7 +53,7 @@ The operator was asked to prepare one unpaid draft in their own customer session
 
 | Check                                                              | Present result                                                      |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| New marketplace draft and operator authorization                   | Awaiting operator                                                   |
+| New marketplace draft and operator authorization                   | Draft verified; explicit authorization pending                      |
 | Buyer-selected PayPal balance                                      | Awaiting operator                                                   |
 | PayPal order COMPLETED and exactly one capture COMPLETED           | Not yet attempted                                                   |
 | One purchase unit; matching custom_id, provider binding, USD $4.50 | Not yet verified for new order                                      |
