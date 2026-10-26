@@ -1,0 +1,13 @@
+{
+  "id": "dpl_6mrY8PbkjqdVMAD4kJEdQWjn5oTM",
+  "status": "READY",
+  "target": "production",
+  "commit": "041896ec528397de2466ca733e2fea2381ea1df9",
+  "aliases": [
+    "runners.aibrylabs.com",
+    "local-town-runners.vercel.app",
+    "local-town-runners-bryan060807s-projects.vercel.app",
+    "local-town-runners-git-main-bryan060807s-projects.vercel.app"
+  ],
+  "framework": "nextjs"
+}

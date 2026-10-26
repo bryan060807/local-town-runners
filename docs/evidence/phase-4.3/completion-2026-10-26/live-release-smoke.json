@@ -1,0 +1,61 @@
+{
+  "recordedAt": "2026-10-26T19:20:45.011Z",
+  "checks": [
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/agreements",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "anonymousRedirect": "/login",
+      "redirectMechanism": "Next.js streamed meta redirect",
+      "privatePaymentDataRendered": false
+    },
+    {
+      "path": "/api/admin/payment-recovery",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/api/webhooks/paypal",
+      "method": "POST",
+      "status": 401
+    }
+  ],
+  "paidOrders": [
+    {
+      "id": "3e48d73e-3ee5-4102-8877-7eaae17ea8b4",
+      "state": "PAID",
+      "paypal_capture_id": "44G98547CY6197247",
+      "total_cents": 450,
+      "payout_status": "SIMULATED"
+    },
+    {
+      "id": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+      "state": "PAID",
+      "paypal_capture_id": "17M125027B131373Y",
+      "total_cents": 450,
+      "payout_status": "SIMULATED"
+    },
+    {
+      "id": "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c",
+      "state": "PAID",
+      "paypal_capture_id": "2RA30218PE716183N",
+      "total_cents": 3500,
+      "payout_status": "SIMULATED"
+    }
+  ],
+  "customerPaymentEntryCount": 3,
+  "totalCustomerPaymentCents": 4400,
+  "noNewCapture": true,
+  "realPayoutsEnabled": false,
+  "operatorAuthenticatedBrowserUsed": false
+}

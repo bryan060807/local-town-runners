@@ -16,5 +16,7 @@
   },
   "npmAuditReportedVulnerabilities": 0,
   "databaseMigrationRequired": false,
-  "deploymentStatus": "prepared for existing main-to-Vercel release"
+  "deploymentStatus": "READY",
+  "productionCommit": "041896ec528397de2466ca733e2fea2381ea1df9",
+  "productionDeployment": "dpl_6mrY8PbkjqdVMAD4kJEdQWjn5oTM"
 }
