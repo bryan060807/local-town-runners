@@ -1,0 +1,6 @@
+{
+  "bugReproduced": true,
+  "approvedRoleNames": ["admin", "customer"],
+  "selectedPaymentPanel": "customer",
+  "roleApprovalRecordsModified": false
+}

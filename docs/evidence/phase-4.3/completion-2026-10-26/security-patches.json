@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-26",
+  "beforeReportedVulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 4,
+    "critical": 1,
+    "total": 5
+  },
+  "patchedVersions": {
+    "next": "16.4.3",
+    "eslint-config-next": "16.4.3",
+    "zod": "4.6.7"
+  },
+  "afterReportedVulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "tlsAndArtifactIntegrityPreserved": true
+}

@@ -1,8 +1,36 @@
 # Phase 4.3 — accelerated Sandbox verification
 
-October 11, 2026 (America/Chicago). **One explicitly authorized $4.50 Sandbox test was attempted; completed-payment verification is blocked on PayPal PENDING_REVIEW.** The operator performed checkout and capture through production. The agent made no financial API call, extra charge, refund or payout; follow-up reconciliation of this new test used capture disabled. Both original pending transactions remain untouched.
+Completion audit: **October 26, 2026 (America/Chicago). The authorized $4.50 Sandbox payment is genuinely COMPLETED, matched to its PAID marketplace order and exactly one customer-payment ledger entry.** PayPal's completed webhook automatically confirmed it on October 12. Two fresh capture-disabled reconciliation runs retained the same capture and identical ledger rows. No additional payment, refund, Live transaction or payout was initiated.
 
-## Actual read-only findings
+## Current completion and app visibility — October 26
+
+All three marketplace test payments were already PAID in the hosted app **before** this completion audit. Actual canonical PayPal GETs verify one matching COMPLETED merchant capture, USD amount and marketplace custom_id for each:
+
+| Marketplace order                      | USD amount | Merchant capture    | PayPal / local status | Customer-payment ledger entries |
+| -------------------------------------- | ---------- | ------------------- | --------------------- | ------------------------------- |
+| `8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c` | $35.00     | `2RA30218PE716183N` | COMPLETED / PAID      | 1                               |
+| `3e48d73e-3ee5-4102-8877-7eaae17ea8b4` | $4.50      | `44G98547CY6197247` | COMPLETED / PAID      | 1                               |
+| `29945be0-236d-4a80-845a-36cf43b4fb1a` | $4.50      | `17M125027B131373Y` | COMPLETED / PAID      | 1                               |
+
+These total **$44.00 USD** in actual Sandbox payments. Each has three separate simulated allocation rows; vendor and runner earnings remain simulated, payout_status is SIMULATED, and no PayPal payout was sent. The $4.50 verification order has customer payment 450 cents and vendor/runner/platform allocations 360/67/23 cents.
+
+Its authentic provider event **`WH-9LD02972PR007470J-3RK76219XD453331M`**, PAYMENT.CAPTURE.COMPLETED, was created at `2026-10-12T05:28:26.553Z`; the app recorded that exact event/capture association at `2026-10-12T05:28:35.734377Z` (October 12, 12:28 AM America/Chicago). Independent provider event GETs verify the event type, amount, order and capture. The deployed webhook handler requires successful PayPal signature verification and canonical matching before storing that WH event ID or crediting payment. Manual recovery uses a different capture-prefixed event key. The matching real provider event and persisted WH record establish completed-webhook processing; this audit did not replay a fake signature or infer delivery merely from event generation. Historical HTTP transmission headers are not available through the provider event GET.
+
+The other two stored completed webhook events are `WH-7L972278WR107503N-3Y434103KE246774E` ($35) and `WH-2TA490075K078542H-12C9512847400552B` (earlier $4.50). They likewise match actual provider event responses. These legitimate automatic settlement records were already present; this audit made no financial or recovery mutation to either preserved original order.
+
+The apparent missing history is explained by **expired isolated demo accounts**, not deleted payment records. All three orders belong to non-template demo workspaces that expired October 10–11. A new Demo Customer session creates a different workspace; it does not inherit old orders. Do not reopen expired identities, move ownership or reset demo data to make the payments visible.
+
+The existing real operator account `bryan060807@gmail.com` is email-verified, approved, unsuspended and has an approved administrator role. Exit Demo Mode, sign in with that real account and open **https://runners.aibrylabs.com/dashboard**. Existing administrator RLS permits access to all orders, including those from expired demo workspaces; all three are within the dashboard's latest 50 orders (only seven total orders were present at the audit). Expand each order's financial allocations and event history. The administrator payment recovery form also confirms an existing UUID at **https://runners.aibrylabs.com/admin/payments**. The agent did not impersonate the operator or claim to have used their authenticated browser session.
+
+A separate display defect was reproduced: the dashboard queried roles without checking approval status, so a rejected vendor role selected Vendor earnings instead of the approved customer's payment history. Its query now filters status=approved. An actual hosted role read selects admin/customer and excludes the rejected vendor role; rendering the actual PaymentSummary component with the hosted financial projection shows **Your payment history**, **$44.00** and **3** transactions. No role approval, order ownership, demo expiration or database access policy was changed. This panel fix does not cause or retroactively claim the earlier automatic payment confirmations.
+
+Two actual shared recovery runs against the authorized $4.50 order used allowCapture=false and a provider adapter that rejects every non-GET request. Both returned confirmed / PAID; one canonical capture and the same four ledger row IDs/values remained, including exactly one CUSTOMER_PAYMENT. One distinct capture-prefixed audit event can be recorded alongside the original webhook event; multiple confirmation sources do not duplicate financial credit. The original orders and ledger remained unchanged during this audit.
+
+Release validation also surfaced existing npm advisories affecting Next.js 16.4.0 and Zod 4.6.5. Compatible patch updates select **Next.js / eslint-config-next 16.4.3** and **Zod 4.6.7**, with the lockfile refreshed through normal verified npm installation. No major-version or payment-flow upgrade is included. Release checks and deployment evidence are recorded below. The original completed-payment evidence was obtained while production still ran `dd2e4258b962387236de01e2a602e18c5686980b`; a new payment or database migration is not required for the display fix.
+
+Sanitized completion evidence is under `docs/evidence/phase-4.3/completion-2026-10-26/`. The history below preserves the October 11 investigation and is not the current pending state.
+
+## Historical preflight findings — October 11
 
 Production is `https://runners.aibrylabs.com`. Its READY deployment is `dpl_6taLk9mw9BiKujoEonwXhrehV2Sm`, code revision `dd2e4258b962387236de01e2a602e18c5686980b`. Hosted `phase42_ready` returns true. The demo-entry API and fictional $4.50 listing respond successfully. Existing payment controls use server-derived USD totals, explicit buyer approval and capture, canonical capture verification, and durable capture-attempt protection. PayPal's API base remains fixed to Sandbox.
 
@@ -51,17 +79,17 @@ The operator prepared marketplace order **`29945be0-236d-4a80-845a-36cf43b4fb1a`
 
 ## Completion evidence required after authorization
 
-| Check                                                              | Present result                                                    |
-| ------------------------------------------------------------------ | ----------------------------------------------------------------- |
-| New marketplace draft and operator authorization                   | Verified; operator explicitly authorized this one $4.50 test      |
-| Buyer-selected PayPal balance                                      | Unavailable in the actual PayPal checkout                         |
-| PayPal order COMPLETED and exactly one capture COMPLETED           | Parent COMPLETED; one capture PENDING / PENDING_REVIEW            |
-| One purchase unit; matching custom_id, provider binding, USD $4.50 | Verified                                                          |
-| Local PAID with same merchant capture                              | Blocked; local PENDING_PAYMENT correctly retained                 |
-| Authentic signed capture-completed webhook accepted                | Pending webhook verified; completed event not available           |
-| Exactly one CUSTOMER_PAYMENT ledger row, amount 450 cents          | Blocked; zero payment credit is correct while capture is pending  |
-| Repeated read-only reconciliation leaves capture/ledger unchanged  | Verified for pending capture; paid-ledger replay still unverified |
-| Vendor and runner earnings simulated; no payout                    | payout_status SIMULATED; no allocations credited or payout made   |
+| Check                                                              | Present result                                                   |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| New marketplace draft and operator authorization                   | Verified; operator explicitly authorized this one $4.50 test     |
+| Buyer-selected PayPal balance                                      | Unavailable; operator used a genuine Sandbox credit-card payment |
+| PayPal order COMPLETED and exactly one capture COMPLETED           | Verified October 26 after provider review cleared                |
+| One purchase unit; matching custom_id, provider binding, USD $4.50 | Verified                                                         |
+| Local PAID with same merchant capture                              | Verified; already recorded by the completed webhook October 12   |
+| Authentic signed capture-completed webhook accepted                | Verified by real provider event and matching stored WH record    |
+| Exactly one CUSTOMER_PAYMENT ledger row, amount 450 cents          | Verified                                                         |
+| Repeated read-only reconciliation leaves capture/ledger unchanged  | Verified twice against the actual completed capture              |
+| Vendor and runner earnings simulated; no payout                    | Verified; three simulated allocation rows and no disbursement    |
 
 The existing financial schema intentionally stores **four total ledger rows** on first payment: one CUSTOMER_PAYMENT plus simulated vendor, runner and platform allocations. For $4.50 they must be 450, 360, 67 and 23 cents respectively. The customer row records actual Sandbox proof; it does not represent a Live charge. A requirement for one payment entry is satisfied by one CUSTOMER_PAYMENT, not by deleting established allocation rows.
 
@@ -82,7 +110,7 @@ Use the genuine provider event ID and local payment-event association, together 
 
 Preserve it and report the canonical pending reason. Do not repeat payment or force PAID. If buyer balance is unavailable, prepare/configure a suitable Personal Sandbox buyer before requesting a separately authorized attempt. If PayPal reviews balance-funded captures, inspect new-test seller/buyer readiness and any supported Sandbox review settings, or seek PayPal developer support. A different Sandbox merchant/app would require explicit configuration changes and retention of access to the old merchant's transactions; it is not an automatic shortcut. Continue demonstrating truthful pending status plus local fixture tests labeled as simulated until a genuine COMPLETED Sandbox capture is observed.
 
-## Authorized test result and live webhook evidence
+## Historical pending-review result and live webhook evidence — October 11
 
 The operator explicitly replied **“Authorize this one $4.50 Sandbox test”** for marketplace order `29945be0-236d-4a80-845a-36cf43b4fb1a`. Its new PayPal order is **`5B5018099M173722J`**, with one merchant capture **`17M125027B131373Y`**. Actual canonical and direct capture reads both show **PENDING / PENDING_REVIEW**, USD **4.50**; the parent order is COMPLETED. The sole purchase unit correctly binds the marketplace UUID and seller `K6S8CVBZ2FSVL`. Local state remains PENDING_PAYMENT, capture confirmation null, ledger and completed payment events empty.
 
@@ -104,4 +132,10 @@ The supported continuation is to check this existing payment after PayPal releas
 
 For an immediate hackathon presentation, use the genuine buyer COMPLETED receipt, canonical merchant PENDING_REVIEW evidence, authentic signed pending webhook and correct pending-payment UI to demonstrate the live provider boundary honestly. Deterministic local completion/fulfillment tests may be demonstrated only with an explicit **SIMULATED — LOCAL FIXTURE** label, alongside the real Sandbox limitation. They must not be called a completed Sandbox capture or used to mark this hosted pending order PAID.
 
-**Definition of done remains open.** The authorized attempt is genuinely accounted for, signed pending delivery is verified, and pending reconciliation is idempotent. A COMPLETED capture, PAID transition, one customer-payment ledger entry and completed-event replay remain blocked on PayPal review. No mock success is represented as completed Sandbox payment.
+**Definition of done verified October 26:** the one authorized genuine Sandbox payment has a canonical COMPLETED merchant capture, matching PAID marketplace order, authentic completed-webhook record and exactly one correct customer-payment ledger entry. Repeated reconciliation does not recapture or duplicate ledger credit. Immediate balance funding was unavailable and this test completed only after PayPal's review cleared; the earlier acceleration limitation is preserved honestly. Live payments and real payouts remain disabled. No mock success is represented as completed Sandbox payment.
+
+## October 26 display repair and release validation
+
+The dashboard now selects only approved roles before choosing customer payment history or simulated vendor/runner earnings. The operator’s rejected vendor role no longer selects the vendor panel. The actual PaymentSummary component rendered with the verified financial projection reports $44.00 in three captured Sandbox transactions. Production settlement, capture IDs, consent and account role approvals are not changed by the display fix.
+
+After the compatible security patch updates, all 79 regression tests passed with zero failures/skips/cancellations; lint, explicit type checking and the production build passed. npm audit reports zero vulnerabilities. The release uses the existing main-to-Vercel pipeline; the final production deployment observation is appended after readiness is confirmed. No additional payment, financial retry or live payout is performed during release.

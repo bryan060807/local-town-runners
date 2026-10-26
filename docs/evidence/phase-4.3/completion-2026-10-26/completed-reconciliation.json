@@ -1,0 +1,51 @@
+{
+  "marketplaceOrderId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+  "recordedAt": "2026-10-26T19:04:33.659Z",
+  "captureAllowed": false,
+  "providerOrderReads": 2,
+  "financialProviderCalls": 0,
+  "runs": [
+    {
+      "payment": {
+        "captureId": "17M125027B131373Y",
+        "providerStatus": "COMPLETED",
+        "phase": "confirmed"
+      },
+      "message": "Payment confirmed. Your order is paid.",
+      "state": "PAID"
+    },
+    {
+      "payment": {
+        "captureId": "17M125027B131373Y",
+        "providerStatus": "COMPLETED",
+        "phase": "confirmed"
+      },
+      "message": "Payment confirmed. Your order is paid.",
+      "state": "PAID"
+    }
+  ],
+  "ledgerRowsUnchanged": true,
+  "ledger": [
+    {
+      "kind": "CUSTOMER_PAYMENT",
+      "amount_cents": 450,
+      "simulated": false
+    },
+    {
+      "kind": "VENDOR_ALLOCATION",
+      "amount_cents": 360,
+      "simulated": true
+    },
+    {
+      "kind": "RUNNER_ALLOCATION",
+      "amount_cents": 67,
+      "simulated": true
+    },
+    {
+      "kind": "PLATFORM_ALLOCATION",
+      "amount_cents": 23,
+      "simulated": true
+    }
+  ],
+  "customerPaymentEntryCount": 1
+}

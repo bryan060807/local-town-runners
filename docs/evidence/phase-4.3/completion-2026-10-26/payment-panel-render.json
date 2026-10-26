@@ -1,0 +1,9 @@
+{
+  "actualComponent": "src/components/PaymentSummary.tsx",
+  "selectedRole": "customer",
+  "renderedHeading": "Your payment history",
+  "capturedSandboxTotalCents": 4400,
+  "transactionCount": 3,
+  "rejectedVendorRoleExcluded": true,
+  "operatorBrowserSessionUsed": false
+}

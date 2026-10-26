@@ -1,0 +1,53 @@
+[
+  {
+    "marketplaceOrderId": "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c",
+    "eventId": "WH-7L972278WR107503N-3Y434103KE246774E",
+    "type": "PAYMENT.CAPTURE.COMPLETED",
+    "captureId": "2RA30218PE716183N",
+    "status": "COMPLETED",
+    "customId": "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c",
+    "paypalOrderId": "2H896866K62686904",
+    "amount": {
+      "currency_code": "USD",
+      "value": "35.00"
+    },
+    "eventCreatedAt": "2026-10-12T08:55:30.808Z",
+    "locallyRecordedAt": "2026-10-12T08:55:50.388725+00:00",
+    "captureMatches": true,
+    "customIdMatches": true
+  },
+  {
+    "marketplaceOrderId": "3e48d73e-3ee5-4102-8877-7eaae17ea8b4",
+    "eventId": "WH-2TA490075K078542H-12C9512847400552B",
+    "type": "PAYMENT.CAPTURE.COMPLETED",
+    "captureId": "44G98547CY6197247",
+    "status": "COMPLETED",
+    "customId": "3e48d73e-3ee5-4102-8877-7eaae17ea8b4",
+    "paypalOrderId": "6H801422XW275760H",
+    "amount": {
+      "currency_code": "USD",
+      "value": "4.50"
+    },
+    "eventCreatedAt": "2026-10-12T00:39:06.263Z",
+    "locallyRecordedAt": "2026-10-12T00:39:20.216485+00:00",
+    "captureMatches": true,
+    "customIdMatches": true
+  },
+  {
+    "marketplaceOrderId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+    "eventId": "WH-9LD02972PR007470J-3RK76219XD453331M",
+    "type": "PAYMENT.CAPTURE.COMPLETED",
+    "captureId": "17M125027B131373Y",
+    "status": "COMPLETED",
+    "customId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+    "paypalOrderId": "5B5018099M173722J",
+    "amount": {
+      "currency_code": "USD",
+      "value": "4.50"
+    },
+    "eventCreatedAt": "2026-10-12T05:28:26.553Z",
+    "locallyRecordedAt": "2026-10-12T05:28:35.734377+00:00",
+    "captureMatches": true,
+    "customIdMatches": true
+  }
+]

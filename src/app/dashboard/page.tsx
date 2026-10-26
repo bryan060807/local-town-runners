@@ -61,7 +61,11 @@ export default async function Dashboard() {
     { data: orders, error: ordersError },
     { data: owned, error: ownedError },
   ] = await Promise.all([
-    client.from("user_roles").select("role").eq("user_id", user.id),
+    client
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("status", "approved"),
     client
       .from("profiles")
       .select("display_name,suspended,demo_workspace")

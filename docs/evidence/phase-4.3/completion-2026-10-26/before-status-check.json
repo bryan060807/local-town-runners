@@ -1,0 +1,289 @@
+{
+  "recordedAt": "2026-10-26T19:00:26.519Z",
+  "financialMutations": 0,
+  "oauth": "Sandbox HTTP 200",
+  "existing": [
+    {
+      "capture": {
+        "id": "2RA30218PE716183N",
+        "status": "COMPLETED",
+        "pendingReason": null,
+        "amount": {
+          "currency_code": "USD",
+          "value": "35.00"
+        },
+        "paypalOrderId": "2H896866K62686904"
+      },
+      "canonical": {
+        "id": "2H896866K62686904",
+        "status": "COMPLETED",
+        "intent": "CAPTURE",
+        "paymentSourceKinds": ["paypal"],
+        "buyerDistinctFromSeller": true,
+        "sellerMerchantIds": ["K6S8CVBZ2FSVL"],
+        "purchaseUnits": [
+          {
+            "custom_id": "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c",
+            "amount": {
+              "currency_code": "USD",
+              "value": "35.00"
+            },
+            "captures": [
+              {
+                "id": "2RA30218PE716183N",
+                "status": "COMPLETED",
+                "pendingReason": null,
+                "amount": {
+                  "currency_code": "USD",
+                  "value": "35.00"
+                },
+                "final_capture": true
+              }
+            ]
+          }
+        ],
+        "localAssociationMatches": true
+      },
+      "local": {
+        "order": {
+          "id": "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c",
+          "state": "PAID",
+          "total_cents": 3500,
+          "paypal_order_id": "2H896866K62686904",
+          "paypal_capture_id": "2RA30218PE716183N",
+          "payout_status": "SIMULATED"
+        },
+        "ledger": [
+          {
+            "kind": "CUSTOMER_PAYMENT",
+            "amount_cents": 3500,
+            "simulated": false
+          },
+          {
+            "kind": "VENDOR_ALLOCATION",
+            "amount_cents": 2800,
+            "simulated": true
+          },
+          {
+            "kind": "RUNNER_ALLOCATION",
+            "amount_cents": 525,
+            "simulated": true
+          },
+          {
+            "kind": "PLATFORM_ALLOCATION",
+            "amount_cents": 175,
+            "simulated": true
+          }
+        ],
+        "paymentEvents": [
+          {
+            "event_id": "WH-7L972278WR107503N-3Y434103KE246774E",
+            "capture_id": "2RA30218PE716183N"
+          }
+        ],
+        "snapshotHash": "5c97650daf181c844eee673de49fac825aefc56f9b48d94013ab52a6af86546e"
+      }
+    },
+    {
+      "capture": {
+        "id": "44G98547CY6197247",
+        "status": "COMPLETED",
+        "pendingReason": null,
+        "amount": {
+          "currency_code": "USD",
+          "value": "4.50"
+        },
+        "paypalOrderId": "6H801422XW275760H"
+      },
+      "canonical": {
+        "id": "6H801422XW275760H",
+        "status": "COMPLETED",
+        "intent": "CAPTURE",
+        "paymentSourceKinds": ["paypal"],
+        "buyerDistinctFromSeller": true,
+        "sellerMerchantIds": ["K6S8CVBZ2FSVL"],
+        "purchaseUnits": [
+          {
+            "custom_id": "3e48d73e-3ee5-4102-8877-7eaae17ea8b4",
+            "amount": {
+              "currency_code": "USD",
+              "value": "4.50"
+            },
+            "captures": [
+              {
+                "id": "44G98547CY6197247",
+                "status": "COMPLETED",
+                "pendingReason": null,
+                "amount": {
+                  "currency_code": "USD",
+                  "value": "4.50"
+                },
+                "final_capture": true
+              }
+            ]
+          }
+        ],
+        "localAssociationMatches": true
+      },
+      "local": {
+        "order": {
+          "id": "3e48d73e-3ee5-4102-8877-7eaae17ea8b4",
+          "state": "PAID",
+          "total_cents": 450,
+          "paypal_order_id": "6H801422XW275760H",
+          "paypal_capture_id": "44G98547CY6197247",
+          "payout_status": "SIMULATED"
+        },
+        "ledger": [
+          {
+            "kind": "CUSTOMER_PAYMENT",
+            "amount_cents": 450,
+            "simulated": false
+          },
+          {
+            "kind": "VENDOR_ALLOCATION",
+            "amount_cents": 360,
+            "simulated": true
+          },
+          {
+            "kind": "RUNNER_ALLOCATION",
+            "amount_cents": 67,
+            "simulated": true
+          },
+          {
+            "kind": "PLATFORM_ALLOCATION",
+            "amount_cents": 23,
+            "simulated": true
+          }
+        ],
+        "paymentEvents": [
+          {
+            "event_id": "WH-2TA490075K078542H-12C9512847400552B",
+            "capture_id": "44G98547CY6197247"
+          }
+        ],
+        "snapshotHash": "348c90779751f84d00a93cc4173f9b4b036e235dc245a91581bacaaf0a2fb140"
+      }
+    }
+  ],
+  "webhooks": [
+    {
+      "id": "5K366015HE7061019",
+      "url": "https://runners.aibrylabs.com/api/webhooks/paypal",
+      "events": [
+        "CHECKOUT.CHECKOUT.BUYER-APPROVED",
+        "CHECKOUT.ORDER.APPROVED",
+        "CHECKOUT.ORDER.COMPLETED",
+        "PAYMENT.CAPTURE.COMPLETED",
+        "PAYMENT.CAPTURE.REVERSED",
+        "PAYMENT.CAPTURE.PENDING",
+        "CHECKOUT.ORDER.DECLINED",
+        "PAYMENT.CAPTURE.REFUNDED",
+        "PAYMENT.CAPTURE.DENIED"
+      ],
+      "productionUrlMatches": true,
+      "configuredIdMatches": true
+    }
+  ],
+  "testOrder": {
+    "local": {
+      "order": {
+        "id": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+        "state": "PAID",
+        "total_cents": 450,
+        "paypal_order_id": "5B5018099M173722J",
+        "paypal_capture_id": "17M125027B131373Y",
+        "payout_status": "SIMULATED"
+      },
+      "ledger": [
+        {
+          "kind": "CUSTOMER_PAYMENT",
+          "amount_cents": 450,
+          "simulated": false
+        },
+        {
+          "kind": "VENDOR_ALLOCATION",
+          "amount_cents": 360,
+          "simulated": true
+        },
+        {
+          "kind": "RUNNER_ALLOCATION",
+          "amount_cents": 67,
+          "simulated": true
+        },
+        {
+          "kind": "PLATFORM_ALLOCATION",
+          "amount_cents": 23,
+          "simulated": true
+        }
+      ],
+      "paymentEvents": [
+        {
+          "event_id": "WH-9LD02972PR007470J-3RK76219XD453331M",
+          "capture_id": "17M125027B131373Y"
+        }
+      ],
+      "snapshotHash": "7faf6136873afe78189d59d41a6a165e9225627e1ed48180cd7fba9269781d3e"
+    },
+    "canonical": {
+      "id": "5B5018099M173722J",
+      "status": "COMPLETED",
+      "intent": "CAPTURE",
+      "paymentSourceKinds": ["paypal"],
+      "buyerDistinctFromSeller": true,
+      "sellerMerchantIds": ["K6S8CVBZ2FSVL"],
+      "purchaseUnits": [
+        {
+          "custom_id": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+          "amount": {
+            "currency_code": "USD",
+            "value": "4.50"
+          },
+          "captures": [
+            {
+              "id": "17M125027B131373Y",
+              "status": "COMPLETED",
+              "pendingReason": null,
+              "amount": {
+                "currency_code": "USD",
+                "value": "4.50"
+              },
+              "final_capture": true
+            }
+          ]
+        }
+      ],
+      "localAssociationMatches": true
+    },
+    "webhookHistory": [
+      {
+        "id": "WH-9LD02972PR007470J-3RK76219XD453331M",
+        "event_type": "PAYMENT.CAPTURE.COMPLETED",
+        "captureId": "17M125027B131373Y",
+        "captureStatus": "COMPLETED",
+        "amount": {
+          "currency_code": "USD",
+          "value": "4.50"
+        },
+        "delivery_status": null,
+        "localEventRecorded": true
+      },
+      {
+        "id": "WH-48X53773VB742825H-3H41842089926113H",
+        "event_type": "PAYMENT.CAPTURE.PENDING",
+        "captureId": "17M125027B131373Y",
+        "captureStatus": "PENDING",
+        "amount": {
+          "currency_code": "USD",
+          "value": "4.50"
+        },
+        "delivery_status": null,
+        "localEventRecorded": false
+      }
+    ],
+    "webhookHistoryPaging": {
+      "returned": 6,
+      "hasMore": false
+    }
+  }
+}

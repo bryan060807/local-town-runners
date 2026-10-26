@@ -1,0 +1,30 @@
+{
+  "recordedAt": "2026-10-26T19:06:43.678Z",
+  "findings": [
+    {
+      "orderId": "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c",
+      "ownedByIsolatedDemo": true,
+      "workspaceExpired": true,
+      "workspaceExpiresAt": "2026-10-10T13:41:25.238+00:00",
+      "isTemplate": false
+    },
+    {
+      "orderId": "3e48d73e-3ee5-4102-8877-7eaae17ea8b4",
+      "ownedByIsolatedDemo": true,
+      "workspaceExpired": true,
+      "workspaceExpiresAt": "2026-10-11T06:34:00.893+00:00",
+      "isTemplate": false
+    },
+    {
+      "orderId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+      "ownedByIsolatedDemo": true,
+      "workspaceExpired": true,
+      "workspaceExpiresAt": "2026-10-11T09:52:03.608+00:00",
+      "isTemplate": false
+    }
+  ],
+  "operatorRealAdminAccountMetadataVerified": true,
+  "operatorBrowserSessionUsed": false,
+  "supportedView": "https://runners.aibrylabs.com/dashboard",
+  "requiredSession": "existing real administrator, outside Demo Mode"
+}
