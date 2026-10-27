@@ -1,0 +1,28 @@
+{
+  "preserved": [
+    {
+      "orderId": "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c",
+      "state": "PAID",
+      "totalCents": 3500,
+      "allFinancialRecordsUnchanged": true,
+      "customerPaymentEntries": 1
+    },
+    {
+      "orderId": "3e48d73e-3ee5-4102-8877-7eaae17ea8b4",
+      "state": "PAID",
+      "totalCents": 450,
+      "allFinancialRecordsUnchanged": true,
+      "customerPaymentEntries": 1
+    },
+    {
+      "orderId": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+      "state": "PAID",
+      "totalCents": 450,
+      "allFinancialRecordsUnchanged": true,
+      "customerPaymentEntries": 1
+    }
+  ],
+  "newPayPalTransactions": 0,
+  "originalAgreementsModified": false,
+  "realPayoutsEnabled": false
+}

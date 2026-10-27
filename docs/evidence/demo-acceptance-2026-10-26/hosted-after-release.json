@@ -1,0 +1,80 @@
+{
+  "recordedAt": "2026-10-27T04:00:29.182Z",
+  "boundary": "Production AI reads and one temporary fresh-demo avatar; no orders, payment, consent or email",
+  "checks": [
+    {
+      "feature": "non-scripted AI discovery",
+      "status": 200,
+      "source": "ai-tool",
+      "tools": ["prepareOrder"],
+      "resultCount": 1,
+      "text": "Review 1 \u00d7 Handmade River Mug for $28.00. This is a quote only; inventory reservation and payment require your explicit approval. Jordan Ellis is already heading toward this vendor; Declared trip already targets this vendor; pickup adds no separate straight-line approach. Delivery routing is not estimated. The runner must accept."
+    },
+    {
+      "feature": "semantic search with unsupported attribute; catalog and budget remain authoritative",
+      "status": 200,
+      "tools": ["searchListings"],
+      "resultCount": 0,
+      "text": "No available listings match. Try a broader search."
+    },
+    {
+      "feature": "contextual details",
+      "status": 200,
+      "tools": ["getListingDetails"]
+    },
+    {
+      "feature": "reviewable quote only",
+      "status": 200,
+      "tools": ["prepareOrder"],
+      "preparedTotalCents": 5600
+    },
+    {
+      "feature": "complete authenticated dashboard render",
+      "expectedDemoName": "Riverbend Market & Goods",
+      "status": 200,
+      "correctIdentity": true,
+      "completeResponseMs": 858
+    },
+    {
+      "feature": "complete authenticated dashboard render",
+      "expectedDemoName": "Jordan Ellis",
+      "status": 200,
+      "correctIdentity": true,
+      "completeResponseMs": 753
+    },
+    {
+      "feature": "complete authenticated dashboard render",
+      "expectedDemoName": "Alex Carter",
+      "status": 200,
+      "correctIdentity": true,
+      "completeResponseMs": 669
+    },
+    {
+      "feature": "complete authenticated dashboard render",
+      "expectedDemoName": "Jordan Ellis",
+      "status": 200,
+      "correctIdentity": true,
+      "completeResponseMs": 621
+    },
+    {
+      "feature": "non-raster upload rejection",
+      "status": 400
+    },
+    {
+      "feature": "temporary own-demo avatar upload",
+      "status": 200
+    },
+    {
+      "feature": "hosted processed image retrieval",
+      "status": 200,
+      "format": "webp",
+      "width": 48,
+      "locationMetadataAbsent": true
+    }
+  ],
+  "ordersCreated": 0,
+  "onlyTemporaryOwnAvatarRemoved": true,
+  "demoExitStatus": 200,
+  "financialProviderCalls": 0,
+  "productionEmailsSent": 0
+}

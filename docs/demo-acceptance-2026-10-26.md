@@ -64,3 +64,13 @@ These are real screenshots of the connected local UI. Their payment setup is a l
 ### Release
 
 The mobile search and AI grounding improvements are prepared for the existing main-to-Vercel release. Deployment readiness and a post-release hosted smoke observation are appended after verification. No new migration, buyer charge, real payout, real vendor activation or email send is required.
+
+## Deployed and checked live
+
+Application commit `560d4182b6b7f9ec26e1cd62526b7551184577d4` is READY in production deployment `dpl_FuYvwzHpEmyTYSEwoq9osjfv8E1L`. The project production target and runners.aibrylabs.com alias match that release. Mobile search and the catalog-grounding instructions are deployed.
+
+Post-release checks verified the non-scripted mug recommendation under $30, contextual item details, an explicitly reviewable two-item quote and zero created orders. A material-specific request still conservatively returned no matches; unsupported attributes were not invented. Fresh-demo Vendor, Runner, Customer and Runner dashboards rendered their correct identities with successful full responses measured at about 0.62–0.86 seconds in these four API observations. This is an observation, not a performance SLA or a native-phone benchmark. Avatar validation, WebP processing/retrieval, metadata stripping and deletion of only the new test object passed again; the test demo was exited.
+
+The actual production page was also rendered in Chromium at 360×800. Search remained visible, used 16 px input text, filtered the live catalog to the cinnamon-roll listing, and produced no horizontal overflow or page errors. The managed-browser transport fetched original production responses using Node’s verified system CA/proxy, preserving body bytes/statuses; encoding headers were normalized after decompression. No TLS verification was disabled, no responses were mocked and only GET/HEAD requests were allowed in this visual check. See [the live mobile screenshot](screenshots/acceptance-2026-10-26/LIVE-PRODUCTION-mobile-search.png) and its sanitized transport record.
+
+All three original hosted financial snapshots match the pre-acceptance baseline: three PAID orders totaling $44.00, one customer-payment entry each, unchanged allocations and no new charge or real payout. Existing legal agreements/applications were not modified. These observations are saved in the acceptance evidence directory; no operator login, real account password or private trace was published.

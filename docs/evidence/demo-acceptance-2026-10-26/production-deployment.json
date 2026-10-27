@@ -1,0 +1,14 @@
+{
+  "recordedAt": "2026-10-27T03:57:46.529Z",
+  "id": "dpl_FuYvwzHpEmyTYSEwoq9osjfv8E1L",
+  "state": "READY",
+  "commit": "560d4182b6b7f9ec26e1cd62526b7551184577d4",
+  "target": "production",
+  "aliases": [
+    "runners.aibrylabs.com",
+    "local-town-runners.vercel.app",
+    "local-town-runners-bryan060807s-projects.vercel.app",
+    "local-town-runners-git-main-bryan060807s-projects.vercel.app"
+  ],
+  "projectProductionTargetMatches": true
+}
