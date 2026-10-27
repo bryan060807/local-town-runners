@@ -13,10 +13,13 @@ async function fixture(includePaymentRecovery = true) {
   await db.exec(
     `create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema public,auth to anon,authenticated,service_role;grant execute on function auth.uid() to anon,authenticated,service_role;`,
   );
+  // The historical upgrade fixture starts before 014; 016 depends on 014.
   for (const file of (await readdir("supabase/migrations"))
     .filter(
       (f) =>
-        f.endsWith(".sql") && (includePaymentRecovery || !f.startsWith("014_")),
+        f.endsWith(".sql") &&
+        (includePaymentRecovery ||
+          (!f.startsWith("014_") && !f.startsWith("016_"))),
     )
     .sort()) {
     const sql = (await readFile(`supabase/migrations/${file}`, "utf8")).replace(
