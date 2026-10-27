@@ -1,469 +1,542 @@
 {
-  "recordedAt": "2026-10-27T22:21:11.629Z",
-  "scope": "Application hardening with no new genuine Sandbox transaction, Live payment, payout, schema migration or hosted integration mutation.",
-  "unitAndDatabase": {
-    "command": "npm run check",
-    "passed": 108,
-    "failed": 0,
-    "includes": [
-      "formatting",
-      "ESLint",
-      "TypeScript",
-      "PostgreSQL RLS and payment invariants",
-      "binary and multipart boundaries",
-      "Sandbox transport and malformed provider evidence"
-    ]
-  },
-  "dependencyAudit": {
-    "command": "npm audit",
-    "reportedVulnerabilities": {
-      "info": 0,
-      "low": 0,
-      "moderate": 0,
-      "high": 0,
-      "critical": 0,
-      "total": 0
-    }
-  },
-  "productionBuilds": {
-    "offline": "passed",
-    "connected": "passed"
-  },
-  "browser": {
-    "offline": {
-      "command": "npm run test:e2e",
-      "passed": 24,
+  "recordedAt": "2026-10-27T23:12:42.260355+00:00",
+  "scope": "Application hardening, repository documentation and CI; one fresh private simulated hosted walkthrough. No new genuine Sandbox transaction, Live payment, payout, schema migration or provider send.",
+  "finalRelease": {
+    "source": "e9bb2ea6f50b3fc5a4c26250c8f41d23e2948555",
+    "applicationRuntimeSource": "a1d1a94cf9d51af37d9ddb1830861c9f3a5ca39c",
+    "runtimeEquivalence": "Only the Explore browser fixture and CI evidence differ between these commits; production application code, configuration, scripts, assets and dependencies are identical.",
+    "ci": {
+      "id": 40599439862,
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40599439862",
+      "conclusion": "success",
+      "evidence": "hardening-ci-2026-10-27.json"
+    },
+    "unitAndDatabase": {
+      "passed": 108,
       "failed": 0
     },
-    "connected": {
-      "existingChecksPassed": 52,
-      "newChecksPassed": 16,
-      "distinctChecksPassed": 68,
-      "viewports": ["desktop", "mobile-360", "mobile-390", "mobile-430"],
-      "verificationMethod": "The full run passed all 52 pre-existing checks and 8 of 16 new checks. Eight new checks initially failed on implicit-label selectors. Only four selector call sites were changed to accessible combobox roles. All 16 new checks then passed against unchanged application code.",
-      "initialSelectorFailures": 8,
-      "targetedCommand": "npm run test:e2e:local -- hardening-ui.spec.ts",
-      "targetedFailed": 0
+    "browser": {
+      "offline": {
+        "passed": 24,
+        "failed": 0
+      },
+      "connected": {
+        "passed": 72,
+        "failed": 0
+      },
+      "totalDistinctChecksPassed": 96,
+      "viewports": ["desktop", "mobile-360", "mobile-390", "mobile-430"]
     },
-    "totalDistinctChecksPassed": 92,
-    "checks": [
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/acceptance.spec.ts",
-        "name": "visible controls simulate and complete a private demo order across customer, vendor and runner"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/acceptance.spec.ts",
-        "name": "discovery, map location, filters, cart removal and quote replies work through visible controls"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/auth.spec.ts",
-        "name": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/auth.spec.ts",
-        "name": "role dashboards have separate capabilities"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/catalog.spec.ts",
-        "name": "vendor catalog stays compact and searchable while listing changes persist"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/demo.spec.ts",
-        "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/diagnostics.spec.ts",
-        "name": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/explore.spec.ts",
-        "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "actual local Auth token confirmation and recovery; administrator review retains rejected consent"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/payments.spec.ts",
-        "name": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/simulation.spec.ts",
-        "name": "simulation requires its private customer ticket and can be declined without a PayPal refund"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/acceptance.spec.ts",
-        "name": "visible controls simulate and complete a private demo order across customer, vendor and runner"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/acceptance.spec.ts",
-        "name": "discovery, map location, filters, cart removal and quote replies work through visible controls"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/auth.spec.ts",
-        "name": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/auth.spec.ts",
-        "name": "role dashboards have separate capabilities"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/catalog.spec.ts",
-        "name": "vendor catalog stays compact and searchable while listing changes persist"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/demo.spec.ts",
-        "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/diagnostics.spec.ts",
-        "name": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/explore.spec.ts",
-        "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "actual local Auth token confirmation and recovery; administrator review retains rejected consent"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/payments.spec.ts",
-        "name": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/simulation.spec.ts",
-        "name": "simulation requires its private customer ticket and can be declined without a PayPal refund"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/acceptance.spec.ts",
-        "name": "visible controls simulate and complete a private demo order across customer, vendor and runner"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/acceptance.spec.ts",
-        "name": "discovery, map location, filters, cart removal and quote replies work through visible controls"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/auth.spec.ts",
-        "name": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/auth.spec.ts",
-        "name": "role dashboards have separate capabilities"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/catalog.spec.ts",
-        "name": "vendor catalog stays compact and searchable while listing changes persist"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/demo.spec.ts",
-        "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/diagnostics.spec.ts",
-        "name": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/explore.spec.ts",
-        "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "actual local Auth token confirmation and recovery; administrator review retains rejected consent"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/payments.spec.ts",
-        "name": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/simulation.spec.ts",
-        "name": "simulation requires its private customer ticket and can be declined without a PayPal refund"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/acceptance.spec.ts",
-        "name": "visible controls simulate and complete a private demo order across customer, vendor and runner"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/acceptance.spec.ts",
-        "name": "discovery, map location, filters, cart removal and quote replies work through visible controls"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/auth.spec.ts",
-        "name": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/auth.spec.ts",
-        "name": "role dashboards have separate capabilities"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/catalog.spec.ts",
-        "name": "vendor catalog stays compact and searchable while listing changes persist"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/demo.spec.ts",
-        "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/diagnostics.spec.ts",
-        "name": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/explore.spec.ts",
-        "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/onboarding.spec.ts",
-        "name": "actual local Auth token confirmation and recovery; administrator review retains rejected consent"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/payments.spec.ts",
-        "name": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/simulation.spec.ts",
-        "name": "simulation requires its private customer ticket and can be declined without a PayPal refund"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "runner writes stay serialized and recover after an interrupted request"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "quantity stays within the server limit and empty map storefronts remain usable"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "vendor listing creation locks duplicate submits and preserves a retry after failure"
-      },
-      {
-        "status": "passed",
-        "viewport": "desktop",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "private documents use an explicit secure link and account network failures can be retried"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "runner writes stay serialized and recover after an interrupted request"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "quantity stays within the server limit and empty map storefronts remain usable"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "vendor listing creation locks duplicate submits and preserves a retry after failure"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-360",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "private documents use an explicit secure link and account network failures can be retried"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "runner writes stay serialized and recover after an interrupted request"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "quantity stays within the server limit and empty map storefronts remain usable"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "vendor listing creation locks duplicate submits and preserves a retry after failure"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-390",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "private documents use an explicit secure link and account network failures can be retried"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "runner writes stay serialized and recover after an interrupted request"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "quantity stays within the server limit and empty map storefronts remain usable"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "vendor listing creation locks duplicate submits and preserves a retry after failure"
-      },
-      {
-        "status": "passed",
-        "viewport": "mobile-430",
-        "file": "e2e-local/hardening-ui.spec.ts",
-        "name": "private documents use an explicit secure link and account network failures can be retried"
+    "dependencyAudit": {
+      "reportedVulnerabilities": 0
+    },
+    "production": {
+      "ready": true,
+      "checksPassed": 10,
+      "deployment": "dpl_GvZnghfdi6nZYy7hoZNZv6zN6LFL",
+      "source": "e9bb2ea6f50b3fc5a4c26250c8f41d23e2948555",
+      "evidence": "hardening-production-2026-10-27.json"
+    },
+    "livePrivateSimulation": {
+      "state": "COMPLETED",
+      "orderId": "e02d08ce-d109-42e4-bafa-8bf9cb30375e",
+      "source": "a1d1a94cf9d51af37d9ddb1830861c9f3a5ca39c",
+      "screenshotsVisuallyReviewed": 7,
+      "allFourLedgerRowsSimulated": true,
+      "simulateReplayIdempotent": true,
+      "completionReplaySafelyRejected409": true,
+      "financialProviderCalls": 0,
+      "actualPayoutsCents": 0,
+      "exitedSuccessfully": true,
+      "evidence": "hardening-live-simulation-2026-10-27.json"
+    },
+    "protectedGenuinePayments": {
+      "unchanged": true,
+      "orders": 3,
+      "ledgerRows": 12,
+      "capturedCents": 4400,
+      "digest": "c2960efc7e2ddfdc7ceedbe905da5a9f20a5f3b3d6c8688cce7bc4dd3b624785"
+    },
+    "documentation": {
+      "currentGuidesChecked": 16,
+      "relativeLinksChecked": 86,
+      "brokenRelativeLinks": 0,
+      "credentialsOrSessionsInSanitizedEvidence": false
+    }
+  },
+  "initialLocalVerification": {
+    "recordedAt": "2026-10-27T22:21:11.629Z",
+    "scope": "Application hardening with no new genuine Sandbox transaction, Live payment, payout, schema migration or hosted integration mutation.",
+    "unitAndDatabase": {
+      "command": "npm run check",
+      "passed": 108,
+      "failed": 0,
+      "includes": [
+        "formatting",
+        "ESLint",
+        "TypeScript",
+        "PostgreSQL RLS and payment invariants",
+        "binary and multipart boundaries",
+        "Sandbox transport and malformed provider evidence"
+      ]
+    },
+    "dependencyAudit": {
+      "command": "npm audit",
+      "reportedVulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
       }
+    },
+    "productionBuilds": {
+      "offline": "passed",
+      "connected": "passed"
+    },
+    "browser": {
+      "offline": {
+        "command": "npm run test:e2e",
+        "passed": 24,
+        "failed": 0
+      },
+      "connected": {
+        "existingChecksPassed": 52,
+        "newChecksPassed": 16,
+        "distinctChecksPassed": 68,
+        "viewports": ["desktop", "mobile-360", "mobile-390", "mobile-430"],
+        "verificationMethod": "The full run passed all 52 pre-existing checks and 8 of 16 new checks. Eight new checks initially failed on implicit-label selectors. Only four selector call sites were changed to accessible combobox roles. All 16 new checks then passed against unchanged application code.",
+        "initialSelectorFailures": 8,
+        "targetedCommand": "npm run test:e2e:local -- hardening-ui.spec.ts",
+        "targetedFailed": 0
+      },
+      "totalDistinctChecksPassed": 92,
+      "checks": [
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/acceptance.spec.ts",
+          "name": "visible controls simulate and complete a private demo order across customer, vendor and runner"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/acceptance.spec.ts",
+          "name": "discovery, map location, filters, cart removal and quote replies work through visible controls"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/auth.spec.ts",
+          "name": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/auth.spec.ts",
+          "name": "role dashboards have separate capabilities"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/catalog.spec.ts",
+          "name": "vendor catalog stays compact and searchable while listing changes persist"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/demo.spec.ts",
+          "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/diagnostics.spec.ts",
+          "name": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/explore.spec.ts",
+          "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "actual local Auth token confirmation and recovery; administrator review retains rejected consent"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/payments.spec.ts",
+          "name": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/simulation.spec.ts",
+          "name": "simulation requires its private customer ticket and can be declined without a PayPal refund"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/acceptance.spec.ts",
+          "name": "visible controls simulate and complete a private demo order across customer, vendor and runner"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/acceptance.spec.ts",
+          "name": "discovery, map location, filters, cart removal and quote replies work through visible controls"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/auth.spec.ts",
+          "name": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/auth.spec.ts",
+          "name": "role dashboards have separate capabilities"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/catalog.spec.ts",
+          "name": "vendor catalog stays compact and searchable while listing changes persist"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/demo.spec.ts",
+          "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/diagnostics.spec.ts",
+          "name": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/explore.spec.ts",
+          "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "actual local Auth token confirmation and recovery; administrator review retains rejected consent"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/payments.spec.ts",
+          "name": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/simulation.spec.ts",
+          "name": "simulation requires its private customer ticket and can be declined without a PayPal refund"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/acceptance.spec.ts",
+          "name": "visible controls simulate and complete a private demo order across customer, vendor and runner"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/acceptance.spec.ts",
+          "name": "discovery, map location, filters, cart removal and quote replies work through visible controls"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/auth.spec.ts",
+          "name": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/auth.spec.ts",
+          "name": "role dashboards have separate capabilities"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/catalog.spec.ts",
+          "name": "vendor catalog stays compact and searchable while listing changes persist"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/demo.spec.ts",
+          "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/diagnostics.spec.ts",
+          "name": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/explore.spec.ts",
+          "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "actual local Auth token confirmation and recovery; administrator review retains rejected consent"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/payments.spec.ts",
+          "name": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/simulation.spec.ts",
+          "name": "simulation requires its private customer ticket and can be declined without a PayPal refund"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/acceptance.spec.ts",
+          "name": "visible controls simulate and complete a private demo order across customer, vendor and runner"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/acceptance.spec.ts",
+          "name": "discovery, map location, filters, cart removal and quote replies work through visible controls"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/auth.spec.ts",
+          "name": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/auth.spec.ts",
+          "name": "role dashboards have separate capabilities"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/catalog.spec.ts",
+          "name": "vendor catalog stays compact and searchable while listing changes persist"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/demo.spec.ts",
+          "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/diagnostics.spec.ts",
+          "name": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/explore.spec.ts",
+          "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/onboarding.spec.ts",
+          "name": "actual local Auth token confirmation and recovery; administrator review retains rejected consent"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/payments.spec.ts",
+          "name": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/simulation.spec.ts",
+          "name": "simulation requires its private customer ticket and can be declined without a PayPal refund"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "runner writes stay serialized and recover after an interrupted request"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "quantity stays within the server limit and empty map storefronts remain usable"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "vendor listing creation locks duplicate submits and preserves a retry after failure"
+        },
+        {
+          "status": "passed",
+          "viewport": "desktop",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "private documents use an explicit secure link and account network failures can be retried"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "runner writes stay serialized and recover after an interrupted request"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "quantity stays within the server limit and empty map storefronts remain usable"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "vendor listing creation locks duplicate submits and preserves a retry after failure"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-360",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "private documents use an explicit secure link and account network failures can be retried"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "runner writes stay serialized and recover after an interrupted request"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "quantity stays within the server limit and empty map storefronts remain usable"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "vendor listing creation locks duplicate submits and preserves a retry after failure"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-390",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "private documents use an explicit secure link and account network failures can be retried"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "runner writes stay serialized and recover after an interrupted request"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "quantity stays within the server limit and empty map storefronts remain usable"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "vendor listing creation locks duplicate submits and preserves a retry after failure"
+        },
+        {
+          "status": "passed",
+          "viewport": "mobile-430",
+          "file": "e2e-local/hardening-ui.spec.ts",
+          "name": "private documents use an explicit secure link and account network failures can be retried"
+        }
+      ]
+    },
+    "appSourceDigest": "fc4f540443e53cd5700ec81583cefebbfbd2e366377704590410c45130d2cc39",
+    "applicationUnchangedDuringSelectorCorrection": true,
+    "operationsBaseline": "hardening-operations-2026-10-27.json",
+    "limitations": [
+      "Reduced local backend excludes Storage: image parsing and database policies are tested separately from hosted Storage writes.",
+      "Existing completed Sandbox captures, signed webhook and prior inbox receipt remain historical evidence; no new financial/provider send was initiated.",
+      "GitHub-hosted workflow execution and final deployed source are recorded separately after push and release.",
+      "Production lacks optional Resend signed delivery feedback configuration."
     ]
   },
-  "appSourceDigest": "fc4f540443e53cd5700ec81583cefebbfbd2e366377704590410c45130d2cc39",
-  "applicationUnchangedDuringSelectorCorrection": true,
-  "operationsBaseline": "hardening-operations-2026-10-27.json",
   "limitations": [
-    "Reduced local backend excludes Storage: image parsing and database policies are tested separately from hosted Storage writes.",
-    "Existing completed Sandbox captures, signed webhook and prior inbox receipt remain historical evidence; no new financial/provider send was initiated.",
-    "GitHub-hosted workflow execution and final deployed source are recorded separately after push and release.",
-    "Production lacks optional Resend signed delivery feedback configuration."
+    "The reduced local backend excludes Storage, SMTP and Realtime; binary/image validation and database policy tests do not replace a hosted Storage write test.",
+    "Completed genuine Sandbox captures, signed payment webhooks and prior notification inbox receipt remain historical evidence; no new financial/provider send was initiated during hardening.",
+    "Production lacks optional Resend signed delivery feedback configuration.",
+    "GitHub About description update returned HTTP403; source and workflow permissions work, but repository settings require the owner."
   ]
 }

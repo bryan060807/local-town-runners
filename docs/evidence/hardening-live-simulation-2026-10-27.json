@@ -1,6 +1,6 @@
 {
-  "source": "15c85a41a7116be0fbbc5ab4b3444d120694059f",
-  "recordedAt": "2026-10-27T22:23:52.755Z",
+  "source": "a1d1a94cf9d51af37d9ddb1830861c9f3a5ca39c",
+  "recordedAt": "2026-10-27T22:53:10.177Z",
   "boundary": "One fresh private customer/vendor/runner demo; one explicitly simulated order and simulated review. No PayPal API, checkout, capture, refund, reconciliation, AI, upload, email or payout actions. Service SDK is read-only.",
   "apiChecks": [
     {
@@ -211,7 +211,7 @@
   },
   "simulation": {
     "privateWorkspace": true,
-    "orderId": "206c9fa4-9b52-4cab-a9a2-10a6591b1033",
+    "orderId": "e02d08ce-d109-42e4-bafa-8bf9cb30375e",
     "totalCents": 450,
     "state": "COMPLETED",
     "noPayPalIdentifiers": true,

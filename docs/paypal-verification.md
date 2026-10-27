@@ -2,6 +2,8 @@
 
 October 7, 2026. This document records observed behavior, not assumed readiness.
 
+This is a historical Phase 2 snapshot. For current setup, implemented reconciliation/refunds and the later completed Sandbox verification, use the [PayPal guide](paypal.md) and [Phase 4.3 evidence](phase-4.3-sandbox-verification.md). Do not treat the pending validation and future-work statements below as current project status.
+
 ## Actual external checks
 
 The configured Sandbox Client ID/secret authenticated at `https://api-m.sandbox.paypal.com/v1/oauth2/token`: HTTP 200 and an access token was returned. No token or credentials were logged. The hosted catalog public read returned zero listings, and no Sandbox buyer approval was available during this audit. Therefore application order creation, approval, capture, authentic registered webhook delivery and completed hosted fulfillment are **not verified end-to-end**. Earlier user-supplied simulator logs showed delivery to the endpoint but OAuth failed then; current OAuth success does not prove those simulator events processed successfully.

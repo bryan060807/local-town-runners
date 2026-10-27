@@ -1,5 +1,7 @@
 # Demonstration
 
+This guide preserves the legacy offline and seeded-role development flows. For the current hosted private Demo Mode, use the [three-minute judge walkthrough](hackathon-demo.md) and [simulated order instructions](demo-order-walkthrough.md). Production already has the current upgrades; the setup and reset commands below are for dedicated development databases.
+
 ## Offline discovery
 
 Open the app. The header clearly says offline demo catalog. Ask “I'm hungry. What's good?” and inspect Habanero Cinnamon Rolls. Quantity two previews $9.00. Preview does not reserve stock or process a payment. Ask for a birthday gift under $40; actual catalog gift cards and map highlights appear. All vendor names are fictional demo businesses.
@@ -16,7 +18,7 @@ Apply migrations, configure Supabase/PayPal and run the seed. Sign in as `custom
 6. Vendor marks ready. Runner confirms pickup → out for delivery → delivered.
 7. Customer completes. Inspect runner rewards, inventory, order events and admin payment/audit records.
 
-Never claim the connected scenario passed without the external Sandbox evidence. No shortcut bypasses payment confirmation in the public app.
+Never claim a genuine Sandbox payment passed without external provider evidence. Genuine PayPal payments always require provider confirmation. The current private Demo Mode offers a separate, explicitly simulated order workflow; it never converts an existing PayPal attempt into a simulation.
 
 ## Restore/reset
 
@@ -37,6 +39,6 @@ npm run local:dev
 
 Reset validates loopback configuration and exact named container images, deletes only `ltr-local-rest`, `ltr-local-auth`, `ltr-local-db` with their anonymous volumes, then rebuilds all migrations and seeds. It restores six known `.example` role accounts, 15 explicitly demo vendors/listings, cinnamon rolls stock 12, empty orders/events/ledger, zero rewards, and a fresh one-hour Bryan trip to the bakery. Generated passwords stay in restricted ignored `.local-backend/` files. Existing hosted credentials cannot override the local wrapper. Local reset never marks an unpaid order paid or bypasses Auth/RLS; Sandbox checkout needs separate hosted configuration and buyer approval.
 
-Signature: hungry → “Wait. Habanero cinnamon rolls?” → “Get me two” → review current $9 quote and already-heading candidate → explicit preparation. Without payment credentials the payment button fails clearly; it never simulates success. In the configured Sandbox deployment continue using the operator flow in paypal-verification.md.
+Signature: hungry → “Wait. Habanero cinnamon rolls?” → “Get me two” → review current $9 quote and already-heading candidate → explicit preparation. Without payment credentials the payment button fails clearly; it never simulates success. For an explicitly authorized new Sandbox test, use the [current PayPal guide](paypal.md); existing completed payment evidence is already available without another checkout.
 
 Gift demo: “A birthday gift for my wife around $40” → “Which one is actually made here?” → “Show me that one” → “Who could bring it?” Availability tools explain candidates and approximate approach, never promise arrival tonight or a precise road detour.

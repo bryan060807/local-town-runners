@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-27T23:01:47Z",
+  "recordedAt": "2026-10-27T23:11:59Z",
   "boundary": "Read-only GitHub Actions status/log inspection. No workflow rerun or cancellation by the monitoring agent. Raw logs remain outside Git.",
   "attempts": [
     {
@@ -171,7 +171,86 @@
         "correction": "Use explicit vendor-name search before selecting Browse items and before selecting the storefront after Show all vendors. Preserve the exact ten-item, vendor count, storefront and accessibility assertions.",
         "appRuntimeChangeRequired": false
       }
+    },
+    {
+      "id": 40599439862,
+      "source": "e9bb2ea6f50b3fc5a4c26250c8f41d23e2948555",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40599439862",
+      "status": "completed",
+      "conclusion": "success",
+      "createdAt": "2026-10-27T23:03:49Z",
+      "updatedAt": "2026-10-27T23:11:59Z",
+      "jobs": [
+        {
+          "name": "Browser checks (connected-local)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40599439862/job/122523584106",
+          "startedAt": "2026-10-27T23:03:52Z",
+          "completedAt": "2026-10-27T23:11:58Z",
+          "failedSteps": []
+        },
+        {
+          "name": "Browser checks (offline)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40599439862/job/122523584535",
+          "startedAt": "2026-10-27T23:03:52Z",
+          "completedAt": "2026-10-27T23:05:51Z",
+          "failedSteps": []
+        },
+        {
+          "name": "Types, lint and database safeguards",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40599439862/job/122523584579",
+          "startedAt": "2026-10-27T23:03:53Z",
+          "completedAt": "2026-10-27T23:05:48Z",
+          "failedSteps": []
+        }
+      ],
+      "verification": {
+        "freshBackendAndSeedsPassed": true,
+        "formatLintTypecheckPassed": true,
+        "unitDatabase": {
+          "passed": 108,
+          "failed": 0,
+          "logProof": ["\u2139 tests 108", "\u2139 pass 108", "\u2139 fail 0"]
+        },
+        "dependencyAudit": {
+          "vulnerabilities": 0,
+          "logProof": "npm audit --audit-level=high: found 0 vulnerabilities"
+        },
+        "offlineBrowser": {
+          "passed": 24,
+          "failed": 0,
+          "duration": "1.1m",
+          "logProof": "24 passed (1.1m)"
+        },
+        "connectedBrowser": {
+          "passed": 72,
+          "failed": 0,
+          "duration": "7.0m",
+          "logProof": "72 passed (7.0m)"
+        },
+        "distinctBrowserChecksPassed": 96,
+        "catalogScopeRegression": {
+          "passed": 4,
+          "failed": 0
+        },
+        "exploreNavigationRegression": {
+          "passed": 4,
+          "failed": 0
+        }
+      },
+      "releaseScope": "The successful source changes only the Explore browser navigation fixture and CI history after a1d1a94. Application runtime inputs remain unchanged from a1d1a94.",
+      "annotations": [
+        "Nonblocking: checkout/setup-node v4 target deprecated Node.js 20 and were forced to run on Node.js 24.",
+        "Informational: ubuntu-latest image migration notice."
+      ]
     }
   ],
-  "latestConclusion": "explore_navigation_fixture_verification_pending"
+  "latestConclusion": "success",
+  "finalSource": "e9bb2ea6f50b3fc5a4c26250c8f41d23e2948555",
+  "finalRunUrl": "https://github.com/bryan060807/local-town-runners/actions/runs/40599439862"
 }
