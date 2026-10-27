@@ -7,7 +7,7 @@ import UploadAsset from "@/components/UploadAsset";
 import Link from "next/link";
 import ReviewOrder from "@/components/ReviewOrder";
 import VendorCreate from "@/components/VendorCreate";
-import VendorEditor from "@/components/VendorEditor";
+import VendorCatalog from "@/components/VendorCatalog";
 import AdminPanel from "@/components/AdminPanel";
 import RunnerTrip from "@/components/RunnerTrip";
 import { configured } from "@/lib/server/env";
@@ -155,7 +155,7 @@ export default async function Dashboard() {
     ownedIds.length
       ? client
           .from("listings")
-          .select("id,vendor_id,title,inventory,price_cents,active")
+          .select("id,vendor_id,title,category,inventory,price_cents,active")
           .in("vendor_id", ownedIds)
       : { data: [] },
     roleNames.includes("runner")
@@ -265,17 +265,18 @@ export default async function Dashboard() {
         <section>
           <h2>Your catalog</h2>
           <VendorCreate vendors={owned || []} />
-          {vendorListings?.map((l) => (
-            <VendorEditor
-              key={l.id}
-              id={l.id}
-              vendorId={l.vendor_id}
-              title={l.title}
-              inventory={l.inventory}
-              price={Number(l.price_cents)}
-              active={l.active}
-            />
-          ))}
+          <VendorCatalog
+            vendors={owned || []}
+            listings={(vendorListings || []).map((listing) => ({
+              id: listing.id,
+              vendorId: listing.vendor_id,
+              title: listing.title,
+              category: listing.category,
+              inventory: listing.inventory,
+              price: Number(listing.price_cents),
+              active: listing.active,
+            }))}
+          />
         </section>
       )}
       <h2>Your orders</h2>

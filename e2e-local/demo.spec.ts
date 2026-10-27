@@ -135,11 +135,15 @@ test("isolated demo switches real sessions; cart, quotes and fulfillment persist
   ).toBeVisible();
   await expect(page.getByLabel("Switch demo profile")).toBeEnabled();
   const edited = listings.data![2];
-  const editor = page
-    .locator("form")
-    .filter({
-      has: page.getByRole("heading", { name: edited.title, exact: true }),
-    });
+  await page
+    .getByRole("searchbox", { name: "Search your catalog" })
+    .fill(edited.title);
+  await page
+    .getByRole("button", { name: `Edit ${edited.title}`, exact: true })
+    .click();
+  const editor = page.locator("form").filter({
+    has: page.getByRole("heading", { name: edited.title, exact: true }),
+  });
   await editor.getByLabel("Available inventory").fill("9");
   await editor.getByLabel("Price in cents").fill("1234");
   const editResponse = page.waitForResponse(
@@ -215,11 +219,9 @@ test("isolated demo switches real sessions; cart, quotes and fulfillment persist
     ).toBe(200);
   await page.getByLabel("Switch demo profile").selectOption("customer");
   await expect(page).toHaveURL(/\/$/);
-  const updatedCard = page
-    .locator(".cards .product")
-    .filter({
-      has: page.getByRole("heading", { name: edited.title, exact: true }),
-    });
+  const updatedCard = page.locator(".cards .product").filter({
+    has: page.getByRole("heading", { name: edited.title, exact: true }),
+  });
   await expect(updatedCard).toContainText("$12.34");
   await updatedCard.click();
   await expect(page.getByRole("dialog")).toContainText("9 available");
