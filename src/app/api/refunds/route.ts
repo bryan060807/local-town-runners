@@ -4,6 +4,7 @@ import { body, failure, sameOrigin, limited } from "@/lib/server/http";
 import { paypal } from "@/lib/server/paypal";
 import { validRefund } from "@/lib/payment-validation";
 import { logEvent } from "@/lib/observability";
+import { rejectSimulatedPayment } from "@/lib/server/demo-orders";
 export async function POST(req: Request) {
   try {
     sameOrigin(req);
@@ -12,10 +13,11 @@ export async function POST(req: Request) {
     await limited(client, "refund");
     const { data: order, error } = await client
       .from("orders")
-      .select("id,vendor_id")
+      .select("id,vendor_id,demo_simulated")
       .eq("id", p.orderId)
       .single();
     if (error || !order) throw new HttpError("Order unavailable", 404);
+    rejectSimulatedPayment(order);
     const { data: vendor } = await client
       .from("vendors")
       .select("owner_id")

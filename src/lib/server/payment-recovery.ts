@@ -10,12 +10,23 @@ import {
 import { serviceDb, HttpError } from "./db";
 import { DatabaseOperationError } from "./errors";
 import { paypal } from "./paypal";
+import { rejectSimulatedPayment } from "./demo-orders";
 export async function recoverPayment(
   order: PaymentOrder,
   allowCapture = false,
   provider: typeof paypal = paypal,
 ) {
   const service = serviceDb();
+  const { data: source, error: sourceError } = await service
+    .from("orders")
+    .select("demo_simulated,paypal_order_id")
+    .eq("id", order.id)
+    .maybeSingle();
+  if (sourceError) throw new HttpError("Payment database unavailable", 503);
+  if (!source) throw new HttpError("Order unavailable", 404);
+  rejectSimulatedPayment(source);
+  if (source.paypal_order_id !== order.paypalId)
+    throw new HttpError("Payment order mismatch", 409);
   const ready = await service.rpc("phase42_ready");
   if (ready.error || !ready.data)
     throw new HttpError(

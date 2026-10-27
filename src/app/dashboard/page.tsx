@@ -19,6 +19,10 @@ import RunnerControls from "@/components/RunnerControls";
 import { redirect } from "next/navigation";
 import CommunityProgress from "@/components/CommunityProgress";
 import { communityProgress } from "@/lib/server/reputation";
+import DemoCheckout from "@/components/DemoCheckout";
+import DemoOrderGuide from "@/components/DemoOrderGuide";
+import { demoSession } from "@/lib/server/demo";
+import { templateWorkspace } from "@/lib/demo-catalog";
 export const dynamic = "force-dynamic";
 export default async function Dashboard() {
   if (!configured())
@@ -110,6 +114,8 @@ export default async function Dashboard() {
     { data: audit },
     progress,
     { data: ownReviews },
+    session,
+    { data: checkoutIntents },
   ] = await Promise.all([
     roleNames.includes("customer")
       ? client
@@ -174,7 +180,9 @@ export default async function Dashboard() {
           .eq("id", user.id)
           .single()
       : { data: null },
-    roleNames.includes("runner") ? client.rpc("available_runs") : { data: [] },
+    roleNames.includes("runner")
+      ? client.rpc("available_runs_with_source")
+      : { data: [] },
     roleNames.includes("admin")
       ? client
           .from("audit_events")
@@ -190,8 +198,19 @@ export default async function Dashboard() {
           .eq("customer_id", user.id)
           .in("order_id", orderIds)
       : { data: [] },
+    profile?.demo_workspace ? demoSession() : null,
+    orderIds.length
+      ? client
+          .from("paypal_checkout_intents")
+          .select("order_id")
+          .in("order_id", orderIds)
+      : { data: [] },
   ]);
   if (eventError || ledgerError) throw eventError || ledgerError;
+  const demoActor =
+    session &&
+    session.workspace_id === profile?.demo_workspace &&
+    session.workspace_id !== templateWorkspace;
   return (
     <main className="simple-page">
       <Link href="/">← {brand.name}</Link>
@@ -264,18 +283,27 @@ export default async function Dashboard() {
             {runnerProfile?.completed_runs || 0} completed runs ·{" "}
             {runnerProfile?.reward_points || 0} demo rewards points
           </p>
-          {runs?.map((r: { id: string; vendor_name: string }) => (
-            <div key={r.id}>
-              <p>
-                Pickup at {r.vendor_name} · exact delivery address stays private
-                until assignment.
-              </p>
-              <DashboardActions
-                orderId={r.id}
-                actions={["Accept run", "Decline run"]}
-              />
-            </div>
-          ))}
+          {runs?.map(
+            (r: {
+              id: string;
+              vendor_name: string;
+              demo_simulated: boolean;
+            }) => (
+              <div key={r.id}>
+                {r.demo_simulated && (
+                  <strong>SIMULATED DEMO RUN — NO PAYPAL CHARGE</strong>
+                )}
+                <p>
+                  Pickup at {r.vendor_name} · exact delivery address stays
+                  private until assignment.
+                </p>
+                <DashboardActions
+                  orderId={r.id}
+                  actions={["Accept run", "Decline run"]}
+                />
+              </div>
+            ),
+          )}
         </div>
       )}
       {roleNames.includes("vendor") && (
@@ -313,9 +341,11 @@ export default async function Dashboard() {
             o.refund_state !== "COMPLETED"
           )
             actions.push(
-              o.refund_state === "PENDING"
-                ? "Retry refund reconciliation"
-                : "Decline and refund Sandbox payment",
+              o.demo_simulated
+                ? "Cancel simulated order"
+                : o.refund_state === "PENDING"
+                  ? "Retry refund reconciliation"
+                  : "Decline and refund Sandbox payment",
             );
           if (o.state === "VENDOR_ACCEPTED") actions.push("RUNNER_MATCHING");
           if (o.state === "RUNNER_ASSIGNED") actions.push("READY_FOR_PICKUP");
@@ -332,6 +362,7 @@ export default async function Dashboard() {
             <h2>
               {money(Number(o.total_cents))} · {o.state.replaceAll("_", " ")}
             </h2>
+            {o.demo_simulated && <DemoOrderGuide state={o.state} />}
             {lineItems
               ?.filter((i) => i.order_id === o.id)
               .map((i) => (
@@ -340,10 +371,12 @@ export default async function Dashboard() {
                   each
                 </p>
               ))}
-            <p>
-              Refund:{" "}
-              {o.refund_state === "NONE" ? "None requested" : o.refund_state}
-            </p>
+            {!o.demo_simulated && (
+              <p>
+                Refund:{" "}
+                {o.refund_state === "NONE" ? "None requested" : o.refund_state}
+              </p>
+            )}
             <p>
               Order {o.id} · Quantity {o.quantity}
             </p>
@@ -351,13 +384,35 @@ export default async function Dashboard() {
               Vendor/runner allocations are simulated. No payout is disbursed.
             </p>
             {o.customer_id === user.id &&
-              ["DRAFT", "PENDING_PAYMENT"].includes(o.state) && (
-                <PaymentActions
-                  orderId={o.id}
-                  pending={o.state === "PENDING_PAYMENT"}
-                />
-              )}
-            <DashboardActions orderId={o.id} actions={actions} />
+              ["DRAFT", "PENDING_PAYMENT"].includes(o.state) &&
+              (demoActor &&
+              session.customer_id === user.id &&
+              o.state === "DRAFT" &&
+              !checkoutIntents?.some((intent) => intent.order_id === o.id) ? (
+                <DemoCheckout orderId={o.id} />
+              ) : (
+                <>
+                  {demoActor &&
+                    o.state === "DRAFT" &&
+                    checkoutIntents?.some(
+                      (intent) => intent.order_id === o.id,
+                    ) && (
+                      <p>
+                        PayPal checkout has started for this draft. Prepare a
+                        new draft to use demo simulation.
+                      </p>
+                    )}
+                  <PaymentActions
+                    orderId={o.id}
+                    pending={o.state === "PENDING_PAYMENT"}
+                  />
+                </>
+              ))}
+            <DashboardActions
+              orderId={o.id}
+              actions={actions}
+              simulated={o.demo_simulated}
+            />
             <details>
               <summary>
                 Private operational addresses (authorized participants only)
@@ -383,12 +438,19 @@ export default async function Dashboard() {
             )}
             <details>
               <summary>Financial allocations and event history</summary>
-              <p>
-                PayPal order: {o.paypal_order_id || "Not created"} · Capture:{" "}
-                {o.paypal_capture_id ||
-                  "No completed capture confirmed locally"}{" "}
-                · Refund: {o.paypal_refund_id || "None"}
-              </p>
+              {o.demo_simulated ? (
+                <p>
+                  Simulated payment only. No PayPal order, capture or refund was
+                  created.
+                </p>
+              ) : (
+                <p>
+                  PayPal order: {o.paypal_order_id || "Not created"} · Capture:{" "}
+                  {o.paypal_capture_id ||
+                    "No completed capture confirmed locally"}{" "}
+                  · Refund: {o.paypal_refund_id || "None"}
+                </p>
+              )}
               {events
                 ?.filter((e) => e.order_id === o.id)
                 .map((e) => (
@@ -401,9 +463,11 @@ export default async function Dashboard() {
                 .map((l) => (
                   <p key={l.kind}>
                     {l.kind}: {money(Number(l.amount_cents))}{" "}
-                    {l.simulated
-                      ? "(simulated allocation)"
-                      : "(Sandbox payment)"}
+                    {l.kind === "DEMO_PAYMENT"
+                      ? "(simulated demo payment — no PayPal charge)"
+                      : l.simulated
+                        ? "(simulated allocation)"
+                        : "(Sandbox payment)"}
                   </p>
                 ))}
             </details>

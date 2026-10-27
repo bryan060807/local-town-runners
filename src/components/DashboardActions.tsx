@@ -3,26 +3,31 @@ import { useState } from "react";
 export default function DashboardActions({
   orderId,
   actions,
+  simulated = false,
 }: {
   orderId: string;
   actions: string[];
+  simulated?: boolean;
 }) {
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
   async function action(a: string) {
     setBusy(true);
     try {
-      const endpoint = a.includes("refund")
-        ? "refunds"
-        : a === "Cancel draft"
-          ? "orders"
-          : a === "Pay with PayPal Sandbox"
-            ? "checkout"
-            : a === "Confirm approved payment"
-              ? "capture"
-              : a === "Accept run" || a === "Decline run"
-                ? "runner"
-                : "fulfillment";
+      const endpoint =
+        a === "Cancel simulated order"
+          ? "demo/orders/cancel"
+          : a.includes("refund")
+            ? "refunds"
+            : a === "Cancel draft"
+              ? "orders"
+              : a === "Pay with PayPal Sandbox"
+                ? "checkout"
+                : a === "Confirm approved payment"
+                  ? "capture"
+                  : a === "Accept run" || a === "Decline run"
+                    ? "runner"
+                    : "fulfillment";
       const r = await fetch(`/api/${endpoint}`, {
         method: a === "Cancel draft" ? "DELETE" : "POST",
         headers: { "Content-Type": "application/json" },
@@ -52,7 +57,9 @@ export default function DashboardActions({
           <button key={a} disabled={busy} onClick={() => action(a)}>
             {(
               {
-                VENDOR_ACCEPTED: "Accept paid order",
+                VENDOR_ACCEPTED: simulated
+                  ? "Accept demo order"
+                  : "Accept paid order",
                 RUNNER_MATCHING: "Find a runner",
                 READY_FOR_PICKUP: "Mark ready for pickup",
                 PICKED_UP: "Confirm pickup",

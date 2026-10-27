@@ -33,7 +33,7 @@ export async function GET() {
     const { data, error } = await client
       .from("orders")
       .select(
-        "id,state,total_cents,quantity,created_at,listing_id,payout_status",
+        "id,state,total_cents,quantity,created_at,listing_id,payout_status,demo_simulated,demo_simulated_at",
       )
       .order("created_at", { ascending: false })
       .limit(50);

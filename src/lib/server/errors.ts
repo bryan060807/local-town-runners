@@ -15,6 +15,7 @@ export type DatabaseOperation =
   | "moderate"
   | "confirm_payment"
   | "claim_payment_capture"
+  | "claim_paypal_checkout"
   | "attach_verified_paypal_order";
 export class DatabaseOperationError extends Error {
   code?: string;

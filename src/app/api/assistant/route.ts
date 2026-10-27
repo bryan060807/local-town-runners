@@ -8,6 +8,7 @@ import { body, failure, sameOrigin, limited } from "@/lib/server/http";
 import { authenticated, HttpError } from "@/lib/server/db";
 import { demoRunners } from "@/lib/runners";
 import { executeTool } from "@/lib/ai-tools";
+import { orderStatusLabel } from "@/lib/order-source";
 const schema = z
   .object({
     message: z.string().min(1).max(1000),
@@ -63,12 +64,12 @@ export async function POST(req: Request) {
       const { client, user } = actor;
       const { data: ownOrders, error: ordersError } = await client
         .from("orders")
-        .select("id,state")
+        .select("id,state,demo_simulated")
         .eq("customer_id", user.id)
         .limit(50);
       if (ordersError) throw ordersError;
       orders = Object.fromEntries(
-        (ownOrders || []).map((o) => [o.id, o.state]),
+        (ownOrders || []).map((o) => [o.id, orderStatusLabel(o)]),
       );
       await limited(client, "assistant");
       const { data: blocked, error: blockError } =

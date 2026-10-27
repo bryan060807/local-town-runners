@@ -1,0 +1,80 @@
+{
+  "expected": 52,
+  "unexpected": 0,
+  "flaky": 0,
+  "skipped": 0,
+  "durationMs": 681548.132,
+  "errors": 0,
+  "projects": {
+    "desktop": {
+      "scenarios": 13,
+      "expected": 13,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "mobile-360": {
+      "scenarios": 13,
+      "expected": 13,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "mobile-390": {
+      "scenarios": 13,
+      "expected": 13,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "mobile-430": {
+      "scenarios": 13,
+      "expected": 13,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0
+    }
+  },
+  "checks": {
+    "visibleSimulationButtonCompletesAllThreeRoles": true,
+    "noFakePayPalIdentifiersOrPaymentEvents": true,
+    "noNormalFinancialBrowserRequestsDuringWalkthrough": true,
+    "simulationPaymentLedgerExactlyOnce": true,
+    "allSimulationAllocationsFlaggedSimulated": true,
+    "genuineCapturedTotalsRemainZero": true,
+    "customerCompletedOrderAndOneStarReviewPoints15": true,
+    "runnerCompletedRunAndReward10ExactlyOnce": true,
+    "simulationReplayAfterCompletionKeepsCompletedState": true,
+    "assignedOrderCancellationBlocked": true,
+    "anonymousOriginStrictBodyRoleTicketAndWorkspaceGuards": true,
+    "normalCheckoutCaptureStatusRefundOfSimulationBlocked": true,
+    "vendorCancellationRestoresInventoryOnce": true,
+    "canceledAllocationBalancesZero": true,
+    "expiredSessionCannotSimulateOrCancel": true,
+    "realVisibleMainRequiredBeforeEvidence": true,
+    "visibleStorefrontAggregateKeepsReviewTextAndCustomerProgressPrivate": true
+  },
+  "evidence": {
+    "directory": "docs/screenshots/demo-order-simulation-2026-10-27",
+    "files": [
+      "desktop-SIMULATED-DEMO-customer-completed-order.png",
+      "desktop-SIMULATED-DEMO-runner-completion-and-earnings.png",
+      "desktop-SIMULATED-DEMO-vendor-cancellation.png",
+      "desktop-SIMULATED-DEMO-vendor-order-rating.png",
+      "mobile-360-SIMULATED-DEMO-customer-completed-order.png",
+      "mobile-360-SIMULATED-DEMO-runner-completion-and-earnings.png",
+      "mobile-360-SIMULATED-DEMO-vendor-cancellation.png",
+      "mobile-360-SIMULATED-DEMO-vendor-order-rating.png",
+      "mobile-390-SIMULATED-DEMO-customer-completed-order.png",
+      "mobile-390-SIMULATED-DEMO-runner-completion-and-earnings.png",
+      "mobile-390-SIMULATED-DEMO-vendor-cancellation.png",
+      "mobile-390-SIMULATED-DEMO-vendor-order-rating.png",
+      "mobile-430-SIMULATED-DEMO-customer-completed-order.png",
+      "mobile-430-SIMULATED-DEMO-runner-completion-and-earnings.png",
+      "mobile-430-SIMULATED-DEMO-vendor-cancellation.png",
+      "mobile-430-SIMULATED-DEMO-vendor-order-rating.png"
+    ]
+  },
+  "boundary": "New simulation cases use the dedicated loopback Auth/PostgreSQL backend and the actual Demo Mode UI/API. Simulated orders have DEMO_PAYMENT ledger entries, all allocations simulated, and null PayPal IDs. Genuine capture/recovery regression fixtures remain explicitly local. No real payouts or new PayPal capture.",
+  "earlierRuns": "An earlier attempt stopped on the obsolete Accept paid order selector after the new UI correctly said Accept demo order. A second partial run was intentionally stopped to strengthen actual-main visibility before storefront assertions/screenshots; hidden streamed HTML had preceded the visible loading fallback. The final complete 52-case run uses the corrected selector and stronger readiness assertions."
+}

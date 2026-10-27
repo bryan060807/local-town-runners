@@ -1,10 +1,9 @@
 import { test, expect, type Page, type TestInfo } from "@playwright/test";
 import { readFile } from "node:fs/promises";
-import { createHash } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 
-// Real local Auth/PostgreSQL and visible UI controls. The one payment fixture is
-// deliberately local-only; it never calls PayPal or represents a genuine charge.
+// Real local Auth/PostgreSQL and visible UI controls. The explicit Demo Mode
+// simulation never calls PayPal or represents a genuine charge.
 const env = Object.fromEntries(
   (await readFile(".local-backend/app.env", "utf8"))
     .trim()
@@ -43,6 +42,9 @@ async function noOverflow(page: Page) {
   ).toBe(true);
 }
 async function evidence(page: Page, info: TestInfo, name: string) {
+  // Next can stream the completed HTML into a hidden container before replacing
+  // its visible loading fallback. Verify the user-visible page before capture.
+  await expect(page.locator("main:not([role=status])")).toBeVisible();
   await noOverflow(page);
   const path = info.outputPath(name + ".png");
   await page.screenshot({ path, fullPage: true });
@@ -59,12 +61,20 @@ async function clickResponse(page: Page, name: string, endpoint: string) {
   expect((await response).status()).toBe(200);
 }
 
-test("visible controls complete customer, vendor and runner fulfillment with a clearly local payment fixture", async ({
+test("visible controls simulate and complete a private demo order across customer, vendor and runner", async ({
   page,
-  context,
 }, info) => {
   const errors: string[] = [];
+  const financialRequests: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
+  page.on("request", (request) => {
+    if (
+      /\/api\/(checkout|capture|refunds|payments\/status)(\?|$)/.test(
+        request.url(),
+      )
+    )
+      financialRequests.push(request.url());
+  });
   await enter(page);
   await page
     .getByRole("textbox", { name: "Search listings" })
@@ -94,42 +104,43 @@ test("visible controls complete customer, vendor and runner fulfillment with a c
     });
   await expect(card()).toContainText("DRAFT");
   await expect(
-    card().getByRole("button", { name: "Pay with PayPal Sandbox" }),
+    card().getByRole("button", { name: "Simulate demo payment", exact: true }),
   ).toBeVisible();
-  const ticket = (await context.cookies()).find(
-    (c) => c.name === "ltr_demo_ticket",
-  )!;
-  const session = await service
-    .from("demo_sessions")
-    .select("customer_id,runner_id")
-    .eq("token_hash", createHash("sha256").update(ticket.value).digest("hex"))
-    .single();
-  expect(session.error).toBeNull();
-  const localCapture = "LOCAL-ACCEPTANCE-" + order.id;
-  expect(
-    (
-      await service.rpc("attach_verified_paypal_order", {
-        order_id: order.id,
-        paypal_id: localCapture,
-        customer_id: session.data!.customer_id,
-      })
-    ).error,
-  ).toBeNull();
-  expect(
-    (
-      await service.rpc("confirm_payment", {
-        order_id: order.id,
-        capture_id: localCapture,
-        event_id: localCapture,
-        amount_cents: 450,
-      })
-    ).error,
-  ).toBeNull();
+  await clickResponse(
+    page,
+    "Simulate demo payment",
+    "/api/demo/orders/simulate",
+  );
   await page.reload();
   await expect(card()).toContainText("PAID");
+  await expect(card()).toContainText("SIMULATED DEMO ORDER — NO PAYPAL CHARGE");
+  await expect(page.locator(".payment-summary")).toContainText(
+    "Captured Sandbox payments: $0.00",
+  );
+  await expect(page.locator(".payment-summary")).toContainText(
+    "Simulated order value: $4.50",
+  );
+  const simulated = await service
+    .from("orders")
+    .select("demo_simulated,paypal_order_id,paypal_capture_id,paypal_refund_id")
+    .eq("id", order.id)
+    .single();
+  expect(simulated.error).toBeNull();
+  expect(simulated.data).toEqual({
+    demo_simulated: true,
+    paypal_order_id: null,
+    paypal_capture_id: null,
+    paypal_refund_id: null,
+  });
+  const replay = await page.request.post("/api/demo/orders/simulate", {
+    headers: { Origin: "http://127.0.0.1:3000" },
+    data: { orderId: order.id },
+  });
+  expect(replay.status()).toBe(200);
   await switchTo(page, "vendor");
   await expect(card()).toContainText("PAID");
-  await clickResponse(page, "Accept paid order", "/api/fulfillment");
+  await expect(card()).toContainText("SIMULATED DEMO ORDER — NO PAYPAL CHARGE");
+  await clickResponse(page, "Accept demo order", "/api/fulfillment");
   await expect(card()).toContainText("VENDOR ACCEPTED");
   await clickResponse(page, "Find a runner", "/api/fulfillment");
   await expect(card()).toContainText("RUNNER MATCHING");
@@ -161,11 +172,24 @@ test("visible controls complete customer, vendor and runner fulfillment with a c
   ).toBeVisible();
   await clickResponse(page, "Accept run", "/api/runner");
   await expect(card()).toContainText("RUNNER ASSIGNED");
+  await expect(card()).toContainText("SIMULATED DEMO ORDER — NO PAYPAL CHARGE");
   await card()
     .getByText("Private operational addresses (authorized participants only)")
     .click();
   await expect(card()).toContainText("Delivery: DEMO TEST ADDRESS");
   await switchTo(page, "vendor");
+  await expect(
+    card().getByRole("button", { name: "Cancel simulated order", exact: true }),
+  ).toHaveCount(0);
+  const assignedCancellation = await page.request.post(
+    "/api/demo/orders/cancel",
+    {
+      headers: { Origin: "http://127.0.0.1:3000" },
+      data: { orderId: order.id },
+    },
+  );
+  expect(assignedCancellation.status()).toBe(409);
+  await expect(card()).toContainText("RUNNER ASSIGNED");
   await clickResponse(page, "Mark ready for pickup", "/api/fulfillment");
   await expect(card()).toContainText("READY FOR PICKUP");
   await switchTo(page, "runner");
@@ -181,6 +205,7 @@ test("visible controls complete customer, vendor and runner fulfillment with a c
   await page.goto("/dashboard");
   await clickResponse(page, "Confirm order complete", "/api/fulfillment");
   await expect(card()).toContainText("COMPLETED");
+  await expect(card()).toContainText("SIMULATED DEMO ORDER — NO PAYPAL CHARGE");
   const progress = page.locator(".community-progress");
   await expect(progress).toContainText("10 community points");
   await card().getByText("Leave a review", { exact: true }).click();
@@ -194,6 +219,11 @@ test("visible controls complete customer, vendor and runner fulfillment with a c
   await expect(card()).toContainText("Review saved. Thank you, neighbor.");
   await page.reload();
   await expect(progress).toContainText("15 community points");
+  const completedReplay = await page.request.post("/api/demo/orders/simulate", {
+    headers: { Origin: "http://127.0.0.1:3000" },
+    data: { orderId: order.id },
+  });
+  expect(completedReplay.status()).toBe(200);
   await expect(progress).toContainText("1 completed purchase");
   await expect(progress).toContainText("1 thoughtful review");
   // A substantive one-star review earns the same recognition as five stars.
@@ -215,12 +245,9 @@ test("visible controls complete customer, vendor and runner fulfillment with a c
     .eq("order_id", order.id);
   expect(reviews.error).toBeNull();
   expect(reviews.data).toEqual([{ rating: 1 }]);
-  await evidence(
-    page,
-    info,
-    "SIMULATED-LOCAL-FIXTURE-customer-completed-order",
-  );
+  await evidence(page, info, "SIMULATED-DEMO-customer-completed-order");
   await page.goto(`/vendors/${order.vendor_id}`);
+  await expect(page.locator("main:not([role=status])")).toBeVisible();
   await expect(page.locator("main:not([role=status])")).toContainText(
     "1.0 / 5",
   );
@@ -234,7 +261,7 @@ test("visible controls complete customer, vendor and runner fulfillment with a c
   await expect(
     page.getByText("Community favorite", { exact: true }),
   ).toHaveCount(0);
-  await evidence(page, info, "LOCAL-FIXTURE-vendor-verified-order-rating");
+  await evidence(page, info, "SIMULATED-DEMO-vendor-order-rating");
   await switchTo(page, "vendor");
   const vendorProgress = page.locator(".vendor-progress");
   await expect(vendorProgress).toContainText("1 fulfilled order");
@@ -252,28 +279,55 @@ test("visible controls complete customer, vendor and runner fulfillment with a c
   await expect(
     page.getByText("Simulated Runner Payout — Demo Only"),
   ).toBeVisible();
-  await evidence(
-    page,
-    info,
-    "SIMULATED-LOCAL-FIXTURE-runner-completion-and-earnings",
-  );
+  await evidence(page, info, "SIMULATED-DEMO-runner-completion-and-earnings");
   const ledger = await service
     .from("ledger")
-    .select("kind,simulated")
+    .select("kind,simulated,amount_cents")
     .eq("order_id", order.id);
+  expect(ledger.data?.filter((l) => l.kind === "DEMO_PAYMENT")).toHaveLength(1);
   expect(
     ledger.data?.filter((l) => l.kind === "CUSTOMER_PAYMENT"),
-  ).toHaveLength(1);
+  ).toHaveLength(0);
+  expect(ledger.data).toHaveLength(4);
+  expect(ledger.data?.every((entry) => entry.simulated)).toBe(true);
   expect(
-    ledger.data
-      ?.filter((l) => l.kind !== "CUSTOMER_PAYMENT")
-      .every((l) => l.simulated),
-  ).toBe(true);
-  await info.attach("local-fixture-boundary.json", {
+    Number(
+      ledger.data?.find((entry) => entry.kind === "DEMO_PAYMENT")?.amount_cents,
+    ),
+  ).toBe(450);
+  const finalOrder = await service
+    .from("orders")
+    .select(
+      "state,demo_simulated,paypal_order_id,paypal_capture_id,paypal_refund_id,runner_id",
+    )
+    .eq("id", order.id)
+    .single();
+  expect(finalOrder.error).toBeNull();
+  expect(finalOrder.data!.demo_simulated).toBe(true);
+  expect(finalOrder.data!.state).toBe("COMPLETED");
+  expect(finalOrder.data!.paypal_order_id).toBeNull();
+  expect(finalOrder.data!.paypal_capture_id).toBeNull();
+  expect(finalOrder.data!.paypal_refund_id).toBeNull();
+  const runner = await service
+    .from("runners")
+    .select("completed_runs,reward_points")
+    .eq("id", finalOrder.data!.runner_id)
+    .single();
+  expect(runner.error).toBeNull();
+  expect(Number(runner.data!.completed_runs)).toBe(1);
+  expect(Number(runner.data!.reward_points)).toBe(10);
+  const paymentEvents = await service
+    .from("payment_events")
+    .select("event_id")
+    .eq("order_id", order.id);
+  expect(paymentEvents.error).toBeNull();
+  expect(paymentEvents.data).toHaveLength(0);
+  expect(financialRequests).toEqual([]);
+  await info.attach("demo-simulation-boundary.json", {
     body: JSON.stringify(
       {
         backend: "loopback Auth/PostgreSQL",
-        payment: "SIMULATED LOCAL FIXTURE; not a PayPal capture",
+        payment: "EXPLICIT DEMO SIMULATION; no PayPal order or capture",
         orderId: order.id,
         finalState: "COMPLETED",
         actualPayPalRequests: 0,

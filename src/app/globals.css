@@ -1273,6 +1273,20 @@ footer span:first-child {
 .payment-summary {
   background: #f2f5ea;
 }
+.demo-order-guide {
+  padding: 14px;
+  margin: 16px 0;
+  border: 1px solid #bfcfae;
+  border-radius: 8px;
+  background: #edf3e4;
+}
+.demo-order-guide strong {
+  color: #315a43;
+  font-size: 12px;
+}
+.simple-page .demo-order-guide p {
+  margin: 8px 0 0;
+}
 .simple-page .simple-card .primary {
   display: block;
   margin-top: 18px;

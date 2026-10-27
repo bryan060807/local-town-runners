@@ -2,6 +2,7 @@ import { z } from "zod";
 import { authenticated, HttpError } from "@/lib/server/db";
 import { body, sameOrigin, failure, limited } from "@/lib/server/http";
 import { recoverPayment } from "@/lib/server/payment-recovery";
+import { rejectSimulatedPayment } from "@/lib/server/demo-orders";
 export async function POST(req: Request) {
   try {
     sameOrigin(req);
@@ -10,10 +11,13 @@ export async function POST(req: Request) {
     await limited(client, "payment_status");
     const { data: o } = await client
       .from("orders")
-      .select("id,state,paypal_order_id,paypal_capture_id,total_cents")
+      .select(
+        "id,state,paypal_order_id,paypal_capture_id,total_cents,demo_simulated",
+      )
       .eq("id", p.orderId)
       .eq("customer_id", user.id)
       .single();
+    if (o) rejectSimulatedPayment(o);
     if (!o || !o.paypal_order_id) throw new HttpError("Order unavailable", 404);
     if (o.paypal_capture_id)
       return Response.json(

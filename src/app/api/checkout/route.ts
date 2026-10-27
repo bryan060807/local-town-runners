@@ -9,6 +9,7 @@ import { body, sameOrigin, failure, limited } from "@/lib/server/http";
 import { paypal } from "@/lib/server/paypal";
 import { recoverPayment } from "@/lib/server/payment-recovery";
 import { paypalConfig } from "@/lib/server/env";
+import { rejectSimulatedPayment } from "@/lib/server/demo-orders";
 export async function POST(req: Request) {
   try {
     sameOrigin(req);
@@ -21,6 +22,7 @@ export async function POST(req: Request) {
       .eq("id", p.orderId)
       .eq("customer_id", user.id)
       .single();
+    if (o) rejectSimulatedPayment(o);
     if (error || !o || !["DRAFT", "PENDING_PAYMENT"].includes(o.state))
       throw new HttpError("Order not payable", 409);
     const { data: address } = await client
@@ -33,8 +35,8 @@ export async function POST(req: Request) {
         "Add a private delivery address before checkout",
         409,
       );
-    const app = paypalConfig().app;
     const service = serviceDb();
+    const app = paypalConfig().app;
     const { data: ready, error: readyError } =
       await service.rpc("phase42_ready");
     if (readyError || !ready)
@@ -48,6 +50,12 @@ export async function POST(req: Request) {
       .eq("id", o.id)
       .single();
     if (preflight) throw new HttpError("Payment database unavailable", 503);
+    const { error: intentError } = await service.rpc("claim_paypal_checkout", {
+      order_id: o.id,
+      customer_id: user.id,
+    });
+    if (intentError)
+      throw new DatabaseOperationError(intentError, "claim_paypal_checkout");
     if (o.paypal_order_id) {
       const current = await recoverPayment({
         id: o.id,

@@ -21,6 +21,10 @@ Purchase milestones are **First local purchase** at one, **Regular neighbor** at
 
 The dashboard includes buying and selling habits: keep payments and status updates in the app, maintain accurate inventory, confirm receipt before completion, protect operational addresses and use the report/refund/support flows when needed. Recognition describes recorded activity; it is not a safety certification.
 
+## Explicit private demo orders
+
+The [demo order walkthrough](demo-order-walkthrough.md) can simulate payment inside the current private workspace. These orders use a separate simulated ledger entry and never acquire PayPal payment IDs. Their completions and reviews contribute only to that workspace's clearly labeled demo recognition; genuine public vendor reputation and captured-payment totals remain separate.
+
 ## Setup and boundaries
 
 Apply [the operator SQL](sql/community-reputation-upgrade.sql) once in the existing Supabase project's SQL Editor. It is identical to migration `015_community_reputation.sql`, can be retried, and adds indexes and read-only aggregate functions. It does not change existing orders, payment ledger rows, review rows or runner reward counters.

@@ -3,6 +3,7 @@ import { adminUser } from "@/lib/server/onboarding";
 import { serviceDb, HttpError } from "@/lib/server/db";
 import { body, sameOrigin, failure, limited } from "@/lib/server/http";
 import { recoverPayment } from "@/lib/server/payment-recovery";
+import { rejectSimulatedPayment } from "@/lib/server/demo-orders";
 export async function POST(req: Request) {
   try {
     sameOrigin(req);
@@ -11,9 +12,12 @@ export async function POST(req: Request) {
     await limited(client, "payment_recovery_admin");
     const { data: o, error } = await serviceDb()
       .from("orders")
-      .select("id,state,paypal_order_id,paypal_capture_id,total_cents")
+      .select(
+        "id,state,paypal_order_id,paypal_capture_id,total_cents,demo_simulated",
+      )
       .eq("id", p.orderId)
       .single();
+    if (o) rejectSimulatedPayment(o);
     if (error || !o || !o.paypal_order_id)
       throw new HttpError("Order unavailable", 404);
     if (o.paypal_capture_id)
