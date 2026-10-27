@@ -1,0 +1,254 @@
+{
+  "deployment": {
+    "recordedAt": "2026-10-27T13:16:25.410Z",
+    "source": "efd4ce952564d61e6ec7ad4fad74d97cc63d7e39",
+    "deployment": "dpl_APFwLE9Rj7mMTWZKX8h9FnFGmQZU",
+    "state": "READY",
+    "branch": "main",
+    "alias": [
+      "runners.aibrylabs.com",
+      "local-town-runners.vercel.app",
+      "local-town-runners-bryan060807s-projects.vercel.app",
+      "local-town-runners-git-main-bryan060807s-projects.vercel.app"
+    ],
+    "productionTarget": "dpl_APFwLE9Rj7mMTWZKX8h9FnFGmQZU"
+  },
+  "live": {
+    "recordedAt": "2026-10-27T13:20:55.512Z",
+    "boundary": "One fresh private customer/vendor/runner demo; one explicitly simulated order and simulated review. No PayPal API, checkout, capture, refund, reconciliation, AI, upload, email or payout actions. Service SDK is read-only.",
+    "apiChecks": [
+      {
+        "method": "POST",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/orders",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo/orders/simulate",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo/orders/simulate",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/fulfillment",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/fulfillment",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/runner",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/runner",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/runner",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/fulfillment",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/fulfillment",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/fulfillment",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/fulfillment",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/fulfillment",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/reviews",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo/orders/simulate",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/fulfillment",
+        "status": 409
+      },
+      {
+        "method": "GET",
+        "path": "/api/orders",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/dashboard",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/dashboard",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/dashboard",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "DELETE",
+        "path": "/api/demo",
+        "status": 200
+      }
+    ],
+    "screenshots": [
+      {
+        "role": "customer",
+        "feature": "completed simulated order",
+        "path": "docs/screenshots/demo-order-simulation-2026-10-27/LIVE-PRODUCTION-SIMULATED-customer-order.png"
+      },
+      {
+        "role": "customer",
+        "feature": "honest payment/allocation summary",
+        "path": "docs/screenshots/demo-order-simulation-2026-10-27/LIVE-PRODUCTION-SIMULATED-customer-payment-summary.png"
+      },
+      {
+        "role": "customer",
+        "feature": "private simulated progress",
+        "path": "docs/screenshots/demo-order-simulation-2026-10-27/LIVE-PRODUCTION-SIMULATED-customer-progress.png"
+      },
+      {
+        "role": "vendor",
+        "feature": "completed simulated order",
+        "path": "docs/screenshots/demo-order-simulation-2026-10-27/LIVE-PRODUCTION-SIMULATED-vendor-order.png"
+      },
+      {
+        "role": "vendor",
+        "feature": "honest payment/allocation summary",
+        "path": "docs/screenshots/demo-order-simulation-2026-10-27/LIVE-PRODUCTION-SIMULATED-vendor-payment-summary.png"
+      },
+      {
+        "role": "runner",
+        "feature": "completed simulated order",
+        "path": "docs/screenshots/demo-order-simulation-2026-10-27/LIVE-PRODUCTION-SIMULATED-runner-order.png"
+      },
+      {
+        "role": "runner",
+        "feature": "honest payment/allocation summary",
+        "path": "docs/screenshots/demo-order-simulation-2026-10-27/LIVE-PRODUCTION-SIMULATED-runner-payment-summary.png"
+      }
+    ],
+    "pageErrors": [],
+    "transportFailures": [],
+    "deniedBrowserRequests": [],
+    "protectedBefore": {
+      "digest": "c2960efc7e2ddfdc7ceedbe905da5a9f20a5f3b3d6c8688cce7bc4dd3b624785",
+      "orderCount": 3,
+      "ledgerRows": 12
+    },
+    "simulation": {
+      "privateWorkspace": true,
+      "orderId": "234aa275-2fa0-40b2-b00d-9412e2c30602",
+      "totalCents": 450,
+      "state": "COMPLETED",
+      "noPayPalIdentifiers": true,
+      "allFourLedgerRowsSimulated": true,
+      "customerCaptureLedgerRows": 0,
+      "runnerCompletedRunDelta": 1,
+      "runnerRewardDelta": 10,
+      "privateCustomerPoints": 15,
+      "simulateReplayIdempotent": true,
+      "completionReplaySafelyRejected409": true,
+      "completionReplayStateRewardsLedgerUnchanged": true,
+      "customerOrderApiSimulationMarker": true
+    },
+    "demoExitStatus": 200,
+    "protectedAfter": {
+      "digest": "c2960efc7e2ddfdc7ceedbe905da5a9f20a5f3b3d6c8688cce7bc4dd3b624785",
+      "orderCount": 3,
+      "ledgerRows": 12
+    },
+    "protectedRecordsUnchanged": true,
+    "browserReads": 64,
+    "financialProviderCalls": 0,
+    "genuineCaptureRowsCreated": 0,
+    "actualPayoutsCents": 0
+  }
+}
