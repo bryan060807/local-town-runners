@@ -1,0 +1,50 @@
+{
+  "recordedAt": "2026-10-27T22:28:03.175Z",
+  "boundary": "Read-only GitHub Actions status/log inspection. No workflow rerun or cancellation by the monitoring agent. Raw logs remain outside Git.",
+  "attempts": [
+    {
+      "id": 40594226228,
+      "source": "15c85a41a7116be0fbbc5ab4b3444d120694059f",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40594226228",
+      "status": "completed",
+      "conclusion": "failure",
+      "createdAt": "2026-10-27T22:21:47Z",
+      "updatedAt": "2026-10-27T22:23:08Z",
+      "jobs": [
+        {
+          "name": "Types, lint and database safeguards",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40594226228/job/122505912102",
+          "failedSteps": []
+        },
+        {
+          "name": "Browser checks (connected-local)",
+          "status": "completed",
+          "conclusion": "failure",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40594226228/job/122505912345",
+          "failedSteps": [
+            "Start the dedicated local backend"
+          ]
+        },
+        {
+          "name": "Browser checks (offline)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40594226228/job/122505912641",
+          "failedSteps": []
+        }
+      ],
+      "failureAssessment": {
+        "step": "Start the dedicated local backend",
+        "observedError": "docker operation failed (exit 2)",
+        "browserExecutionStarted": false,
+        "diagnosticLimit": "The initial helper suppressed the subcommand and stderr; the remote log alone did not identify the failing SQL call.",
+        "reproducedCause": "The old Unix-socket readiness probe can accept the temporary postgres initialization server; its restart interrupts admitted psql work with exit 2.",
+        "fix": "Wait for TCP readiness on 127.0.0.1, then bootstrap; report stage and exit code without arguments, input or stderr.",
+        "localProof": "hardening-postgres-readiness-2026-10-27.json"
+      }
+    }
+  ],
+  "latestConclusion": "initial_failed_fix_pending"
+}

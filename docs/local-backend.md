@@ -6,6 +6,8 @@ From the repository, run `npm run local:backend`, then keep `npm run local:gatew
 
 Run `npm run test:local` for real Auth/PostgREST smoke checks and `npm run test:e2e:local` for browser authentication, persistent draft ordering, cancellation and role dashboards. Stop an existing app before browser tests, which manage their own app process.
 
+Fresh PostgreSQL startup waits for the final server's TCP listener. The image briefly runs an initialization server on its Unix socket; socket readiness alone can cause bootstrap queries to fail during its restart. Setup errors identify a stage and exit code while keeping SQL, command arguments and credentials out of logs.
+
 The dedicated Docker containers are `ltr-local-db`, `ltr-local-auth` and `ltr-local-rest`. A destructive local reset requires stopping these containers and removing only these named containers with their anonymous volumes, then rerunning initialization and seeding. It deletes local demo orders and accounts. Do not run this against a hosted project. `supabase db reset` applies only to a separate full Supabase CLI stack and does not reset this reduced stack.
 
 For the selected hosted project, configure the public key and server service-role key in environment settings, review migrations, and apply them using the deployment guide. Hosted Auth, Storage, PayPal Sandbox and provider AI must be checked separately before deployment.

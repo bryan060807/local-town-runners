@@ -5,7 +5,7 @@ import { randomBytes, createHmac } from "node:crypto";
 import path from "node:path";
 const dir = path.resolve(".local-backend");
 await mkdir(dir, { recursive: true, mode: 0o700 });
-async function run(args, input) {
+async function run(stage, args, input) {
   return await new Promise((resolve, reject) => {
     const p = spawn(args[0], args.slice(1), {
       stdio: ["pipe", "pipe", "pipe"],
@@ -13,15 +13,20 @@ async function run(args, input) {
     let out = "";
     p.stdout.on("data", (b) => (out += b));
     p.stderr.on("data", () => {});
-    p.on("error", () => reject(Error(`Could not run ${args[0]}`)));
+    p.on("error", () =>
+      reject(Error(`Local backend stage ${stage} could not start`)),
+    );
     p.on("close", (code) =>
       code === 0
         ? resolve(out)
         : reject(
             Error(
-              `${args[0]} operation failed (exit ${code}); inspect the named local container for diagnostics without printing credentials`,
+              `Local backend stage ${stage} failed (exit ${code}); inspect the named local container for diagnostics without printing credentials`,
             ),
           ),
+    );
+    p.stdin.on("error", () =>
+      reject(Error(`Local backend stage ${stage} input channel unavailable`)),
     );
     p.stdin.end(input);
   });
@@ -58,9 +63,9 @@ const db = "ltr-local-db",
   rest = "ltr-local-rest",
   network = "ltr-local-network";
 try {
-  await run(["docker", "network", "inspect", network]);
+  await run("network_inspect", ["docker", "network", "inspect", network]);
 } catch {
-  await run(["docker", "network", "create", network]);
+  await run("network_create", ["docker", "network", "create", network]);
 }
 async function container(name, image, env, ports = []) {
   const envFile = path.join(dir, `${name}.env`);
@@ -72,10 +77,10 @@ async function container(name, image, env, ports = []) {
     { mode: 0o600 },
   );
   try {
-    await run(["docker", "container", "inspect", name]);
-    await run(["docker", "start", name]);
+    await run(`${name}_inspect`, ["docker", "container", "inspect", name]);
+    await run(`${name}_start`, ["docker", "start", name]);
   } catch {
-    await run([
+    await run(`${name}_create`, [
       "docker",
       "run",
       "-d",
@@ -93,7 +98,7 @@ async function container(name, image, env, ports = []) {
 await container(db, "postgres:17-alpine", { POSTGRES_PASSWORD: config.db }, [
   "127.0.0.1:54322:5432",
 ]);
-async function ready(operation, attempts = 60) {
+async function ready(stage, operation, attempts = 60) {
   for (let i = 0; i < attempts; i++) {
     try {
       return await operation();
@@ -101,10 +106,23 @@ async function ready(operation, attempts = 60) {
       await new Promise((r) => setTimeout(r, 1000));
     }
   }
-  throw Error("Local service readiness timed out");
+  throw Error(`Local backend stage ${stage} readiness timed out`);
 }
-await ready(() => run(["docker", "exec", db, "pg_isready", "-U", "postgres"]));
-const initialized = await run([
+// The image starts a temporary Unix-socket-only server while initializing.
+// TCP becomes ready only after that server stops and the final server starts.
+await ready("postgres_tcp", () =>
+  run("postgres_tcp_probe", [
+    "docker",
+    "exec",
+    db,
+    "pg_isready",
+    "-h",
+    "127.0.0.1",
+    "-U",
+    "postgres",
+  ]),
+);
+const initialized = await run("postgres_bootstrap_check", [
   "docker",
   "exec",
   db,
@@ -116,6 +134,7 @@ const initialized = await run([
 ]);
 if (!initialized.includes("t"))
   await run(
+    "postgres_bootstrap",
     [
       "docker",
       "exec",
@@ -149,11 +168,12 @@ await container(
   },
   ["127.0.0.1:54325:9999"],
 );
-await ready(async () => {
+await ready("auth", async () => {
   const r = await fetch("http://127.0.0.1:54325/health");
   if (!r.ok) throw Error("Auth not ready");
 });
 await run(
+  "migration_tracking_setup",
   [
     "docker",
     "exec",
@@ -170,7 +190,7 @@ await run(
 for (const file of (await readdir("supabase/migrations"))
   .filter((f) => f.endsWith(".sql"))
   .sort()) {
-  const applied = await run([
+  const applied = await run(`migration_check_${file}`, [
     "docker",
     "exec",
     db,
@@ -182,6 +202,7 @@ for (const file of (await readdir("supabase/migrations"))
   ]);
   if (!applied.includes("t")) {
     await run(
+      `migration_apply_${file}`,
       [
         "docker",
         "exec",
@@ -195,7 +216,7 @@ for (const file of (await readdir("supabase/migrations"))
       ],
       await readFile(`supabase/migrations/${file}`, "utf8"),
     );
-    await run([
+    await run(`migration_record_${file}`, [
       "docker",
       "exec",
       db,
@@ -208,6 +229,7 @@ for (const file of (await readdir("supabase/migrations"))
   }
 }
 await run(
+  "local_auth_uid_setup",
   [
     "docker",
     "exec",
@@ -233,7 +255,7 @@ await container(
   },
   ["127.0.0.1:54326:3000"],
 );
-await ready(async () => {
+await ready("rest", async () => {
   const r = await fetch("http://127.0.0.1:54326/");
   if (!r.ok) throw Error("REST not ready");
 });
@@ -242,7 +264,7 @@ await writeFile(
   `APP_URL=http://127.0.0.1:3000\nNEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321\nNEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${token("anon")}\nSUPABASE_SERVICE_ROLE_KEY=${token("service_role")}\nDEMO_SEED_PASSWORD=${config.password}\n`,
   { mode: 0o600 },
 );
-await run([
+await run("rest_schema_reload", [
   "docker",
   "exec",
   db,

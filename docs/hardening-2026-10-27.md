@@ -20,11 +20,25 @@ This pass reviews the current hackathon application, including discovery, accoun
 | Repository         | README, example configuration and current architecture/security/database/deployment guides describe today's features, migrations 001–016, evidence and operational limits. Historical phase reports remain historical. Formatting commands now cover the current browser tests and workflow.                                                                                                                   |
 | Automation         | GitHub Actions runs formatting, lint, types, PostgreSQL/unit safeguards, dependency audit and separate offline/connected browser jobs on main pushes and pull requests. Jobs use generated local credentials, a bounded gateway readiness check and the PDF inspection dependency; they receive no production secrets.                                                                                         |
 
+A clean CI runner also exposed a local PostgreSQL startup race: the image's temporary initialization server could satisfy the old Unix-socket readiness probe, then interrupt the bootstrap query with exit 2 when it restarted. Readiness now requires TCP, which becomes available on the final server. Errors identify a safe operation stage without printing arguments, SQL or credentials. A [separate fresh-container reproduction](evidence/hardening-postgres-readiness-2026-10-27.json) confirmed the old failure and the successful TCP gate; the existing local backend also restarted safely. The [initial CI attempt](evidence/hardening-ci-initial-2026-10-27.json) passed quality and offline browser jobs. Current rerun status is available in [GitHub Actions](https://github.com/bryan060807/local-town-runners/actions/workflows/ci.yml).
+
 ## Verification
+
+| Check                             | Result                                                                                            |
+| --------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Unit and PostgreSQL tests         | 108 passed                                                                                        |
+| Offline browser checks            | 24 passed                                                                                         |
+| Existing connected browser checks | 52 passed across desktop and three phone widths                                                   |
+| New failure/retry browser checks  | 16 passed after test-only selector corrections                                                    |
+| Dependency audit                  | Zero reported vulnerabilities                                                                     |
+| Deployed operational checks       | 10 passed                                                                                         |
+| Fresh hosted private simulation   | Completed, reviewed and replay-checked; four simulated ledger rows, zero financial provider calls |
 
 Final release results are recorded in [hardening evidence](evidence/hardening-2026-10-27.json). The browser suites use production builds; desktop and mobile flows cover discovery, persistence, role permissions, catalog editing, agreement intake, genuine-payment denial, isolated simulation and full fulfillment. New failure tests cover delayed runner/vendor requests, interrupted sign-out/recovery, quantity boundaries and explicit private-document links.
 
 The [read-only operational audit](evidence/hardening-operations-2026-10-27.json) checks the deployed source, production environment variable names, cron registration, anonymous denial, security headers, bucket privacy and existing payment records. The three genuine Sandbox orders retain their complete prior order/ledger digest, their PAID states and exactly one genuine customer-payment entry each, totaling $44.00 USD. Presence of a variable name does not independently prove a credential's value or provider authorization.
+
+The [deployed release checks](evidence/hardening-production-2026-10-27.json) additionally verify the intended source and new API cache headers. A [fresh hosted simulated walkthrough](evidence/hardening-live-simulation-2026-10-27.json) completed all three roles, kept the financial ledger and protected genuine payments distinct, and captured seven [sanitized mobile screens](screenshots/hardening-2026-10-27). Replaying simulation preserved state, rewards and ledger rows; a repeated completion returned the existing safe 409 response. The private QA session was exited afterward.
 
 No database migration or new application environment variable is required for these fixes. Hosted Auth email, Storage writes, new signed provider deliveries and financial capture were not retriggered as part of the code regression suite. Local Storage is absent from the reduced development backend; binary/image tests and database policy tests are distinct from a hosted Storage integration test. Earlier genuine capture, signed webhook and inbox evidence remain linked from the README.
 

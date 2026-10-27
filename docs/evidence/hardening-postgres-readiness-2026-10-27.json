@@ -1,0 +1,28 @@
+{
+  "image": "postgres:17-alpine",
+  "publishedPorts": 0,
+  "socketAcceptedDuringTemporaryInit": true,
+  "tcpRejectedDuringTemporaryInit": true,
+  "baselinePsqlExit": 2,
+  "tcpReadinessObserved": true,
+  "queryAfterTcpReadiness": true,
+  "initializationRestartSeen": true,
+  "verifiedAt": "2026-10-27T22:25:55.648Z",
+  "warmBackendSetupPassed": true,
+  "stageDiagnostics": {
+    "passed": true,
+    "containsStage": true,
+    "containsExitStatus": true,
+    "includesArgv": false,
+    "includesSqlOrInput": false,
+    "includesStderr": false
+  },
+  "notes": [
+    "A dedicated network-isolated ephemeral PostgreSQL container with a delayed initialization SQL fixture reproduced the Unix-socket readiness race.",
+    "The old probe admitted a query that exited 2 during the temporary-server restart; TCP readiness waited for the stable final server.",
+    "The existing named local backend was reused successfully after the fix; no reset or hosted operation occurred."
+  ],
+  "existingStackTouchedDuringFreshProof": false,
+  "existingStackReusedForWarmCheck": true,
+  "existingStackReset": false
+}

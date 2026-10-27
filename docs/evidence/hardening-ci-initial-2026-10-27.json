@@ -1,0 +1,200 @@
+{
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "conclusion": "success",
+      "name": "Types, lint and database safeguards",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run npm ci",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Install the PDF inspection tool used by database tests",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run npm run check",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run npm audit --audit-level=high",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "name": "Browser checks (connected-local)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run npm ci",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run npx playwright install --with-deps chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Select the installed browser",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Start the dedicated local backend",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Offline browser checks",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Connected browser checks",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "name": "Browser checks (offline)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run npm ci",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run npx playwright install --with-deps chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Select the installed browser",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Start the dedicated local backend",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Offline browser checks",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Connected browser checks",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    }
+  ],
+  "runId": 40594226228,
+  "source": "15c85a41a7116be0fbbc5ab4b3444d120694059f",
+  "status": "completed",
+  "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40594226228"
+}
