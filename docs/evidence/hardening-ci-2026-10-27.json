@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-27T22:42:26.326Z",
+  "recordedAt": "2026-10-27T23:01:47Z",
   "boundary": "Read-only GitHub Actions status/log inspection. No workflow rerun or cancellation by the monitoring agent. Raw logs remain outside Git.",
   "attempts": [
     {
@@ -23,9 +23,7 @@
           "status": "completed",
           "conclusion": "failure",
           "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40594226228/job/122505912345",
-          "failedSteps": [
-            "Start the dedicated local backend"
-          ]
+          "failedSteps": ["Start the dedicated local backend"]
         },
         {
           "name": "Browser checks (offline)",
@@ -73,9 +71,7 @@
           "status": "completed",
           "conclusion": "failure",
           "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40595053052/job/122508744096",
-          "failedSteps": [
-            "Connected browser checks"
-          ]
+          "failedSteps": ["Connected browser checks"]
         }
       ],
       "verification": {
@@ -94,22 +90,88 @@
         "connectedBrowser": {
           "passed": 65,
           "failed": 3,
-          "failedProjects": [
-            "mobile-360",
-            "mobile-390",
-            "mobile-430"
-          ],
+          "failedProjects": ["mobile-360", "mobile-390", "mobile-430"],
           "failedTest": "auth.spec.ts: cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state"
         }
       },
       "failureAssessment": {
         "expectedQuoteText": "already heading",
-        "actualQuoteText": "Sarah is a compatible candidate; About 0.5 straight-line miles from pickup; within the runner’s declared approach limit. The runner must accept.",
-        "cause": "Legacy and public-template catalogs contain an identically named $4.50 cinnamon-roll listing. Unsorted row order changes after the desktop test reserves/restores legacy inventory, so later named conversations can choose the template listing while the test assumes the legacy vendor’s known runner trip.",
+        "actualQuoteText": "Sarah is a compatible candidate; About 0.5 straight-line miles from pickup; within the runner\u2019s declared approach limit. The runner must accept.",
+        "cause": "Legacy and public-template catalogs contain an identically named $4.50 cinnamon-roll listing. Unsorted row order changes after the desktop test reserves/restores legacy inventory, so later named conversations can choose the template listing while the test assumes the legacy vendor\u2019s known runner trip.",
         "reproduction": "An isolated PGlite table reproduced [legacy, template] becoming [template, legacy] after reservation/restoration updates; the actual conversationTool selected the corresponding different listing IDs.",
-        "correction": "Each auth test now owns a uniquely named local listing at the validated trip destination and verifies the exact quote/order listing ID. The already-heading and payment-denial assertions remain unchanged. No app matching change."
+        "correction": "Each auth test now owns a uniquely named local listing at the validated trip destination and verifies the exact quote/order listing ID. The already-heading and payment-denial assertions remain unchanged. The fixture correction did not change matching; a related authenticated catalog scope bug was fixed separately in a1d1a94, with dedicated scope regressions."
+      }
+    },
+    {
+      "id": 40597994529,
+      "source": "a1d1a94cf9d51af37d9ddb1830861c9f3a5ca39c",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40597994529",
+      "status": "completed",
+      "conclusion": "failure",
+      "createdAt": "2026-10-27T22:51:52Z",
+      "updatedAt": "2026-10-27T23:01:47Z",
+      "jobs": [
+        {
+          "name": "Types, lint and database safeguards",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40597994529/job/122518697202",
+          "startedAt": "2026-10-27T22:51:55Z",
+          "completedAt": "2026-10-27T22:53:17Z",
+          "failedSteps": []
+        },
+        {
+          "name": "Browser checks (offline)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40597994529/job/122518697608",
+          "startedAt": "2026-10-27T22:51:55Z",
+          "completedAt": "2026-10-27T22:53:30Z",
+          "failedSteps": []
+        },
+        {
+          "name": "Browser checks (connected-local)",
+          "status": "completed",
+          "conclusion": "failure",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40597994529/job/122518697642",
+          "startedAt": "2026-10-27T22:51:55Z",
+          "completedAt": "2026-10-27T23:01:46Z",
+          "failedSteps": ["Connected browser checks"]
+        }
+      ],
+      "verification": {
+        "freshBackendAndSeedsPassed": true,
+        "unitDatabase": {
+          "passed": 108,
+          "failed": 0
+        },
+        "dependencyAudit": {
+          "vulnerabilities": 0
+        },
+        "offlineBrowser": {
+          "passed": 24,
+          "failed": 0,
+          "duration": "54.6s"
+        },
+        "connectedBrowser": {
+          "passed": 70,
+          "failed": 2,
+          "duration": "8.8m",
+          "failedProjects": ["desktop", "mobile-360"],
+          "failedTest": "explore.spec.ts: Explore highlights vendors, bounds featured items and keeps every available item reachable"
+        },
+        "catalogScopeRegression": {
+          "passed": 4,
+          "failed": 0
+        }
+      },
+      "failureAssessment": {
+        "observedError": "At explore.spec.ts:167, clicking the exact Browse Riverbend Market & Goods items button timed out after 15000ms.",
+        "cause": "The private fixture has seven vendors, but the directory initially displays six. Unordered database results can put Riverbend outside the first six. Changing or clearing the search remounts the directory and resets the visible count; the test assumed the target stayed among the initial cards.",
+        "correction": "Use explicit vendor-name search before selecting Browse items and before selecting the storefront after Show all vendors. Preserve the exact ten-item, vendor count, storefront and accessibility assertions.",
+        "appRuntimeChangeRequired": false
       }
     }
   ],
-  "latestConclusion": "fixture_correction_verification_pending"
+  "latestConclusion": "explore_navigation_fixture_verification_pending"
 }

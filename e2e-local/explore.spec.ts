@@ -158,7 +158,11 @@ test("Explore highlights vendors, bounds featured items and keeps every availabl
   await search.fill("Handmade River Mug");
   await expect(products).toHaveCount(1);
   await expect(products).toContainText("Handmade River Mug");
-  await search.fill("");
+  // A searched directory remounts with six cards. Database row order is not
+  // a ranking contract, so find the intended vendor instead of assuming its
+  // card is in that first group.
+  await search.fill("Riverbend Market & Goods");
+  await expect(vendorCards).toHaveCount(1);
   await page
     .getByRole("button", {
       name: "Browse Riverbend Market & Goods items",
@@ -171,6 +175,8 @@ test("Explore highlights vendors, bounds featured items and keeps every availabl
     .getByRole("button", { name: "Show all vendors", exact: true })
     .click();
   await expect(products).toHaveCount(4);
+  await search.fill("Riverbend Market & Goods");
+  await expect(vendorCards).toHaveCount(1);
   await page
     .getByRole("link", {
       name: "Visit Riverbend Market & Goods storefront",
