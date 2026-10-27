@@ -1,0 +1,81 @@
+{
+  "deployment": {
+    "recordedAt": "2026-10-27T12:26:51.050Z",
+    "source": "4e30b08e276e4be8ff31d82bd9aea1ac5652eb27",
+    "deployment": "dpl_tA2zHcPkwtTbmxenywtcSbeATqBh",
+    "state": "READY",
+    "branch": "main",
+    "alias": [
+      "runners.aibrylabs.com",
+      "local-town-runners.vercel.app",
+      "local-town-runners-bryan060807s-projects.vercel.app",
+      "local-town-runners-git-main-bryan060807s-projects.vercel.app"
+    ],
+    "productionTarget": "dpl_tA2zHcPkwtTbmxenywtcSbeATqBh"
+  },
+  "api": {
+    "recordedAt": "2026-10-27T12:27:01.949Z",
+    "boundary": "One new temporary fictional customer demo, read-only Explore/storefront/progress checks; no orders, listing changes, reviews, payments, uploads or emails.",
+    "exploreStatus": 200,
+    "vendorDirectory": true,
+    "vendorCards": 4,
+    "featuredCards": 4,
+    "browseAllItems": true,
+    "honestZeroReviewState": true,
+    "ratingsUnavailable": false,
+    "dashboardStatus": 200,
+    "privateProgressPresent": true,
+    "zeroPoints": true,
+    "progressUnavailable": false,
+    "storefrontStatus": 200,
+    "reputationExplanation": true,
+    "databaseReady": true,
+    "demoExitStatus": 200
+  },
+  "visual": {
+    "recordedAt": "2026-10-27T12:27:02.044Z",
+    "boundary": "One normal fresh production customer demo, read-only Explore and own zero-point progress. No orders, reviews, checkout, AI, uploads, email or payout actions.",
+    "transport": "Original production response bodies/statuses through Node verified TLS, managed proxy and system CA; compression headers normalized after decompression.",
+    "tlsVerificationDisabled": false,
+    "browserAllowedMethods": [
+      "GET",
+      "HEAD"
+    ],
+    "browserAllowedOrigin": "https://runners.aibrylabs.com",
+    "views": [
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "status": 200,
+        "vendors": 4,
+        "featured": 4,
+        "zeroReviewCards": 4,
+        "horizontalOverflow": false,
+        "screenshot": "docs/screenshots/explore-reputation-2026-10-27/LIVE-PRODUCTION-desktop-explore-vendors-and-featured.png"
+      },
+      {
+        "viewport": {
+          "width": 360,
+          "height": 800
+        },
+        "status": 200,
+        "vendors": 4,
+        "featured": 4,
+        "zeroReviewCards": 4,
+        "horizontalOverflow": false,
+        "screenshot": "docs/screenshots/explore-reputation-2026-10-27/LIVE-PRODUCTION-mobile-360-explore-vendors-and-featured.png"
+      }
+    ],
+    "pageErrors": [],
+    "transportFailures": [],
+    "deniedBrowserRequests": [],
+    "demoEntryStatus": 200,
+    "privateFreshDemoPoints": 0,
+    "progressScreenshot": "docs/screenshots/explore-reputation-2026-10-27/LIVE-PRODUCTION-demo-customer-zero-progress.png",
+    "demoExitStatus": 200,
+    "requests": 95,
+    "explicitDemoMutationRequests": 2
+  }
+}
