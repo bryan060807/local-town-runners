@@ -125,7 +125,17 @@ export default function Marketplace({
   const [recommendations, setRecommendations] = useState<Listing[]>([]);
   const selectVendor = useCallback(
     (id: string) => {
-      setSelected(listings.find((l) => l.vendorId === id) || null);
+      const available = listings.find(
+        (l) => l.vendorId === id && l.active && l.inventory > 0,
+      );
+      setSelected(available || null);
+      if (!available) {
+        setStorefront(id);
+        setCategory("All");
+        setLocalOnly(false);
+        setQuery("");
+        setItemPage(1);
+      }
       setQuantity(1);
       setNotice("");
     },
@@ -746,16 +756,20 @@ export default function Marketplace({
             <div className="quantity">
               <button
                 aria-label="Decrease quantity"
-                disabled={quantity === 1}
-                onClick={() => setQuantity((q) => q - 1)}
+                disabled={quantity <= 1 || preparing}
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
               >
                 <Minus size={16} />
               </button>
               <span>{quantity}</span>
               <button
                 aria-label="Increase quantity"
-                disabled={quantity === selected.inventory}
-                onClick={() => setQuantity((q) => q + 1)}
+                disabled={
+                  quantity >= Math.min(20, selected.inventory) || preparing
+                }
+                onClick={() =>
+                  setQuantity((q) => Math.min(20, selected.inventory, q + 1))
+                }
               >
                 <Plus size={16} />
               </button>

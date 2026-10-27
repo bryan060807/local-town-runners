@@ -2,6 +2,7 @@ import { DatabaseOperationError } from "@/lib/server/errors";
 import {
   paymentMatchesOrder,
   paymentMatchesTotal,
+  sandboxApprovalUrl,
 } from "@/lib/payment-validation";
 import { z } from "zod";
 import { authenticated, serviceDb, HttpError } from "@/lib/server/db";
@@ -101,6 +102,8 @@ export async function POST(req: Request) {
     if (
       typeof result.id !== "string" ||
       !result.id ||
+      result.id.length > 100 ||
+      (o.paypal_order_id && result.id !== o.paypal_order_id) ||
       !paymentMatchesOrder(result, o.id, result.id) ||
       !paymentMatchesTotal(result, o.total_cents)
     )
@@ -112,19 +115,12 @@ export async function POST(req: Request) {
     });
     if (save)
       throw new DatabaseOperationError(save, "attach_verified_paypal_order");
-    const link = result.links?.find((l: { rel: string; href: string }) =>
-      ["approve", "payer-action"].includes(l.rel),
+    const approvalUrl = sandboxApprovalUrl(result, result.id);
+    if (!approvalUrl) throw Error("Sandbox approval link unavailable");
+    return Response.json(
+      { approvalUrl },
+      { headers: { "Cache-Control": "private, no-store" } },
     );
-    const approval = link ? new URL(link.href) : null;
-    if (
-      !approval ||
-      approval.protocol !== "https:" ||
-      approval.username ||
-      approval.password ||
-      !approval.hostname.endsWith(".paypal.com")
-    )
-      throw Error("Approval link unavailable");
-    return Response.json({ approvalUrl: link.href });
   } catch (e) {
     return failure(e);
   }

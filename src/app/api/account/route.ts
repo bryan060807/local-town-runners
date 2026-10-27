@@ -38,23 +38,19 @@ export async function POST(req: Request) {
         .update({ display_name: p.name })
         .eq("id", user.id);
       if (a.error) throw a.error;
-      const r = await client
-        .from("account_privacy")
-        .upsert({
-          user_id: user.id,
-          communication: p.communication,
-          analytics_consent: p.analytics,
-        });
+      const r = await client.from("account_privacy").upsert({
+        user_id: user.id,
+        communication: p.communication,
+        analytics_consent: p.analytics,
+      });
       if (r.error) throw r.error;
     } else if (p.action === "address") {
-      const r = await client
-        .from("private_addresses")
-        .insert({
-          user_id: user.id,
-          label: p.label,
-          address: p.address,
-          instructions: p.instructions,
-        });
+      const r = await client.from("private_addresses").insert({
+        user_id: user.id,
+        label: p.label,
+        address: p.address,
+        instructions: p.instructions,
+      });
       if (r.error) throw r.error;
     } else if (p.action === "removeAddress") {
       const r = await client

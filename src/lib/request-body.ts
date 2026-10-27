@@ -3,10 +3,16 @@ export async function readLimited(
   req: Request,
   limit = 16000,
 ): Promise<string> {
+  return new TextDecoder().decode(await readLimitedBytes(req, limit));
+}
+export async function readLimitedBytes(
+  req: Request,
+  limit: number,
+): Promise<Uint8Array<ArrayBuffer>> {
   const declared = Number(req.headers.get("content-length"));
   if (Number.isFinite(declared) && declared > limit)
     throw new HttpError("Request too large", 413);
-  if (!req.body) return "";
+  if (!req.body) return new Uint8Array();
   const reader = req.body.getReader();
   const chunks: Uint8Array[] = [];
   let length = 0;
@@ -30,5 +36,5 @@ export async function readLimited(
     joined.set(chunk, offset);
     offset += chunk.byteLength;
   }
-  return new TextDecoder().decode(joined);
+  return joined;
 }

@@ -1,12 +1,7 @@
 {
   "name": "local-town-runners",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs",
-    "test": "tests"
-  },
+  "description": "A local commerce marketplace with private customer, vendor and runner demos, grounded discovery and PayPal Sandbox verification.",
   "scripts": {
     "dev": "node --use-env-proxy --use-system-ca node_modules/next/dist/bin/next dev --hostname 0.0.0.0",
     "build": "next build",
@@ -16,7 +11,7 @@
     "test": "tsx --test tests/*.test.ts",
     "seed": "node --use-env-proxy --use-system-ca --import tsx --env-file=.env.local scripts/seed.ts",
     "test:e2e": "playwright test",
-    "format": "prettier --write src tests e2e scripts docs *.ts *.json *.mjs",
+    "format": "prettier --write src tests e2e e2e-local scripts docs README.md *.ts *.json *.mjs .github/workflows/*.yml",
     "import:vendors": "node --use-env-proxy --use-system-ca --import tsx --env-file=.env.local scripts/import-vendors.ts",
     "local:backend": "node scripts/local-backend.mjs",
     "local:gateway": "node scripts/local-gateway.mjs",
@@ -35,7 +30,9 @@
     "test:phase3-reset": "node scripts/with-local-env.mjs --script scripts/local-phase3-reset-smoke.ts",
     "seed:phase4": "node --use-env-proxy --use-system-ca --import tsx scripts/seed-phase4.ts",
     "local:seed:phase4": "node scripts/with-local-env.mjs --script scripts/seed-phase4.ts",
-    "import:vdpcp": "node --use-env-proxy --use-system-ca --import tsx scripts/import-vdpcp.ts"
+    "import:vdpcp": "node --use-env-proxy --use-system-ca --import tsx scripts/import-vdpcp.ts",
+    "format:check": "prettier --check src tests e2e e2e-local scripts README.md *.ts *.json *.mjs .github/workflows/*.yml",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm test"
   },
   "repository": {
     "type": "git",

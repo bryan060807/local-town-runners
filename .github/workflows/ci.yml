@@ -1,0 +1,65 @@
+name: App checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Types, lint and database safeguards
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Install the PDF inspection tool used by database tests
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - run: npm run check
+      - run: npm audit --audit-level=high
+
+  browsers:
+    name: Browser checks (${{ matrix.mode }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [offline, connected-local]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Select the installed browser
+        run: node --input-type=module -e 'import { chromium } from "@playwright/test"; console.log(`CHROMIUM_PATH=${chromium.executablePath()}`)' >> "$GITHUB_ENV"
+      - name: Start the dedicated local backend
+        if: matrix.mode == 'connected-local'
+        run: |
+          npm run local:backend
+          npm run local:gateway > /tmp/ltr-gateway.log 2>&1 &
+          node --input-type=module -e 'for (let attempt = 0; ; attempt++) { try { const response = await fetch("http://127.0.0.1:54321/auth/v1/health"); if (response.ok) break; } catch {} if (attempt >= 29) throw Error("Local gateway readiness timed out"); await new Promise(resolve => setTimeout(resolve, 1000)); }'
+          npm run local:seed
+          npm run local:seed:phase3
+          npm run local:seed:phase4
+      - name: Offline browser checks
+        if: matrix.mode == 'offline'
+        run: npm run test:e2e
+      - name: Connected browser checks
+        if: matrix.mode == 'connected-local'
+        run: npm run test:e2e:local

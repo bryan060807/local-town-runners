@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readLimited } from "../src/lib/request-body";
+import { readLimited, readLimitedBytes } from "../src/lib/request-body";
 test("oversized declared and chunked requests stop before unbounded buffering", async () => {
   await assert.rejects(
     () =>
@@ -38,5 +38,24 @@ test("bounded JSON preserves UTF-8 catalog text", async () => {
       new Request("https://example.test", { method: "POST", body: json }),
     ),
     json,
+  );
+});
+test("bounded byte reads preserve binary uploads and enforce the exact byte boundary", async () => {
+  const binary = new Uint8Array([0, 255, 128, 137, 10]);
+  assert.deepEqual(
+    await readLimitedBytes(
+      new Request("https://example.test", { method: "POST", body: binary }),
+      binary.length,
+    ),
+    binary,
+  );
+  await assert.rejects(
+    () =>
+      readLimitedBytes(
+        new Request("https://example.test", { method: "POST", body: binary }),
+        binary.length - 1,
+      ),
+    (error: unknown) =>
+      error instanceof Error && "status" in error && error.status === 413,
   );
 });

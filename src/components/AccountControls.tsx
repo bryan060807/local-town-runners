@@ -159,10 +159,15 @@ export default function AccountControls({
         <button
           disabled={busy}
           onClick={async () => {
+            if (busy) return;
             setBusy(true);
-            const r = await fetch("/api/auth", { method: "DELETE" });
-            if (r.ok) router.push("/login");
-            else {
+            setStatus("");
+            try {
+              const r = await fetch("/api/auth", { method: "DELETE" });
+              if (!r.ok) throw Error("Sign-out failed");
+              router.push("/login");
+              router.refresh();
+            } catch {
               setStatus("Sign-out failed. Try again.");
               setBusy(false);
             }

@@ -4,27 +4,12 @@ import {
 } from "./payment-validation";
 import { logEvent } from "./observability";
 type Order = { id: string; total_cents: number };
-type Canonical = {
-  id: string;
-  status?: string;
-  purchase_units?: {
-    custom_id?: string;
-    amount?: { currency_code: string; value: string };
-    payments?: {
-      captures?: {
-        id: string;
-        status: string;
-        amount: { currency_code: string; value: string };
-      }[];
-    };
-  }[];
-};
 export async function processWebhook(
   event: unknown,
   services: {
     verify: (event: unknown) => Promise<boolean>;
     findOrder: (paypalId: string) => Promise<Order | null>;
-    canonical: (paypalId: string) => Promise<Canonical>;
+    canonical: (paypalId: string) => Promise<unknown>;
     confirm: (
       order: Order,
       captureId: string,
@@ -32,6 +17,8 @@ export async function processWebhook(
     ) => Promise<void>;
   },
 ) {
+  if (!event || typeof event !== "object" || Array.isArray(event))
+    return { status: 400, body: "Invalid event" };
   if (!(await services.verify(event))) {
     logEvent("webhook_rejected", { stage: "signature", status: 401 });
     return { status: 401, body: "Invalid signature" };

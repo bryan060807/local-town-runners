@@ -76,7 +76,9 @@ export default function Login() {
         type="button"
         disabled={busy || !email}
         onClick={async () => {
+          if (busy) return;
           setBusy(true);
+          setStatus("");
           try {
             const r = await fetch("/api/auth", {
               method: "POST",
@@ -84,7 +86,14 @@ export default function Login() {
               body: JSON.stringify({ action: "recover", email }),
             });
             const d = await r.json();
+            if (!r.ok) throw Error(d.error || "Recovery email unavailable");
             setStatus(d.message || d.error);
+          } catch (error) {
+            setStatus(
+              error instanceof Error
+                ? error.message
+                : "Recovery email unavailable. Try again.",
+            );
           } finally {
             setBusy(false);
           }

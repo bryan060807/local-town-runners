@@ -24,16 +24,14 @@ if (current.error || current.data)
   throw Error(
     "Deactivate existing version explicitly before publishing a new version",
   );
-const r = await c
-  .from("agreement_versions")
-  .insert({
-    kind: "vendor",
-    version,
-    title: "Vendor Demo Participation & Content Permission",
-    sections,
-    source_sha256: createHash("sha256").update(bytes).digest("hex"),
-    active: true,
-  });
+const r = await c.from("agreement_versions").insert({
+  kind: "vendor",
+  version,
+  title: "Vendor Demo Participation & Content Permission",
+  sections,
+  source_sha256: createHash("sha256").update(bytes).digest("hex"),
+  active: true,
+});
 if (r.error) throw Error("VDPCP import failed");
 console.log(
   "Exact 12-section VDPCP version imported; no source text or private signatures logged.",

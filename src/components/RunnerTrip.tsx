@@ -7,7 +7,11 @@ export default function RunnerTrip({
 }) {
   const [vendor, setVendor] = useState(vendors[0]?.id || "");
   const [status, setStatus] = useState("");
+  const [busy, setBusy] = useState(false);
   async function save() {
+    if (busy || !vendor) return;
+    setBusy(true);
+    setStatus("");
     try {
       const r = await fetch("/api/runner", {
         method: "POST",
@@ -26,13 +30,19 @@ export default function RunnerTrip({
       );
     } catch (e) {
       setStatus(e instanceof Error ? e.message : "Could not share trip");
+    } finally {
+      setBusy(false);
     }
   }
   return (
     <div>
       <label>
         I’m already going to…{" "}
-        <select value={vendor} onChange={(e) => setVendor(e.target.value)}>
+        <select
+          value={vendor}
+          disabled={busy}
+          onChange={(e) => setVendor(e.target.value)}
+        >
           {vendors.map((v) => (
             <option key={v.id} value={v.id}>
               {v.name}
@@ -40,7 +50,7 @@ export default function RunnerTrip({
           ))}
         </select>
       </label>{" "}
-      <button disabled={!vendor} onClick={save}>
+      <button disabled={!vendor || busy} onClick={save}>
         Share trip for one hour
       </button>
       <p role="status">{status}</p>

@@ -76,7 +76,8 @@ export async function POST(req: Request) {
         message: "If eligible, a verification email has been requested.",
       });
     }
-    if (!("password" in p)) throw new HttpError("Invalid authentication action", 400);
+    if (!("password" in p))
+      throw new HttpError("Invalid authentication action", 400);
     const r =
       p.action === "signin"
         ? await c.auth.signInWithPassword({

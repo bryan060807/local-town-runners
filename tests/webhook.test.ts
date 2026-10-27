@@ -44,6 +44,23 @@ test("webhook rejects spoofed signatures before database access", async () => {
   assert.equal(r.status, 401);
   assert.equal(reads, 0);
 });
+test("non-object webhook payloads are rejected before verification or database access", async () => {
+  let calls = 0;
+  const unexpected = async () => {
+    calls++;
+    throw Error("No service call is expected");
+  };
+  for (const payload of [null, [], "event", 123]) {
+    const result = await processWebhook(payload, {
+      verify: unexpected,
+      findOrder: unexpected,
+      canonical: unexpected,
+      confirm: unexpected,
+    });
+    assert.equal(result.status, 400);
+  }
+  assert.equal(calls, 0);
+});
 test("verified event reconciles only canonical matching captured payment; database handles replay", async () => {
   let calls = 0;
   const services = {

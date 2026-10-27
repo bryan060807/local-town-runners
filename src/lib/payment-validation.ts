@@ -16,9 +16,42 @@ export function paymentMatchesOrder(
   };
   return (
     p?.id === paypalId &&
-    p.purchase_units?.length === 1 &&
-    p.purchase_units[0].custom_id === orderId
+    Array.isArray(p.purchase_units) &&
+    p.purchase_units.length === 1 &&
+    p.purchase_units[0]?.custom_id === orderId
   );
+}
+/** The Sandbox flow must never send a buyer to Live PayPal or a different order. */
+export function sandboxApprovalUrl(payment: unknown, paypalId: string) {
+  const links = (payment as { links?: unknown })?.links;
+  if (!Array.isArray(links)) return null;
+  for (const link of links) {
+    if (
+      !link ||
+      !["approve", "payer-action"].includes(link.rel) ||
+      typeof link.href !== "string"
+    )
+      continue;
+    try {
+      const url = new URL(link.href);
+      if (
+        url.protocol === "https:" &&
+        ["www.sandbox.paypal.com", "sandbox.paypal.com"].includes(
+          url.hostname,
+        ) &&
+        !url.port &&
+        !url.username &&
+        !url.password &&
+        !url.hash &&
+        url.searchParams.getAll("token").length === 1 &&
+        url.searchParams.get("token") === paypalId
+      )
+        return url.href;
+    } catch {
+      // A malformed upstream link cannot become a browser navigation target.
+    }
+  }
+  return null;
 }
 export function validWebhookCertificate(value: string) {
   try {
@@ -27,6 +60,10 @@ export function validWebhookCertificate(value: string) {
       url.protocol === "https:" &&
       !url.username &&
       !url.password &&
+      !url.port &&
+      !url.search &&
+      !url.hash &&
+      /^\/v1\/notifications\/certs\/[A-Za-z0-9_-]+$/.test(url.pathname) &&
       [
         "api.paypal.com",
         "api.sandbox.paypal.com",
@@ -80,8 +117,9 @@ function matchesUsd(amount: unknown, total: number) {
 export function paymentMatchesTotal(payment: unknown, total: number) {
   const p = payment as { purchase_units?: { amount?: unknown }[] };
   return (
-    p?.purchase_units?.length === 1 &&
-    matchesUsd(p.purchase_units[0].amount, total)
+    Array.isArray(p?.purchase_units) &&
+    p.purchase_units.length === 1 &&
+    matchesUsd(p.purchase_units[0]?.amount, total)
   );
 }
 const pendingReasons = [
@@ -116,11 +154,19 @@ export function inspectOwnedPayment(
       };
     }[];
   };
-  const captures = p.purchase_units[0].payments?.captures ?? [];
+  const payments = p.purchase_units[0].payments;
+  if (
+    payments !== undefined &&
+    (!payments || typeof payments !== "object" || Array.isArray(payments))
+  )
+    throw new PaymentValidationError("capture_shape");
+  const captures = payments?.captures === undefined ? [] : payments.captures;
   if (!Array.isArray(captures) || captures.length > 1)
     throw new PaymentValidationError("capture_count");
   const capture = captures[0];
-  if (capture) {
+  if (captures.length === 1) {
+    if (!capture || typeof capture !== "object" || Array.isArray(capture))
+      throw new PaymentValidationError("capture_shape");
     if (
       typeof capture.id !== "string" ||
       !capture.id ||
@@ -129,7 +175,7 @@ export function inspectOwnedPayment(
       throw new PaymentValidationError("capture_id");
     if (
       !matchesUsd(capture.amount, order.totalCents) ||
-      capture.final_capture === false
+      (capture.final_capture !== undefined && capture.final_capture !== true)
     )
       throw new PaymentValidationError("capture_amount_currency");
     const proof = { captureId: capture.id, providerStatus: capture.status };
@@ -208,7 +254,6 @@ export function validRefund(value: unknown, total: number) {
     r.id.length > 0 &&
     r.id.length <= 100 &&
     r.status === "COMPLETED" &&
-    r.amount?.currency_code === "USD" &&
-    r.amount.value === (total / 100).toFixed(2)
+    matchesUsd(r.amount, total)
   );
 }

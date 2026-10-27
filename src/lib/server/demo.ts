@@ -108,13 +108,11 @@ export async function enterDemo(req: Request, role: DemoRole) {
   });
   if (result.error || result.data.user?.id !== target.id)
     throw new HttpError("Demo sign-in failed", 503);
-  const { error: audit } = await service
-    .from("audit_events")
-    .insert({
-      event: `DEMO_${role.toUpperCase()}_SIGNED_IN`,
-      resource_id: session.workspace_id,
-      actor_id: target.id,
-    });
+  const { error: audit } = await service.from("audit_events").insert({
+    event: `DEMO_${role.toUpperCase()}_SIGNED_IN`,
+    resource_id: session.workspace_id,
+    actor_id: target.id,
+  });
   if (audit) throw audit;
   return { role };
 }

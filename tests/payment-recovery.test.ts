@@ -159,6 +159,57 @@ test("amount, currency, purchase-unit count and internal association stay mandat
     );
   assert.equal(calls, 0);
 });
+test("malformed canonical payment structures fail closed before claiming or capturing", async () => {
+  let financialCalls = 0;
+  const invalid = [
+    null,
+    [],
+    { ...approved, purchase_units: [null] },
+    {
+      ...approved,
+      purchase_units: { 0: approved.purchase_units[0], length: 1 },
+    },
+    ...[null, [], "invalid", { captures: null }, { captures: [null] }].map(
+      (payments) => ({
+        ...approved,
+        purchase_units: [{ ...approved.purchase_units[0], payments }],
+      }),
+    ),
+    {
+      ...captured(),
+      purchase_units: [
+        {
+          ...approved.purchase_units[0],
+          payments: {
+            captures: [
+              {
+                ...captured().purchase_units[0].payments.captures[0],
+                final_capture: "true",
+              },
+            ],
+          },
+        },
+      ],
+    },
+  ];
+  for (const payment of invalid)
+    await assert.rejects(
+      () =>
+        reconcileOwnedCapture(order, {
+          read: async () => payment,
+          claimCapture: async () => {
+            financialCalls++;
+            return true;
+          },
+          capture: async () => {
+            financialCalls++;
+            return {};
+          },
+        }),
+      PaymentValidationError,
+    );
+  assert.equal(financialCalls, 0);
+});
 test("canonical capture requires one nonempty ID, exact USD amount and completed status", () => {
   for (const capture of [
     { id: "", status: "COMPLETED", amount },

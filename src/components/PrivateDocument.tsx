@@ -11,15 +11,19 @@ export default function PrivateDocument({
 }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [url, setUrl] = useState("");
   async function open() {
+    if (busy) return;
     setBusy(true);
+    setError("");
+    setUrl("");
     try {
       const r = await fetch(
         `/api/onboarding/${photo ? "photos" : "documents"}?id=${id}${presentation ? "&presentation=1" : ""}`,
       );
       const d = await r.json();
       if (!r.ok) throw Error(d.error);
-      window.open(d.url, "_blank", "noopener,noreferrer");
+      setUrl(d.url);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Download unavailable");
     } finally {
@@ -32,11 +36,19 @@ export default function PrivateDocument({
         {busy
           ? "Preparing secure link…"
           : photo
-            ? "View private photograph"
+            ? "Prepare private photograph link"
             : presentation
-              ? "Download private presentation copy"
-              : "Download private agreement PDF"}
+              ? "Prepare private presentation copy link"
+              : "Prepare private agreement PDF link"}
       </button>
+      {url && (
+        <p>
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            Open private {photo ? "photograph" : "agreement PDF"} in a new tab
+          </a>
+          {" · This secure link expires. Request a new link if needed."}
+        </p>
+      )}
       <span role="status">{error}</span>
     </>
   );

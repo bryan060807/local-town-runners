@@ -30,13 +30,11 @@ export async function POST(req: Request) {
     );
     const { client, user } = await authenticated();
     await limited(client, "cart");
-    const { error } = await client
-      .from("cart_items")
-      .upsert({
-        customer_id: user.id,
-        listing_id: p.listingId,
-        quantity: p.quantity,
-      });
+    const { error } = await client.from("cart_items").upsert({
+      customer_id: user.id,
+      listing_id: p.listingId,
+      quantity: p.quantity,
+    });
     if (error) throw error;
     return Response.json({ ok: true });
   } catch (e) {

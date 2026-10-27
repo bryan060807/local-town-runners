@@ -16,13 +16,11 @@ export async function POST(req: Request) {
     );
     const { client, user, profile } = await authenticated();
     await limited(client, "preferences");
-    const { error } = await client
-      .from("customer_preferences")
-      .upsert({
-        customer_id: user.id,
-        delivery_address: profile.demo_workspace ? demoAddress : p.address,
-        delivery_notes: p.notes,
-      });
+    const { error } = await client.from("customer_preferences").upsert({
+      customer_id: user.id,
+      delivery_address: profile.demo_workspace ? demoAddress : p.address,
+      delivery_notes: p.notes,
+    });
     if (error) throw error;
     return Response.json({ ok: true });
   } catch (e) {

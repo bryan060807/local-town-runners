@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { authenticated, HttpError, serviceDb } from "@/lib/server/db";
 import { sameOrigin, failure, limited } from "@/lib/server/http";
 import { sanitizeImage } from "@/lib/images";
+import { imageUpload } from "@/lib/uploads";
 const id = z.uuid();
 const schema = z.discriminatedUnion("target", [
   z
@@ -16,45 +17,8 @@ export async function POST(req: Request) {
     sameOrigin(req);
     const { client, user } = await authenticated();
     await limited(client, "asset_upload");
-    const declared = Number(req.headers.get("content-length"));
-    if (declared > 6 * 1024 * 1024)
-      throw new HttpError("Upload too large", 413);
-    const reader = req.body?.getReader();
-    if (!reader) throw new HttpError("File required", 400);
-    const chunks: Uint8Array[] = [];
-    let size = 0;
-    try {
-      while (true) {
-        const r = await reader.read();
-        if (r.done) break;
-        size += r.value.byteLength;
-        if (size > 6 * 1024 * 1024) {
-          await reader.cancel();
-          throw new HttpError("Upload too large", 413);
-        }
-        chunks.push(r.value);
-      }
-    } finally {
-      reader.releaseLock();
-    }
-    const bytes = new Uint8Array(size);
-    let offset = 0;
-    chunks.forEach((c) => {
-      bytes.set(c, offset);
-      offset += c.byteLength;
-    });
-    const form = await new Response(bytes.buffer, {
-      headers: { "Content-Type": req.headers.get("content-type") || "" },
-    }).formData();
-    if (
-      [...form.keys()].some((k) => !["data", "file"].includes(k)) ||
-      form.getAll("file").length !== 1
-    )
-      throw new HttpError("Invalid upload", 400);
-    const p = schema.parse(JSON.parse(String(form.get("data"))));
-    const file = form.get("file");
-    if (!(file instanceof File) || file.size > 5 * 1024 * 1024)
-      throw new HttpError("Choose one raster image under 5 MB", 400);
+    const { data, file } = await imageUpload(req);
+    const p = schema.parse(JSON.parse(data));
     let path: string;
     if (p.target === "runner") {
       const { data: allowed } = await client.rpc("has_role", {
@@ -119,11 +83,13 @@ export async function POST(req: Request) {
               )
               .eq("id", p.vendorId)
               .select("id");
-    if (update.error || !update.data?.length)
+    if (update.error || !update.data?.length) {
+      await storage.from("marketplace-assets").remove([path]);
       throw new HttpError(
-        "Image uploaded but could not be attached. Retry after checking database configuration.",
+        "Image could not be attached. Retry after checking database configuration.",
         503,
       );
+    }
     return Response.json({ url });
   } catch (e) {
     return failure(e);
