@@ -1,0 +1,40 @@
+{
+  "recordedAt": "2026-10-27T22:51:49.219Z",
+  "trigger": "Clean CI exposed duplicate named products in the legacy and public template catalogs; unsorted PostgreSQL row order changed after reservation/restoration.",
+  "applicationFix": {
+    "anonymousPublicPreviewPreserved": true,
+    "authenticatedVendorsMatchOwnProfileWorkspace": true,
+    "realAndAdminExploreExcludePrivateAndTemplateVendors": true,
+    "runnerFiltering": "Only IDs already visible under caller RLS are checked with server-only SELECT(id) and an exact workspace predicate in batches of100. Errors or missing service configuration never fall back to unscoped candidates.",
+    "assistantRunnerDetailsAndTripsConstrainedToCatalog": true,
+    "databaseAssignmentCartAndOrderGuardsUnchanged": true,
+    "newSqlRequired": false,
+    "newEnvironmentVariableRequired": false
+  },
+  "fixtureFix": "The authentication/order test owns a unique fictional product at the validated seed trip destination, asserts its exact listing IDs and cleans up only that product/order. Its existing-trip and payment-denial assertions remain.",
+  "targetedBrowser": {
+    "command": "npm run test:e2e:local -- auth.spec.ts catalog-scope.spec.ts",
+    "passed": 12,
+    "failed": 0,
+    "viewports": ["desktop", "mobile-360", "mobile-390", "mobile-430"],
+    "checks": [
+      "anonymous preview remains visible",
+      "real customer and admin catalogs exclude public template/private QA data",
+      "private demo catalog is restricted to its own workspace",
+      "template/private runner markers are absent for real/admin accounts",
+      "forged template cart/order attempts fail and preserve the order list",
+      "exact product quote uses the validated existing trip",
+      "unconfigured PayPal never creates a paid order",
+      "role dashboards retain distinct capabilities"
+    ]
+  },
+  "unitAndProjectChecks": {
+    "command": "npm run check",
+    "passed": 108,
+    "failed": 0,
+    "formatting": "passed",
+    "eslint": "passed",
+    "typecheck": "passed"
+  },
+  "fullCiVerification": "Recorded separately after pushing this correction."
+}

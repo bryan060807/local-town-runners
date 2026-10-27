@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-27T22:28:03.175Z",
+  "recordedAt": "2026-10-27T22:42:26.326Z",
   "boundary": "Read-only GitHub Actions status/log inspection. No workflow rerun or cancellation by the monitoring agent. Raw logs remain outside Git.",
   "attempts": [
     {
@@ -44,7 +44,72 @@
         "fix": "Wait for TCP readiness on 127.0.0.1, then bootstrap; report stage and exit code without arguments, input or stderr.",
         "localProof": "hardening-postgres-readiness-2026-10-27.json"
       }
+    },
+    {
+      "id": 40595053052,
+      "source": "c9524eed0513fed9978c160775235fef616f6630",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40595053052",
+      "status": "completed",
+      "conclusion": "failure",
+      "createdAt": "2026-10-27T22:28:12Z",
+      "updatedAt": "2026-10-27T22:37:36Z",
+      "jobs": [
+        {
+          "name": "Types, lint and database safeguards",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40595053052/job/122508743949",
+          "failedSteps": []
+        },
+        {
+          "name": "Browser checks (offline)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40595053052/job/122508744059",
+          "failedSteps": []
+        },
+        {
+          "name": "Browser checks (connected-local)",
+          "status": "completed",
+          "conclusion": "failure",
+          "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40595053052/job/122508744096",
+          "failedSteps": [
+            "Connected browser checks"
+          ]
+        }
+      ],
+      "verification": {
+        "freshBackendAndSeedsPassed": true,
+        "unitDatabase": {
+          "passed": 108,
+          "failed": 0
+        },
+        "dependencyAudit": {
+          "vulnerabilities": 0
+        },
+        "offlineBrowser": {
+          "passed": 24,
+          "failed": 0
+        },
+        "connectedBrowser": {
+          "passed": 65,
+          "failed": 3,
+          "failedProjects": [
+            "mobile-360",
+            "mobile-390",
+            "mobile-430"
+          ],
+          "failedTest": "auth.spec.ts: cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state"
+        }
+      },
+      "failureAssessment": {
+        "expectedQuoteText": "already heading",
+        "actualQuoteText": "Sarah is a compatible candidate; About 0.5 straight-line miles from pickup; within the runner’s declared approach limit. The runner must accept.",
+        "cause": "Legacy and public-template catalogs contain an identically named $4.50 cinnamon-roll listing. Unsorted row order changes after the desktop test reserves/restores legacy inventory, so later named conversations can choose the template listing while the test assumes the legacy vendor’s known runner trip.",
+        "reproduction": "An isolated PGlite table reproduced [legacy, template] becoming [template, legacy] after reservation/restoration updates; the actual conversationTool selected the corresponding different listing IDs.",
+        "correction": "Each auth test now owns a uniquely named local listing at the validated trip destination and verifies the exact quote/order listing ID. The already-heading and payment-denial assertions remain unchanged. No app matching change."
+      }
     }
   ],
-  "latestConclusion": "initial_failed_fix_pending"
+  "latestConclusion": "fixture_correction_verification_pending"
 }

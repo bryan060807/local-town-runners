@@ -3,7 +3,7 @@ import { logEvent } from "@/lib/observability";
 import { safeAssetUrl, safeWebsiteUrl } from "@/lib/assets";
 import { demoRunners } from "@/lib/runners";
 import { PublicRunner } from "@/lib/map-types";
-import { db } from "./db";
+import { db, serviceDb } from "./db";
 import { vendorReputations } from "./reputation";
 import { templateWorkspace } from "@/lib/demo-catalog";
 import { supabaseConfig, configured } from "./env";
@@ -33,12 +33,30 @@ export async function publicCatalog() {
     };
   const e = supabaseConfig();
   const c = await db(true);
-  const v = await c
+  const { data: identity } = await c.auth.getUser();
+  let scope: string | null | undefined;
+  if (identity.user) {
+    const profile = await c
+      .from("profiles")
+      .select("demo_workspace")
+      .eq("id", identity.user.id)
+      .single();
+    if (profile.error || !profile.data)
+      throw Error("Marketplace account unavailable");
+    scope = profile.data.demo_workspace;
+  }
+  let vendorQuery = c
     .from("vendors")
     .select(
       "id,name,category,public_lon,public_lat,demo,verified,description,hours,website_url,social_urls,logo_url,cover_url,demo_workspace",
     )
     .eq("active", true);
+  if (scope !== undefined)
+    vendorQuery =
+      scope === null
+        ? vendorQuery.is("demo_workspace", null)
+        : vendorQuery.eq("demo_workspace", scope);
+  const v = await vendorQuery;
   const vendorIds = (v.data || []).map((row) => row.id);
   const [l, r, t, reputation] = await Promise.all([
     vendorIds.length
@@ -74,6 +92,28 @@ export async function publicCatalog() {
     });
     throw Error("Marketplace data unavailable");
   }
+  let visibleRunners = r.data!;
+  if (scope !== undefined && visibleRunners.length) {
+    // Profiles are private under caller RLS. Read only scope membership for
+    // runners already visible to this caller; never broaden that public DTO.
+    const service = serviceDb();
+    const ids = visibleRunners.map((row) => row.id);
+    const allowed = new Set<string>();
+    for (let offset = 0; offset < ids.length; offset += 100) {
+      let query = service
+        .from("profiles")
+        .select("id")
+        .in("id", ids.slice(offset, offset + 100));
+      query =
+        scope === null
+          ? query.is("demo_workspace", null)
+          : query.eq("demo_workspace", scope);
+      const result = await query;
+      if (result.error) throw Error("Runner scope unavailable");
+      for (const row of result.data || []) allowed.add(row.id);
+    }
+    visibleRunners = visibleRunners.filter((row) => allowed.has(row.id));
+  }
   return {
     demo: false,
     isolatedDemo: Boolean(
@@ -82,7 +122,7 @@ export async function publicCatalog() {
       v.data[0].demo_workspace !== templateWorkspace &&
       v.data.every((row) => row.demo_workspace === v.data[0].demo_workspace),
     ),
-    runners: r.data!.map((row) => ({
+    runners: visibleRunners.map((row) => ({
       id: row.id,
       name: row.display_name,
       area: [Number(row.public_lon), Number(row.public_lat)],

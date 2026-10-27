@@ -26,6 +26,8 @@ React escapes descriptions and assistant text; no arbitrary user HTML is injecte
 
 The assistant may choose only validated catalog tools and authorized order reads. It cannot submit arbitrary SQL, select roles, confirm financial state or invoke protected writes. Prices, inventory and returned IDs are grounded in catalog rows. An AI order preparation response is a quote for explicit review, not a reservation or completed purchase. Without a provider key, labeled deterministic discovery remains available.
 
+Signed-in vendor/item reads and runner recommendations use the caller's exact marketplace scope. A narrowly constrained service lookup reads only scope membership for runner IDs already visible under caller RLS; it cannot broaden the returned roster. Missing service configuration fails closed. Anonymous template previews remain available, while direct cross-workspace cart/order attempts remain blocked by PostgreSQL regardless of UI filtering.
+
 ## Consent, notifications and secrets
 
 Agreement versions, accepted submissions, signatures and successful PDF evidence are immutable. Corrected presentation copies do not overwrite originals. Electronic signature evidence is not a certified cryptographic digital signature. Administrative review, notification attempts and state decisions retain audit history.

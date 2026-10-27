@@ -24,6 +24,8 @@ A clean CI runner also exposed a local PostgreSQL startup race: the image's temp
 
 ## Verification
 
+Clean-machine browser testing also exposed ambiguous fixture selection between the legacy catalog and the public preview template. The order-preparation test now owns a uniquely named listing at its validated trip destination and checks exact listing IDs. The application additionally scopes signed-in vendor/item reads and runner recommendations to the authenticated marketplace; public anonymous preview remains available. A narrow server-only scope lookup filters only runner IDs already visible under caller RLS. A new regression covers anonymous, real customer, private demo and administrator contexts, including direct cross-workspace order/cart denial. All 12 targeted scope/auth checks passed across desktop and three phone widths; the complete CI suite includes 72 connected checks after this addition.
+
 | Check                             | Result                                                                                            |
 | --------------------------------- | ------------------------------------------------------------------------------------------------- |
 | Unit and PostgreSQL tests         | 108 passed                                                                                        |
@@ -48,6 +50,7 @@ No database migration or new application environment variable is required for th
 - **Commercial operations:** Backup/restore drills, retention and deletion handling, alert ownership, provider capacity and rate limits, road routing and a suitable sustained-use tile service remain necessary before broader public operation. A demo workspace expires for access control; it is not automatically deleted by a retention process.
 - **Payments:** The audit does not enable Live, promise immediate Sandbox settlement, establish commercial approval or convert simulated allocations into actual earnings. Genuine new payment tests still require explicit authorization and buyer approval.
 - **Release governance:** The new checks run automatically; administrators can separately require successful checks before merging to main. CI does not replace review or hosted integration evidence.
+- **Repository sidebar copy:** The GitHub About description is still the legacy `paypal hackaton build`. Updating repository settings returned HTTP 403 for this integration; source pushes and workflow execution are authorized and working. The README and package description are updated. Suggested sidebar text: “Local commerce and neighbor-powered pickups with grounded discovery, private demos, and PayPal Sandbox verification.” The homepage already points to the production app.
 
 ## Recommended next steps
 

@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-27T22:22:57.326Z",
+  "recordedAt": "2026-10-27T22:29:03.958Z",
   "boundary": "Read-only Vercel metadata, fixed public app GETs and Supabase SELECT/storage bucket metadata only. No configuration/data mutation, authentication as an operator, demo entry, cron execution, provider AI/email/PayPal requests or financial action.",
   "findings": [
     {
@@ -16,10 +16,10 @@
   ],
   "production": {
     "project": "local-town-runners",
-    "deployment": "dpl_4f5WXcbq4Pq2CMSSiEZ1wAqiFYAZ",
+    "deployment": "dpl_FBFs6DsBFGHq2x7fxwzdadim7GfK",
     "readyState": "READY",
-    "url": "local-town-runners-bd7nu6squ-bryan060807s-projects.vercel.app",
-    "source": "15c85a41a7116be0fbbc5ab4b3444d120694059f",
+    "url": "local-town-runners-rkztc16wx-bryan060807s-projects.vercel.app",
+    "source": "c9524eed0513fed9978c160775235fef616f6630",
     "branch": "main",
     "aliases": [
       "runners.aibrylabs.com",
@@ -140,7 +140,7 @@
       {
         "path": "/api/internal/notifications",
         "schedule": "0 12 * * *",
-        "host": "local-town-runners-bd7nu6squ-bryan060807s-projects.vercel.app"
+        "host": "local-town-runners-rkztc16wx-bryan060807s-projects.vercel.app"
       }
     ],
     "executionNotInvoked": true,

@@ -82,22 +82,32 @@ export async function POST(req: Request) {
         (l) => !blockedIds.has(l.vendorId),
       );
       catalog.vendors = catalog.vendors.filter((v) => !blockedIds.has(v.id));
-      const { data, error } = await client
-        .from("runners")
-        .select(
-          "id,display_name,public_lon,public_lat,available_until,categories,max_detour_miles,reliability",
-        )
-        .eq("visible", true)
-        .gt("available_until", new Date().toISOString());
+      const runnerIds = catalog.runners.map((runner) => runner.id);
+      const vendorIds = catalog.vendors.map((vendor) => vendor.id);
+      const { data, error } = runnerIds.length
+        ? await client
+            .from("runners")
+            .select(
+              "id,display_name,public_lon,public_lat,available_until,categories,max_detour_miles,reliability",
+            )
+            .in("id", runnerIds)
+            .eq("visible", true)
+            .gt("available_until", new Date().toISOString())
+        : { data: [], error: null };
       if (error) throw error;
       const { data: workloads, error: workloadError } =
         await client.rpc("runner_workloads");
       if (workloadError) throw workloadError;
-      const { data: trips, error: tripError } = await client
-        .from("runner_trips")
-        .select("runner_id,destination_vendor_id,expires_at")
-        .order("expires_at", { ascending: false })
-        .gt("expires_at", new Date().toISOString());
+      const { data: trips, error: tripError } =
+        runnerIds.length && vendorIds.length
+          ? await client
+              .from("runner_trips")
+              .select("runner_id,destination_vendor_id,expires_at")
+              .in("runner_id", runnerIds)
+              .in("destination_vendor_id", vendorIds)
+              .order("expires_at", { ascending: false })
+              .gt("expires_at", new Date().toISOString())
+          : { data: [], error: null };
       if (tripError) throw tripError;
       runners = (data || []).map((r) => ({
         id: r.id,

@@ -50,17 +50,17 @@ Local wrappers select loopback credentials from ignored `.local-backend/` files 
 
 Use [.env.example](.env.example) as the checklist. Set `APP_URL` to the exact browser origin, such as `https://runners.aibrylabs.com`, and redeploy after changing Vercel settings. Cloud environment settings and Vercel settings are separate.
 
-| Capability                                                                                          | Variables                                                                                      |
-| --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Connected browsing, Auth and orders                                                                 | `APP_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`                  |
-| Private demos, onboarding documents/notifications, privileged payment and administration operations | `SUPABASE_SERVICE_ROLE_KEY` (server only)                                                      |
-| Genuine PayPal Sandbox checkout and signed webhooks                                                 | `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID`                                |
-| Optional provider AI discovery                                                                      | `AI_API_KEY`, `AI_MODEL`, `AI_BASE_URL` (default `https://api.openai.com/v1`)                  |
-| Application notification sending                                                                    | `RESEND_API_KEY`, verified `ONBOARDING_EMAIL_FROM`; `ONBOARDING_EMAIL_TO=aibrymusic@gmail.com` |
-| Scheduled notification retries                                                                      | `CRON_SECRET`; daily Vercel Cron configuration is in [vercel.json](vercel.json)                |
-| Optional signed Resend delivery events                                                              | `RESEND_WEBHOOK_SECRET`                                                                        |
-| Optional demo entry/switch kill switch                                                              | `DEMO_MODE_ENABLED=false`; the database setting also revokes existing demo access              |
-| Legacy local fixture seed only                                                                      | `DEMO_SEED_PASSWORD` (at least 12 characters)                                                  |
+| Capability                                                                             | Variables                                                                                      |
+| -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Connected browsing, Auth and orders                                                    | `APP_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`                  |
+| Private demos, scoped runner reads, onboarding, privileged payments and administration | `SUPABASE_SERVICE_ROLE_KEY` (server only)                                                      |
+| Genuine PayPal Sandbox checkout and signed webhooks                                    | `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID`                                |
+| Optional provider AI discovery                                                         | `AI_API_KEY`, `AI_MODEL`, `AI_BASE_URL` (default `https://api.openai.com/v1`)                  |
+| Application notification sending                                                       | `RESEND_API_KEY`, verified `ONBOARDING_EMAIL_FROM`; `ONBOARDING_EMAIL_TO=aibrymusic@gmail.com` |
+| Scheduled notification retries                                                         | `CRON_SECRET`; daily Vercel Cron configuration is in [vercel.json](vercel.json)                |
+| Optional signed Resend delivery events                                                 | `RESEND_WEBHOOK_SECRET`                                                                        |
+| Optional demo entry/switch kill switch                                                 | `DEMO_MODE_ENABLED=false`; the database setting also revokes existing demo access              |
+| Legacy local fixture seed only                                                         | `DEMO_SEED_PASSWORD` (at least 12 characters)                                                  |
 
 Only the two `NEXT_PUBLIC_` values are public. Keep all secrets in secure environment settings, never in chat, Git, browser bundles or logs. `AI_MODEL` must name a model available to the selected provider account. Supabase Auth confirmation/recovery mail is configured in Supabase; Resend application notifications do not replace that setup. See [deployment and domain configuration](docs/deployment.md).
 
