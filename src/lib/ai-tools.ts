@@ -5,7 +5,12 @@ import { Runner, matchRunners } from "./runners";
 const id = z.string().min(1).max(80);
 const search = z
   .object({
-    query: z.string().max(100),
+    query: z
+      .string()
+      .max(100)
+      .describe(
+        "Search words present in actual catalog titles or descriptions. Use an empty string to browse a category; do not turn unsupported material or descriptive attributes into mandatory keywords.",
+      ),
     category: z.enum([
       "All",
       "Food",
@@ -15,7 +20,12 @@ const search = z
       "Shops",
       "Services",
     ]),
-    maxPriceCents: z.number().int().min(0).max(10000000),
+    maxPriceCents: z
+      .number()
+      .int()
+      .min(0)
+      .max(10000000)
+      .describe("Maximum item price in integer USD cents: $30 means 3000."),
     madeLocal: z.boolean().optional(),
     secondhand: z.boolean().optional(),
   })

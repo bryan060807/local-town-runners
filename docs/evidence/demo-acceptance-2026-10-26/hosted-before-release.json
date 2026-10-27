@@ -1,0 +1,45 @@
+{
+  "recordedAt": "2026-10-27T03:27:29.412Z",
+  "boundary": "Production AI reads and one temporary fresh-demo avatar; no orders, payment, consent or email",
+  "checks": [
+    {
+      "feature": "non-scripted AI discovery",
+      "status": 200,
+      "source": "ai-tool",
+      "tools": ["searchListings"],
+      "resultCount": 1,
+      "text": "I found 1 available options: Handmade River Mug ($28.00)."
+    },
+    {
+      "feature": "contextual details",
+      "status": 200,
+      "tools": ["getListingDetails"]
+    },
+    {
+      "feature": "reviewable quote only",
+      "status": 200,
+      "tools": ["prepareOrder"],
+      "preparedTotalCents": 5600
+    },
+    {
+      "feature": "non-raster upload rejection",
+      "status": 400
+    },
+    {
+      "feature": "temporary own-demo avatar upload",
+      "status": 200
+    },
+    {
+      "feature": "hosted processed image retrieval",
+      "status": 200,
+      "format": "webp",
+      "width": 48,
+      "locationMetadataAbsent": true
+    }
+  ],
+  "ordersCreated": 0,
+  "onlyTemporaryOwnAvatarRemoved": true,
+  "demoExitStatus": 200,
+  "financialProviderCalls": 0,
+  "productionEmailsSent": 0
+}

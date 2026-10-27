@@ -788,8 +788,20 @@ footer span:first-child {
   .tabs button {
     padding: 8px 12px;
   }
+  .filters {
+    flex-wrap: wrap;
+  }
   .search {
-    display: none;
+    display: flex;
+    flex: 1 0 100%;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+  }
+  .search input {
+    min-width: 0;
+    width: 100%;
+    font-size: 16px;
   }
   .runner-banner a {
     white-space: normal;

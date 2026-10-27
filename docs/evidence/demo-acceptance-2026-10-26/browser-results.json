@@ -1,0 +1,294 @@
+{
+  "stats": {
+    "startTime": "2026-10-27T03:43:38.722Z",
+    "duration": 604543.191,
+    "expected": 40,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "title": "visible controls complete customer, vendor and runner fulfillment with a clearly local payment fixture",
+      "project": "desktop",
+      "status": "passed",
+      "durationMs": 36371,
+      "retries": 0
+    },
+    {
+      "title": "discovery, map location, filters, cart removal and quote replies work through visible controls",
+      "project": "desktop",
+      "status": "passed",
+      "durationMs": 14988,
+      "retries": 0
+    },
+    {
+      "title": "visible controls complete customer, vendor and runner fulfillment with a clearly local payment fixture",
+      "project": "mobile-360",
+      "status": "passed",
+      "durationMs": 35565,
+      "retries": 0
+    },
+    {
+      "title": "discovery, map location, filters, cart removal and quote replies work through visible controls",
+      "project": "mobile-360",
+      "status": "passed",
+      "durationMs": 14873,
+      "retries": 0
+    },
+    {
+      "title": "visible controls complete customer, vendor and runner fulfillment with a clearly local payment fixture",
+      "project": "mobile-390",
+      "status": "passed",
+      "durationMs": 38669,
+      "retries": 0
+    },
+    {
+      "title": "discovery, map location, filters, cart removal and quote replies work through visible controls",
+      "project": "mobile-390",
+      "status": "passed",
+      "durationMs": 17434,
+      "retries": 0
+    },
+    {
+      "title": "visible controls complete customer, vendor and runner fulfillment with a clearly local payment fixture",
+      "project": "mobile-430",
+      "status": "passed",
+      "durationMs": 35675,
+      "retries": 0
+    },
+    {
+      "title": "discovery, map location, filters, cart removal and quote replies work through visible controls",
+      "project": "mobile-430",
+      "status": "passed",
+      "durationMs": 18472,
+      "retries": 0
+    },
+    {
+      "title": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state",
+      "project": "desktop",
+      "status": "passed",
+      "durationMs": 12883,
+      "retries": 0
+    },
+    {
+      "title": "role dashboards have separate capabilities",
+      "project": "desktop",
+      "status": "passed",
+      "durationMs": 9526,
+      "retries": 0
+    },
+    {
+      "title": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state",
+      "project": "mobile-360",
+      "status": "passed",
+      "durationMs": 12713,
+      "retries": 0
+    },
+    {
+      "title": "role dashboards have separate capabilities",
+      "project": "mobile-360",
+      "status": "passed",
+      "durationMs": 8520,
+      "retries": 0
+    },
+    {
+      "title": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state",
+      "project": "mobile-390",
+      "status": "passed",
+      "durationMs": 13028,
+      "retries": 0
+    },
+    {
+      "title": "role dashboards have separate capabilities",
+      "project": "mobile-390",
+      "status": "passed",
+      "durationMs": 9776,
+      "retries": 0
+    },
+    {
+      "title": "cookie-authenticated order preparation persists; missing PayPal configuration does not forge paid state",
+      "project": "mobile-430",
+      "status": "passed",
+      "durationMs": 12405,
+      "retries": 0
+    },
+    {
+      "title": "role dashboards have separate capabilities",
+      "project": "mobile-430",
+      "status": "passed",
+      "durationMs": 9876,
+      "retries": 0
+    },
+    {
+      "title": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport",
+      "project": "desktop",
+      "status": "passed",
+      "durationMs": 25813,
+      "retries": 0
+    },
+    {
+      "title": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport",
+      "project": "mobile-360",
+      "status": "passed",
+      "durationMs": 29689,
+      "retries": 0
+    },
+    {
+      "title": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport",
+      "project": "mobile-390",
+      "status": "passed",
+      "durationMs": 25878,
+      "retries": 0
+    },
+    {
+      "title": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport",
+      "project": "mobile-430",
+      "status": "passed",
+      "durationMs": 24378,
+      "retries": 0
+    },
+    {
+      "title": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects",
+      "project": "desktop",
+      "status": "passed",
+      "durationMs": 3870,
+      "retries": 0
+    },
+    {
+      "title": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects",
+      "project": "mobile-360",
+      "status": "passed",
+      "durationMs": 4653,
+      "retries": 0
+    },
+    {
+      "title": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects",
+      "project": "mobile-390",
+      "status": "passed",
+      "durationMs": 3948,
+      "retries": 0
+    },
+    {
+      "title": "Sandbox diagnostics restrict access and report missing local credentials without payment side effects",
+      "project": "mobile-430",
+      "status": "passed",
+      "durationMs": 4018,
+      "retries": 0
+    },
+    {
+      "title": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access",
+      "project": "desktop",
+      "status": "passed",
+      "durationMs": 5207,
+      "retries": 0
+    },
+    {
+      "title": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts",
+      "project": "desktop",
+      "status": "passed",
+      "durationMs": 6433,
+      "retries": 0
+    },
+    {
+      "title": "actual local Auth token confirmation and recovery; administrator review retains rejected consent",
+      "project": "desktop",
+      "status": "passed",
+      "durationMs": 22123,
+      "retries": 0
+    },
+    {
+      "title": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access",
+      "project": "mobile-360",
+      "status": "passed",
+      "durationMs": 5679,
+      "retries": 0
+    },
+    {
+      "title": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts",
+      "project": "mobile-360",
+      "status": "passed",
+      "durationMs": 20774,
+      "retries": 0
+    },
+    {
+      "title": "actual local Auth token confirmation and recovery; administrator review retains rejected consent",
+      "project": "mobile-360",
+      "status": "passed",
+      "durationMs": 16599,
+      "retries": 0
+    },
+    {
+      "title": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access",
+      "project": "mobile-390",
+      "status": "passed",
+      "durationMs": 4472,
+      "retries": 0
+    },
+    {
+      "title": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts",
+      "project": "mobile-390",
+      "status": "passed",
+      "durationMs": 6349,
+      "retries": 0
+    },
+    {
+      "title": "actual local Auth token confirmation and recovery; administrator review retains rejected consent",
+      "project": "mobile-390",
+      "status": "passed",
+      "durationMs": 14466,
+      "retries": 0
+    },
+    {
+      "title": "mobile customer registration, private preferences, consent PDF retry and unauthorized admin access",
+      "project": "mobile-430",
+      "status": "passed",
+      "durationMs": 4784,
+      "retries": 0
+    },
+    {
+      "title": "mobile runner and vendor application drafts, actual signatures, immutable duplicate submissions and pending storage receipts",
+      "project": "mobile-430",
+      "status": "passed",
+      "durationMs": 6463,
+      "retries": 0
+    },
+    {
+      "title": "actual local Auth token confirmation and recovery; administrator review retains rejected consent",
+      "project": "mobile-430",
+      "status": "passed",
+      "durationMs": 15706,
+      "retries": 0
+    },
+    {
+      "title": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced",
+      "project": "desktop",
+      "status": "passed",
+      "durationMs": 9856,
+      "retries": 0
+    },
+    {
+      "title": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced",
+      "project": "mobile-360",
+      "status": "passed",
+      "durationMs": 4691,
+      "retries": 0
+    },
+    {
+      "title": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced",
+      "project": "mobile-390",
+      "status": "passed",
+      "durationMs": 4602,
+      "retries": 0
+    },
+    {
+      "title": "payment recovery shows pending eCheck and verified capture states without repeated checkout; ownership remains enforced",
+      "project": "mobile-430",
+      "status": "passed",
+      "durationMs": 4842,
+      "retries": 0
+    }
+  ],
+  "engine": "Chromium",
+  "financialBoundary": "All fulfillment payments in this matrix are local fixtures, not remote captures."
+}

@@ -1,6 +1,6 @@
 # Local Town Runners
 
-An evolving local commerce MVP: a Louisiana, Missouri map, catalog-grounded discovery, independent vendors, and neighbor-powered pickups. Branding and geography are centralized in `src/lib/brand.ts`. All seeded vendors are fictional and labeled DEMO. 
+An evolving local commerce MVP: a Louisiana, Missouri map, catalog-grounded discovery, independent vendors, and neighbor-powered pickups. Branding and geography are centralized in `src/lib/brand.ts`. All seeded vendors are fictional and labeled DEMO.
 
 ## Current capabilities
 
@@ -8,7 +8,7 @@ Next.js App Router / TypeScript / React, MapLibre, Zod, Supabase SSR authenticat
 
 Without Supabase configuration, browsing uses a fixed illustrative catalog. Order previews neither persist nor charge. Without an AI key, discovery uses deterministic catalog search and matching, labeled as demo discovery. Connected AI uses a validated catalog/order-read tool registry; order preparation creates a quote for explicit review. No model can confirm payments or invoke protected writes.
 
-Phase 2 is deployed at https://runners.aibrylabs.com. Phase 3 adds isolated fictional demo identities, carts, quote inquiries and explicit simulated earnings. See [Phase 3 implementation](docs/phase-3-implementation.md), [judge walkthrough](docs/phase-3-demo-guide.md) and [current test report](docs/phase-3-test-report.md). Actual Sandbox capture and refunds require a buyer-approved hosted test.
+The app is deployed at https://runners.aibrylabs.com through Phase 4.3. Three genuine PayPal Sandbox marketplace payments total $44, with matching PAID orders, completed webhook records and exactly one payment entry per order. Vendor/runner payouts remain simulated. See [payment verification](docs/phase-4.3-sandbox-verification.md), [current acceptance coverage](docs/demo-acceptance-2026-10-26.md) and the [short judge walkthrough](docs/hackathon-demo.md). The connected local fulfillment tests use clearly labeled payment fixtures and do not create another Sandbox charge.
 
 ## Development
 
@@ -69,7 +69,9 @@ Do not publish the environment or claim live payment readiness solely because th
 
 For the tested persistent development backend, see [local backend setup](docs/local-backend.md). Current validation and remaining integration requirements are documented in [build notes](docs/build-notes.md).
 
-Phase 2 audit/hardening: [audit](docs/phase-2-audit.md), [report](docs/phase-2-report.md), [PayPal verification](docs/paypal-verification.md). Existing hosted databases need migrations **008 and 009 in order before deploying these changes**. The current configured AI model failed a provider check; use `AI_MODEL=gpt-4.1-mini` with OpenAI (verified accessible with the configured key), then redeploy. Safe log events expose provider stages/statuses without secrets. Local reset is opt-in: `npm run local:reset -- --confirm-demo-reset`; this destroys only the dedicated local demo data.
+For connected browser acceptance, keep the local backend/gateway running, seed using the local wrappers, and run `npm run test:e2e:local` with port 3000 free. It checks desktop and 360/390/430 px layouts, including the visible customer/vendor/runner controls. Demo tickets expire after six hours; fresh demo identities do not inherit old orders. The existing real administrator account can view retained payment history outside Demo Mode.
+
+Phase 2 audit/hardening: [audit](docs/phase-2-audit.md), [report](docs/phase-2-report.md), [PayPal verification](docs/paypal-verification.md). Older Phase 1 installations need migrations **008 and 009 in order** before the Phase 2 release; the current hosted installation already includes the Phase 4.3 schema. No SQL upgrade is needed for the acceptance fixes. Set `AI_MODEL` to a model available to the configured provider account; the current acceptance report records actual deployed AI discovery separately from local deterministic tests. Safe log events expose provider stages/statuses without secrets. Local reset is opt-in: `npm run local:reset -- --confirm-demo-reset`; this destroys only the dedicated local demo data.
 
 ## Phase 4 onboarding
 

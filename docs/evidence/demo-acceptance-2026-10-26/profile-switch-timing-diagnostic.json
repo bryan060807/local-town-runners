@@ -1,0 +1,650 @@
+{
+  "source": "traced isolated rerun of unchanged 430px scenario after one delayed loading-screen failure",
+  "passed": true,
+  "originalExpectTimeoutMs": 15000,
+  "assertionsOrTimeoutsWeakened": false,
+  "requests": [
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 115.441,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 112.559,
+        "receive": 2.882
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 982.785,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 978.858,
+        "receive": 3.927
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 211.893,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 208.717,
+        "receive": 3.176
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 107.826,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 107.826,
+        "receive": -1
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 105.518,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 101.241,
+        "receive": 4.277
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 198.04,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 194.19,
+        "receive": 3.85
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 104.286,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 101.53,
+        "receive": 2.756
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 192.614,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 192.614,
+        "receive": -1
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 170.258,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 167.291,
+        "receive": 2.967
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 4090.938,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 4065.52,
+        "receive": 25.418
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 5046.387,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 84.808,
+        "receive": 4961.579
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 1046.2279999999998,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 1039.456,
+        "receive": 6.772
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 220.909,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 214.281,
+        "receive": 6.628
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 1097.324,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 80.925,
+        "receive": 1016.399
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 332.841,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 329.024,
+        "receive": 3.817
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 185.528,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 183.768,
+        "receive": 1.76
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 2141.345,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 96.544,
+        "receive": 2044.801
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 327.502,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 321.543,
+        "receive": 5.959
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 1868.9479999999999,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 152.62,
+        "receive": 1716.328
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 269.896,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 267.464,
+        "receive": 2.432
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 213.03,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 210.756,
+        "receive": 2.274
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 741.015,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 90.774,
+        "receive": 650.241
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 287.045,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 284.733,
+        "receive": 2.312
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 190.976,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 189.281,
+        "receive": 1.695
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 1802.713,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 81.105,
+        "receive": 1721.608
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 277.581,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 275.264,
+        "receive": 2.317
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 184.732,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 182.844,
+        "receive": 1.888
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 116.62100000000001,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 115.019,
+        "receive": 1.602
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 97.36500000000001,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 95.686,
+        "receive": 1.679
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 173.575,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 169.922,
+        "receive": 3.653
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 771.3209999999999,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 87.521,
+        "receive": 683.8
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 250.331,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 250.331,
+        "receive": -1
+      }
+    },
+    {
+      "path": "/dashboard",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 190.443,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 190.443,
+        "receive": -1
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 176.32700000000114,
+      "timings": {
+        "send": 8.034999999999854,
+        "wait": 165.14800000000105,
+        "receive": 3.3629999999993743,
+        "dns": -1,
+        "connect": 7.816000000000713,
+        "ssl": -1,
+        "blocked": -1
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "POST",
+      "status": 400,
+      "durationMs": 112.10299999999916,
+      "timings": {
+        "send": 2.162000000000262,
+        "wait": 109.78600000000006,
+        "receive": 0.36200000000098953,
+        "dns": -1,
+        "connect": 1.9549999999981083,
+        "ssl": -1,
+        "blocked": -1
+      }
+    },
+    {
+      "path": "/api/fulfillment",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 326.96299999999974,
+      "timings": {
+        "send": 0.6160000000018044,
+        "wait": 325.15999999999985,
+        "receive": 1.8029999999998836,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.3600000000005821
+      }
+    },
+    {
+      "path": "/api/fulfillment",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 172.58000000000175,
+      "timings": {
+        "send": 0.7799999999988358,
+        "wait": 172.26699999999983,
+        "receive": 0.31300000000192085,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.6519999999982247
+      }
+    },
+    {
+      "path": "/api/runner",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 277.11499999999796,
+      "timings": {
+        "send": 1.136000000005879,
+        "wait": 276.5369999999966,
+        "receive": 0.5780000000013388,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.9619999999995343
+      }
+    },
+    {
+      "path": "/api/fulfillment",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 172.06299999999464,
+      "timings": {
+        "send": 1.1860000000015134,
+        "wait": 171.77100000000064,
+        "receive": 0.2919999999940046,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 1.025999999998021
+      }
+    },
+    {
+      "path": "/api/fulfillment",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 225.90000000000146,
+      "timings": {
+        "send": 0.7929999999978463,
+        "wait": 225.58200000000215,
+        "receive": 0.3179999999993015,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.6429999999963911
+      }
+    },
+    {
+      "path": "/api/fulfillment",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 154.92799999999988,
+      "timings": {
+        "send": 0.49299999999493593,
+        "wait": 154.62600000000384,
+        "receive": 0.3019999999960419,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.3929999999963911
+      }
+    },
+    {
+      "path": "/api/fulfillment",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 146.87900000000081,
+      "timings": {
+        "send": 0.36499999999796273,
+        "wait": 146.68300000000454,
+        "receive": 0.1959999999962747,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.2669999999998254
+      }
+    },
+    {
+      "path": "/api/fulfillment",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 266.81900000000314,
+      "timings": {
+        "send": 0.9170000000012806,
+        "wait": 266.4720000000016,
+        "receive": 0.3470000000015716,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.7530000000042492
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "DELETE",
+      "status": 200,
+      "durationMs": 160.10399999999936,
+      "timings": {
+        "send": 0.5319999999992433,
+        "wait": 156.99500000000262,
+        "receive": 3.1089999999967404,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.4069999999992433
+      }
+    },
+    {
+      "path": "/api/demo",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 805.8489999999947,
+      "timings": {
+        "send": 1.771999999997206,
+        "wait": 803.1039999999994,
+        "receive": 1.0930000000007567,
+        "dns": -1,
+        "connect": 1.6519999999945867,
+        "ssl": -1,
+        "blocked": -1
+      }
+    }
+  ]
+}
