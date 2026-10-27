@@ -181,16 +181,66 @@ test("visible controls complete customer, vendor and runner fulfillment with a c
   await page.goto("/dashboard");
   await clickResponse(page, "Confirm order complete", "/api/fulfillment");
   await expect(card()).toContainText("COMPLETED");
+  const progress = page.locator(".community-progress");
+  await expect(progress).toContainText("10 community points");
   await card().getByText("Leave a review", { exact: true }).click();
+  await card().getByLabel("Rating out of five").fill("1");
   await card()
     .getByLabel("Your review")
-    .fill("Fictional local acceptance test: complete neighbor pickup.");
+    .fill(
+      "Fictional local test: pickup was complete, but packaging needed care.",
+    );
   await clickResponse(page, "Save review", "/api/reviews");
   await expect(card()).toContainText("Review saved. Thank you, neighbor.");
+  await page.reload();
+  await expect(progress).toContainText("15 community points");
+  await expect(progress).toContainText("1 completed purchase");
+  await expect(progress).toContainText("1 thoughtful review");
+  // A substantive one-star review earns the same recognition as five stars.
+  // The unique review/order constraint also prevents repeatedly earning points.
+  const duplicate = await page.request.post("/api/reviews", {
+    headers: { Origin: "http://127.0.0.1:3000" },
+    data: {
+      orderId: order.id,
+      rating: 5,
+      comment: "A duplicate must never add another review or more points.",
+    },
+  });
+  expect(duplicate.status()).toBe(409);
+  await page.reload();
+  await expect(progress).toContainText("15 community points");
+  const reviews = await service
+    .from("reviews")
+    .select("rating")
+    .eq("order_id", order.id);
+  expect(reviews.error).toBeNull();
+  expect(reviews.data).toEqual([{ rating: 1 }]);
   await evidence(
     page,
     info,
     "SIMULATED-LOCAL-FIXTURE-customer-completed-order",
+  );
+  await page.goto(`/vendors/${order.vendor_id}`);
+  await expect(page.locator("main:not([role=status])")).toContainText(
+    "1.0 / 5",
+  );
+  await expect(page.locator("main:not([role=status])")).toContainText(
+    "1 completed-order review",
+  );
+  await expect(page.locator("main:not([role=status])")).not.toContainText(
+    "Fictional local test: pickup was complete, but packaging needed care.",
+  );
+  await expect(page.locator(".community-progress")).toHaveCount(0);
+  await expect(
+    page.getByText("Community favorite", { exact: true }),
+  ).toHaveCount(0);
+  await evidence(page, info, "LOCAL-FIXTURE-vendor-verified-order-rating");
+  await switchTo(page, "vendor");
+  const vendorProgress = page.locator(".vendor-progress");
+  await expect(vendorProgress).toContainText("1 fulfilled order");
+  await expect(vendorProgress).toContainText("1 completed-order review");
+  await expect(vendorProgress).toContainText(
+    "1.0 / 5 average across your storefronts",
   );
   await switchTo(page, "runner");
   await expect(page.locator("main:not([role=status])")).toContainText(
@@ -262,7 +312,7 @@ test("discovery, map location, filters, cart removal and quote replies work thro
   ).toBeVisible();
   await page.getByRole("textbox", { name: "Search listings" }).fill("");
   await page.getByRole("button", { name: "Everything", exact: true }).click();
-  await expect(page.locator(".cards .product")).toHaveCount(25);
+  await expect(page.locator(".cards .product")).toHaveCount(4);
   const local = page.getByRole("button", { name: "MADE LOCAL", exact: true });
   await local.click();
   await expect(local).toHaveAttribute("aria-pressed", "true");
@@ -270,7 +320,9 @@ test("discovery, map location, filters, cart removal and quote replies work thro
     "Secondhand Reading Lamp",
   ]);
   await local.click();
-  await page.getByRole("link", { name: "Explore this storefront →" }).click();
+  await page
+    .getByRole("button", { name: "Browse Riverbend Market & Goods items" })
+    .click();
   await expect(page.locator(".cards .product")).toHaveCount(10);
   await page.getByRole("button", { name: "Show all vendors" }).click();
   await page

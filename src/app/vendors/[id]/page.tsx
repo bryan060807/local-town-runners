@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { publicCatalog } from "@/lib/server/catalog";
 import { money } from "@/lib/catalog";
+import VendorReputation from "@/components/VendorReputation";
 export default async function VendorPage({
   params,
 }: {
@@ -41,6 +42,22 @@ export default async function VendorPage({
         />
       )}
       <h1>{vendor.name}</h1>
+      <div className="simple-card">
+        <VendorReputation reputation={vendor.reputation} demo={vendor.demo} />
+        <details>
+          <summary>About vendor reputation</summary>
+          <p>
+            Ratings come from customers’ completed, paid orders. Community
+            favorite requires at least five different reviewers and an average
+            of 4.5 or higher. Sponsored placement is separate from earned
+            reputation.
+          </p>
+          <p>
+            Review the listing details, keep payments in the app and confirm
+            receipt before completing your order.
+          </p>
+        </details>
+      </div>
       {vendor.description && <p>{vendor.description}</p>}
       {vendor.websiteUrl && (
         <p>

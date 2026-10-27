@@ -28,6 +28,8 @@ import {
 } from "lucide-react";
 import { brand } from "@/lib/brand";
 import { Listing, Vendor, money } from "@/lib/catalog";
+import ExploreVendors from "./ExploreVendors";
+import styles from "./ExploreCatalog.module.css";
 const WorldMap = dynamic(() => import("./WorldMap"), {
   ssr: false,
   loading: () => (
@@ -62,13 +64,13 @@ export default function Marketplace({
     () => true,
     () => false,
   );
-  const featuredVendor = vendors.find(
-    (v) => v.demo && v.name === "Riverbend Market & Goods",
-  );
   const [storefront, setStorefront] = useState<string | null>(null);
   const [category, setCategory] = useState("All");
   const [localOnly, setLocalOnly] = useState(false);
   const [query, setQuery] = useState("");
+  const [browseAll, setBrowseAll] = useState(false);
+  const [itemPage, setItemPage] = useState(1);
+  const findsHeading = useRef<HTMLHeadingElement>(null);
   const [highlight, setHighlight] = useState<string[]>([]);
   const [selected, setSelected] = useState<Listing | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -234,15 +236,86 @@ export default function Marketplace({
       setPreparing(false);
     }
   }
-  const shown = listings.filter(
+  const vendorNames = new Map(
+    vendors.map((vendor) => [vendor.id, vendor.name]),
+  );
+  const availableListings = listings.filter(
+    (listing) => listing.active && listing.inventory > 0,
+  );
+  const search = query.trim().toLowerCase();
+  const shown = availableListings.filter(
     (l) =>
-      l.active &&
       (!storefront || l.vendorId === storefront) &&
       (!localOnly || l.local) &&
-      l.inventory > 0 &&
       (category === "All" || l.category === category) &&
-      `${l.title} ${l.description}`.toLowerCase().includes(query.toLowerCase()),
+      `${l.title} ${l.description} ${vendorNames.get(l.vendorId) || ""}`
+        .toLowerCase()
+        .includes(search),
   );
+  const shownVendors = vendors.filter((vendor) => {
+    const vendorListings = availableListings.filter(
+      (listing) => listing.vendorId === vendor.id,
+    );
+    return (
+      (!storefront || vendor.id === storefront) &&
+      (category === "All" ||
+        vendor.category === category ||
+        vendorListings.some((listing) => listing.category === category)) &&
+      (!localOnly ||
+        vendorListings.some(
+          (listing) =>
+            listing.local &&
+            (category === "All" || listing.category === category),
+        )) &&
+      (!search ||
+        `${vendor.name} ${vendor.category} ${vendor.description || ""}`
+          .toLowerCase()
+          .includes(search) ||
+        shown.some((listing) => listing.vendorId === vendor.id))
+    );
+  });
+  const hasFilters = Boolean(
+    storefront || localOnly || category !== "All" || search,
+  );
+  const showFullCatalog = browseAll || hasFilters;
+  const pageSize = 12;
+  const itemPageCount = Math.max(1, Math.ceil(shown.length / pageSize));
+  const currentItemPage = Math.min(itemPage, itemPageCount);
+  // Rotate through vendors before taking a second item from the same shop.
+  // This is an available-catalog sample, with no paid placement or rating weight.
+  const featured: Listing[] = [];
+  const featuredVendorIds = new Set<string>();
+  for (const listing of shown) {
+    if (!featuredVendorIds.has(listing.vendorId)) {
+      featured.push(listing);
+      featuredVendorIds.add(listing.vendorId);
+    }
+    if (featured.length === 4) break;
+  }
+  if (featured.length < 4) {
+    featured.push(
+      ...shown
+        .filter((listing) => !featured.includes(listing))
+        .slice(0, 4 - featured.length),
+    );
+  }
+  const visibleItems = showFullCatalog
+    ? shown.slice((currentItemPage - 1) * pageSize, currentItemPage * pageSize)
+    : featured;
+  function browseVendor(id: string) {
+    setStorefront(id);
+    setCategory("All");
+    setLocalOnly(false);
+    setQuery("");
+    setItemPage(1);
+  }
+  function changeItemPage(page: number) {
+    setItemPage(page);
+    requestAnimationFrame(() => {
+      findsHeading.current?.focus({ preventScroll: true });
+      findsHeading.current?.scrollIntoView({ block: "start" });
+    });
+  }
   return (
     <>
       <header inert={Boolean(selected)} className="header">
@@ -257,7 +330,13 @@ export default function Marketplace({
           <Link className="active" href="#explore">
             Explore
           </Link>
-          <Link href="#local" onClick={() => setLocalOnly(true)}>
+          <Link
+            href="#local"
+            onClick={() => {
+              setLocalOnly(true);
+              setItemPage(1);
+            }}
+          >
             Made local
           </Link>
           <Link href="/dashboard">For neighbors</Link>
@@ -405,51 +484,32 @@ export default function Marketplace({
             <span>Demo vendors are fictional. Real Louisiana geography.</span>
           </div>
         </section>
-        {featuredVendor && (
-          <section className="demo-storefront">
-            {featuredVendor.coverUrl && (
-              <Image
-                src={featuredVendor.coverUrl}
-                alt="Fictional Riverbend storefront illustration"
-                width={960}
-                height={420}
-              />
-            )}
-            <div>
-              <span className="demo-tag">FICTIONAL DEMO VENDOR</span>
-              <h2>{featuredVendor.name}</h2>
-              <p>{featuredVendor.description}</p>
-              <Link
-                href="#local"
-                onClick={() => {
-                  setStorefront(featuredVendor.id);
-                  setCategory("All");
-                  setLocalOnly(false);
-                  setQuery("");
-                }}
-              >
-                Explore this storefront →
-              </Link>
-            </div>
-          </section>
-        )}
         <section id="local" className="catalog">
           {storefront && (
             <p>
               Viewing {vendors.find((v) => v.id === storefront)?.name}{" "}
-              <button onClick={() => setStorefront(null)}>
+              <button
+                className={styles.textButton}
+                onClick={() => {
+                  setStorefront(null);
+                  setItemPage(1);
+                }}
+              >
                 Show all vendors
               </button>
             </p>
           )}
           <div className="section-top">
             <div>
-              <div className="eyebrow">FROM AROUND THE CORNER</div>
-              <h2>Small town. Great finds.</h2>
+              <div className="eyebrow">THE NEIGHBORS BEHIND THE FINDS</div>
+              <h2>Small town. Good neighbors.</h2>
             </div>
             <button
               aria-pressed={localOnly}
-              onClick={() => setLocalOnly((v) => !v)}
+              onClick={() => {
+                setLocalOnly((v) => !v);
+                setItemPage(1);
+              }}
               className="local-stamp"
             >
               <Leaf size={15} /> MADE LOCAL
@@ -461,7 +521,11 @@ export default function Marketplace({
                 <button
                   className={category === c ? "selected" : ""}
                   key={c}
-                  onClick={() => setCategory(c)}
+                  aria-pressed={category === c}
+                  onClick={() => {
+                    setCategory(c);
+                    setItemPage(1);
+                  }}
                 >
                   {c === "All" ? "Everything" : c}
                 </button>
@@ -472,64 +536,149 @@ export default function Marketplace({
               <input
                 aria-label="Search listings"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Find your next good thing"
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setItemPage(1);
+                }}
+                placeholder="Find a vendor or something good"
               />
             </label>
           </div>
-          <div className="cards">
-            {shown.map((l, i) => (
-              <button
-                className="product"
-                disabled={!hydrated}
-                key={l.id}
-                onClick={() => {
-                  setSelected(l);
-                  setQuantity(1);
-                  setNotice("");
-                  setHighlight([l.vendorId]);
-                }}
-              >
-                <div className={`product-art art-${i % 5}`}>
-                  {l.photos?.[0] ? (
-                    <Image
-                      className="product-photo"
-                      src={l.photos[0]}
-                      alt={l.title}
-                      fill
-                      sizes="(max-width: 760px) 50vw, 25vw"
-                    />
-                  ) : (
-                    <span>{l.emoji}</span>
-                  )}
-                  <span className="mode">{l.mode}</span>
-                  <span className="heart">↗</span>
-                </div>
-                <div className="product-copy">
-                  <span className="product-vendor">
-                    {vendors.find((v) => v.id === l.vendorId)?.name}{" "}
-                    <span>DEMO</span>
-                  </span>
-                  <h3>{l.title}</h3>
-                  <p>{l.description}</p>
-                  <div className="product-bottom">
-                    <strong>
-                      {l.mode === "SELL" ? money(l.price) : "Quote required"}
-                    </strong>
-                    <span>
-                      <Leaf size={12} />{" "}
-                      {l.local ? "Made local" : "Around town"}
-                    </span>
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-          {shown.length === 0 && (
-            <div className="empty">
-              No finds yet. Try another category or a shorter search.
+          <ExploreVendors
+            key={`${storefront || ""}:${category}:${localOnly}:${query}`}
+            vendors={shownVendors}
+            listings={availableListings}
+            onBrowse={browseVendor}
+          />
+          <section className={styles.finds} aria-labelledby="finds-heading">
+            <div className={styles.findsHeader}>
+              <div>
+                <h3 id="finds-heading" ref={findsHeading} tabIndex={-1}>
+                  {hasFilters
+                    ? "Matching finds"
+                    : browseAll
+                      ? "All local finds"
+                      : "Featured finds"}
+                </h3>
+                <p>
+                  {showFullCatalog
+                    ? "Explore available items and services from the vendors around you."
+                    : "A small selection from the current catalog. Explore a storefront for more."}
+                </p>
+              </div>
+              {!showFullCatalog ? (
+                <button
+                  type="button"
+                  className={styles.actionButton}
+                  onClick={() => {
+                    setBrowseAll(true);
+                    setItemPage(1);
+                  }}
+                >
+                  Browse all items <ArrowUpRight size={15} />
+                </button>
+              ) : (
+                !hasFilters && (
+                  <button
+                    type="button"
+                    className={styles.actionButton}
+                    onClick={() => {
+                      setBrowseAll(false);
+                      setItemPage(1);
+                    }}
+                  >
+                    Back to featured finds
+                  </button>
+                )
+              )}
             </div>
-          )}
+            {showFullCatalog && (
+              <p className={styles.resultCount} role="status">
+                {shown.length
+                  ? `${(currentItemPage - 1) * pageSize + 1}–${Math.min(currentItemPage * pageSize, shown.length)} of ${shown.length}`
+                  : "0"}{" "}
+                available finds
+              </p>
+            )}
+            <div className="cards">
+              {visibleItems.map((l, i) => (
+                <button
+                  className="product"
+                  disabled={!hydrated}
+                  key={l.id}
+                  onClick={() => {
+                    setSelected(l);
+                    setQuantity(1);
+                    setNotice("");
+                    setHighlight([l.vendorId]);
+                  }}
+                >
+                  <div className={`product-art art-${i % 5}`}>
+                    {l.photos?.[0] ? (
+                      <Image
+                        className="product-photo"
+                        src={l.photos[0]}
+                        alt={l.title}
+                        fill
+                        sizes="(max-width: 760px) 50vw, 25vw"
+                      />
+                    ) : (
+                      <span>{l.emoji}</span>
+                    )}
+                    <span className="mode">{l.mode}</span>
+                    <span className="heart">↗</span>
+                  </div>
+                  <div className="product-copy">
+                    <span className="product-vendor">
+                      {vendors.find((v) => v.id === l.vendorId)?.name}{" "}
+                      {vendors.find((v) => v.id === l.vendorId)?.demo && (
+                        <span>DEMO</span>
+                      )}
+                    </span>
+                    <h3>{l.title}</h3>
+                    <p>{l.description}</p>
+                    <div className="product-bottom">
+                      <strong>
+                        {l.mode === "SELL" ? money(l.price) : "Quote required"}
+                      </strong>
+                      <span>
+                        <Leaf size={12} />{" "}
+                        {l.local ? "Made local" : "Around town"}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+            {shown.length === 0 && (
+              <div className="empty">
+                No finds yet. Try another category or a shorter search.
+              </div>
+            )}
+            {showFullCatalog && itemPageCount > 1 && (
+              <nav className={styles.pagination} aria-label="Item pages">
+                <button
+                  type="button"
+                  className={styles.actionButton}
+                  disabled={currentItemPage === 1}
+                  onClick={() => changeItemPage(currentItemPage - 1)}
+                >
+                  Previous items
+                </button>
+                <span>
+                  Page {currentItemPage} of {itemPageCount}
+                </span>
+                <button
+                  type="button"
+                  className={styles.actionButton}
+                  disabled={currentItemPage === itemPageCount}
+                  onClick={() => changeItemPage(currentItemPage + 1)}
+                >
+                  Next items
+                </button>
+              </nav>
+            )}
+          </section>
         </section>
         <section className="runner-banner">
           <div className="runner-symbol">

@@ -18,6 +18,10 @@ Goal: show a grounded discovery experience, a real persisted marketplace workflo
 
 Enter Demo Mode and use the same browser throughout. Search/filter the catalog, use the assistant, open a listing and prepare a cart. Switch Customer/Vendor/Runner with the profile selector; quote inquiries and vendor responses work without payment. Catalog changes persist in the same isolated workspace. Exit and re-enter to start a fresh workspace; that does not erase old payment history.
 
+Explore now starts with vendor storefront cards and four featured finds. On phones, swipe the vendor cards horizontally; **Browse all items** opens the full catalog in pages of twelve. Fresh demo storefronts honestly show no completed-order reviews, and fresh customers start with zero community points.
+
+The recorded local fulfillment walkthrough also shows a completed purchase earning ten points, followed by a detailed one-star review earning five more. The storefront displays the actual one-star aggregate; the customer's points remain private. Keep these screenshots captioned as local fixtures. [Community recognition rules and setup](community-recognition.md) explain the milestones and earned vendor badge.
+
 In the Vendor dashboard, **Your catalog** shows ten compact item rows per page. Search by item name, filter by category, storefront or listing status, and sort by name, price or stock. Select an item name to expand its editor, then save. The row updates immediately; closing or filtering an item keeps its unsaved price and stock edits until the page is reloaded.
 
 The hosted full paid-order flow needs an explicitly approved Sandbox payment. If no Sandbox buyer is available, stop at the unpaid draft and use the clearly labeled local fulfillment evidence. A PayPal review hold is provider behavior, not permission to force a hosted order PAID. The final acceptance report links the exact current test evidence and limitations.

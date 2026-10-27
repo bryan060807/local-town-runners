@@ -1,0 +1,227 @@
+.directoryHeader,
+.findsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.directoryHeader h3,
+.findsHeader h3 {
+  font-family: Manrope, sans-serif;
+  font-size: 23px;
+  line-height: 1.35;
+}
+.directoryHeader p,
+.findsHeader p {
+  margin-top: 8px;
+  color: #65715e;
+  line-height: 1.65;
+  font-size: 13px;
+}
+.resultCount {
+  color: #65715e;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.vendorGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.vendorGrid:focus-visible {
+  outline: 3px solid #88a95e;
+  outline-offset: 3px;
+}
+.mobileHint {
+  display: none;
+}
+.vendorCard {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  background: white;
+  border: 1px solid #dfe6d6;
+  border-radius: 14px;
+}
+.vendorArt {
+  position: relative;
+  height: 160px;
+  display: grid;
+  place-items: center;
+  background: #e8eddc;
+}
+.vendorArt > span:first-child {
+  font-size: 58px;
+}
+.cover {
+  object-fit: cover;
+}
+.logo {
+  object-fit: contain;
+  padding: 18px;
+  background: #f5f7ef;
+}
+.vendorTag {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  max-width: calc(100% - 24px);
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  color: #315a43;
+  background: #fffffff2;
+}
+.vendorBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 18px;
+}
+.category {
+  color: #647856;
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+.vendorBody h4 {
+  margin: 0;
+  font-family: Manrope, sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 42px;
+  margin: 10px 0 14px;
+  color: #65715e;
+  font-size: 12px;
+  line-height: 1.75;
+}
+.availability {
+  margin: 12px 0;
+  color: #65715e;
+  font-size: 12px;
+}
+.vendorActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid #e9eddf;
+}
+.vendorActions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  color: #315a43;
+  font-size: 12px;
+  font-weight: 700;
+}
+.vendorActions button,
+.textButton {
+  min-height: 44px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: #315a43;
+  font-size: 12px;
+  text-decoration: underline;
+}
+.finds {
+  margin-top: 44px;
+  padding-top: 28px;
+  border-top: 1px solid #dfe6d6;
+}
+.finds > .resultCount {
+  margin-bottom: 16px;
+}
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #cfdbc3;
+  border-radius: 8px;
+  color: #315a43;
+  background: #fff;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.moreVendors,
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+.pagination {
+  justify-content: space-between;
+}
+.pagination span {
+  color: #65715e;
+  font-size: 12px;
+}
+.emptyVendors {
+  padding: 24px;
+  border: 1px dashed #cfdbc3;
+  border-radius: 12px;
+  color: #65715e;
+  line-height: 1.7;
+}
+@media (max-width: 1050px) {
+  .vendorGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .directoryHeader,
+  .findsHeader {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .vendorGrid {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 88%;
+    gap: 12px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    padding-bottom: 12px;
+  }
+  .vendorCard {
+    scroll-snap-align: start;
+  }
+  .mobileHint {
+    display: block;
+    margin: 0 0 12px;
+    color: #65715e;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .vendorArt {
+    height: 145px;
+  }
+  .directoryHeader h3,
+  .findsHeader h3 {
+    font-size: 21px;
+  }
+}

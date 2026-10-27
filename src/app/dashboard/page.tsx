@@ -17,6 +17,8 @@ import { money } from "@/lib/catalog";
 import DashboardActions from "@/components/DashboardActions";
 import RunnerControls from "@/components/RunnerControls";
 import { redirect } from "next/navigation";
+import CommunityProgress from "@/components/CommunityProgress";
+import { communityProgress } from "@/lib/server/reputation";
 export const dynamic = "force-dynamic";
 export default async function Dashboard() {
   if (!configured())
@@ -106,6 +108,8 @@ export default async function Dashboard() {
     { data: runnerProfile },
     { data: runs },
     { data: audit },
+    progress,
+    { data: ownReviews },
   ] = await Promise.all([
     roleNames.includes("customer")
       ? client
@@ -178,6 +182,14 @@ export default async function Dashboard() {
           .order("created_at", { ascending: false })
           .limit(30)
       : { data: [] },
+    communityProgress(client),
+    orderIds.length
+      ? client
+          .from("reviews")
+          .select("order_id,rating,comment")
+          .eq("customer_id", user.id)
+          .in("order_id", orderIds)
+      : { data: [] },
   ]);
   if (eventError || ledgerError) throw eventError || ledgerError;
   return (
@@ -225,6 +237,11 @@ export default async function Dashboard() {
         Your roles: {roleNames.join(", ")}. Roles are assigned by an
         administrator, never by browser state.
       </p>
+      <CommunityProgress
+        progress={progress}
+        customer={roleNames.includes("customer")}
+        vendor={roleNames.includes("vendor")}
+      />
       {roleNames.includes("runner") && (
         <div className="simple-card">
           <h2>Runner availability</h2>
@@ -357,7 +374,12 @@ export default async function Dashboard() {
                 ))}
             </details>
             {o.customer_id === user.id && o.state === "COMPLETED" && (
-              <ReviewOrder id={o.id} />
+              <ReviewOrder
+                id={o.id}
+                existing={ownReviews?.find(
+                  (review) => review.order_id === o.id,
+                )}
+              />
             )}
             <details>
               <summary>Financial allocations and event history</summary>

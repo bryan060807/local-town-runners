@@ -1,0 +1,39 @@
+.reputation {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #56644f;
+}
+.reputation strong {
+  color: #315a43;
+  font-size: 15px;
+}
+.demo {
+  display: block;
+  color: #65715e;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+.badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 16px;
+  background: #eaf2db;
+  color: #315a43;
+  font-size: 12px;
+  font-weight: 600;
+}
+.points {
+  display: block;
+  margin-top: 12px;
+  font-size: 24px;
+  color: #315a43;
+}
+.habits {
+  margin: 12px 0;
+  padding-left: 22px;
+  line-height: 1.9;
+}

@@ -61,8 +61,8 @@ test("isolated demo switches real sessions; cart, quotes and fulfillment persist
     }),
   ).toBeVisible();
   await expect(
-    page.getByRole("img", {
-      name: "Fictional Riverbend storefront illustration",
+    page.getByRole("link", {
+      name: "Visit Riverbend Market & Goods storefront",
     }),
   ).toBeVisible();
   for (const item of listings.data!.slice(0, 2)) {
@@ -219,6 +219,9 @@ test("isolated demo switches real sessions; cart, quotes and fulfillment persist
     ).toBe(200);
   await page.getByLabel("Switch demo profile").selectOption("customer");
   await expect(page).toHaveURL(/\/$/);
+  await page
+    .getByRole("textbox", { name: "Search listings" })
+    .fill(edited.title);
   const updatedCard = page.locator(".cards .product").filter({
     has: page.getByRole("heading", { name: edited.title, exact: true }),
   });

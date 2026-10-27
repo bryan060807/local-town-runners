@@ -1,3 +1,5 @@
+import type { VendorReputationStats } from "./reputation";
+
 export type Listing = {
   id: string;
   vendorId: string;
@@ -26,6 +28,7 @@ export type Vendor = {
   socialUrls?: string[];
   logoUrl?: string;
   coverUrl?: string;
+  reputation?: VendorReputationStats;
 };
 const entries = [
   [

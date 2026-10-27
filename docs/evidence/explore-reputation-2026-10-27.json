@@ -1,0 +1,72 @@
+{
+  "expected": 48,
+  "unexpected": 0,
+  "flaky": 0,
+  "skipped": 0,
+  "durationMs": 533431.346,
+  "errors": 0,
+  "projects": {
+    "desktop": {
+      "scenarios": 12,
+      "expected": 12,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "mobile-360": {
+      "scenarios": 12,
+      "expected": 12,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "mobile-390": {
+      "scenarios": 12,
+      "expected": 12,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "mobile-430": {
+      "scenarios": 12,
+      "expected": 12,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0
+    }
+  },
+  "checks": {
+    "boundedVendorDirectory6Then7": true,
+    "featuredItems4": true,
+    "all25ItemsReachable12Then12Then1": true,
+    "categoryVendorAndSearchFilters": true,
+    "emptyVendorSearch": true,
+    "mobileRailKeyboardReachableWithoutPageOverflow": true,
+    "noInventedZeroReviewRatings": true,
+    "completedOrderCustomerPoints10": true,
+    "substantiveOneStarReviewAdds5": true,
+    "repeatedReviewRejectedAndPointsStable": true,
+    "publicAggregateOnlyNoPrivateProgressOrComment": true,
+    "vendorOwnAggregateMatches": true,
+    "existingRunnerRewardsAndLedgerIntegrity": true
+  },
+  "evidence": {
+    "directory": "docs/screenshots/explore-reputation-2026-10-27",
+    "files": [
+      "desktop-LOCAL-vendor-rating.png",
+      "desktop-SIMULATED-LOCAL-customer-progress.png",
+      "desktop-vendor-directory.png",
+      "mobile-360-LOCAL-vendor-rating.png",
+      "mobile-360-SIMULATED-LOCAL-customer-progress.png",
+      "mobile-360-vendor-directory.png",
+      "mobile-390-LOCAL-vendor-rating.png",
+      "mobile-390-SIMULATED-LOCAL-customer-progress.png",
+      "mobile-390-vendor-directory.png",
+      "mobile-430-LOCAL-vendor-rating.png",
+      "mobile-430-SIMULATED-LOCAL-customer-progress.png",
+      "mobile-430-vendor-directory.png"
+    ]
+  },
+  "boundary": "All financial fixtures used loopback Auth/PostgreSQL only; no genuine PayPal charge or payout. Customer points are noncash recognition. Test images are labeled local or fictional demo.",
+  "fixturePrecondition": "Authenticated browser tests assert loopback backend and renew only the known seeded local runner/trip availability; no hosted or financial record renewal."
+}

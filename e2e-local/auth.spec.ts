@@ -11,6 +11,41 @@ const env = Object.fromEntries(
       return [line.slice(0, i), line.slice(i + 1)];
     }),
 );
+if (env.NEXT_PUBLIC_SUPABASE_URL !== "http://127.0.0.1:54321")
+  throw Error("Authenticated browser fixtures require the local backend");
+const service = createClient(
+  env.NEXT_PUBLIC_SUPABASE_URL,
+  env.SUPABASE_SERVICE_ROLE_KEY,
+  { auth: { persistSession: false } },
+);
+test.beforeAll(async () => {
+  // This quote assertion depends on the known seed runner's current trip.
+  // Renew only that local fixture instead of depending on when seeding ran.
+  const tripId = "00000000-0000-4000-8000-000000000500";
+  const trip = await service
+    .from("runner_trips")
+    .select("runner_id")
+    .eq("id", tripId)
+    .single();
+  expect(trip.error).toBeNull();
+  const until = new Date(Date.now() + 3 * 3600000).toISOString();
+  expect(
+    (
+      await service
+        .from("runner_trips")
+        .update({ expires_at: until })
+        .eq("id", tripId)
+    ).error,
+  ).toBeNull();
+  expect(
+    (
+      await service
+        .from("runners")
+        .update({ available_until: until })
+        .eq("id", trip.data!.runner_id)
+    ).error,
+  ).toBeNull();
+});
 async function login(page: import("@playwright/test").Page, role: string) {
   await page.goto("/login");
   await page
@@ -79,10 +114,6 @@ test("cookie-authenticated order preparation persists; missing PayPal configurat
       page.locator(".simple-card").filter({ hasText: orderId }),
     ).toContainText("CANCELLED");
   } finally {
-    const service = createClient(
-      env.NEXT_PUBLIC_SUPABASE_URL,
-      env.SUPABASE_SERVICE_ROLE_KEY,
-    );
     const current = await service
       .from("orders")
       .select("state")

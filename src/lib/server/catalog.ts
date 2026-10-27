@@ -4,6 +4,7 @@ import { safeAssetUrl, safeWebsiteUrl } from "@/lib/assets";
 import { demoRunners } from "@/lib/runners";
 import { PublicRunner } from "@/lib/map-types";
 import { db } from "./db";
+import { vendorReputations } from "./reputation";
 import { templateWorkspace } from "@/lib/demo-catalog";
 import { supabaseConfig, configured } from "./env";
 import {
@@ -15,7 +16,10 @@ import {
 export async function publicCatalog() {
   if (!configured())
     return {
-      vendors: demoVendors,
+      vendors: demoVendors.map((vendor) => ({
+        ...vendor,
+        reputation: { averageRating: null, reviewCount: 0, completedOrders: 0 },
+      })),
       listings: demoListings,
       runners: demoRunners().map((r) => ({
         id: r.id,
@@ -36,7 +40,7 @@ export async function publicCatalog() {
     )
     .eq("active", true);
   const vendorIds = (v.data || []).map((row) => row.id);
-  const [l, r, t] = await Promise.all([
+  const [l, r, t, reputation] = await Promise.all([
     vendorIds.length
       ? c
           .from("listings")
@@ -61,6 +65,7 @@ export async function publicCatalog() {
           .gt("expires_at", new Date().toISOString())
           .in("destination_vendor_id", vendorIds)
       : { data: [], error: null },
+    vendorReputations(c, vendorIds),
   ]);
   if (v.error || l.error || r.error || t.error) {
     logEvent("catalog_failure", {
@@ -109,6 +114,7 @@ export async function publicCatalog() {
       socialUrls: (row.social_urls || []).map(safeWebsiteUrl).filter(Boolean),
       logoUrl: safeAssetUrl(row.logo_url, e.url),
       coverUrl: safeAssetUrl(row.cover_url, e.url),
+      reputation: reputation.get(row.id),
     })) as Vendor[],
     listings: l.data.map((row) => ({
       id: row.id,
