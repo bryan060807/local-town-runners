@@ -17,4 +17,14 @@ Sidekick uses a visible **Send** control and native Enter submission. Its input 
 5. Reload the cart: it should retain **2 × $4.50** and **Total $9.00**, with the fictional delivery address.
 6. Select **Prepare this vendor order** only when ready to reserve the fictional stock. The dashboard shows one **$9.00 · DRAFT** after reload. Stop here to verify this repair without a payment.
 
-The full simulated fulfillment walkthrough remains in the [demo order guide](demo-order-walkthrough.md). No schema migration, dependency or environment change is needed. Release verification and screenshots are recorded after the checks finish.
+The full simulated fulfillment walkthrough remains in the [demo order guide](demo-order-walkthrough.md). No schema migration, dependency or environment change is needed.
+
+## Verification
+
+Tested source: `f47e3dd8fb928b39aee930830ee6337fb613498f`. The [clean-machine CI run](https://github.com/bryan060807/local-town-runners/actions/runs/40632052895) passed **116 unit/database tests and 148 browser checks**: 40 offline and 108 connected. Dependency audit reported zero vulnerabilities. All 20 new focused connected checks also passed locally at desktop and 360/390/430px widths; those checks overlap the CI total.
+
+A fresh hosted Customer demo submitted the exact discovery with Enter and the two-roll quote with Send, then followed the bakery storefront to the listing and saved quantity two. The **$9.00 cart survived reload**, with inventory unchanged. Hosted QA deliberately stopped before preparation, removed its own cart row, confirmed zero orders and exited its owned session. It used one desktop browser context resized to 360px for the phone captures. Explicit creation and persistence of one unpaid DRAFT, the exact stock reservation and zero ledger/PayPal/runner assignment are verified separately in the connected local/CI regressions.
+
+All **ten production checks** passed. A separate read-only check after hosted QA confirmed the three existing paid Sandbox orders and all twelve ledger rows retain their prior fingerprint and $44.00 total. No provider payment, actual payout, protected payment record or production configuration was changed.
+
+See the [verification report](evidence/customer-order-path.json), [CI evidence](evidence/customer-order-path-ci.json), [hosted cart evidence](evidence/customer-order-path-live-qa.json), [production checks](evidence/customer-order-path-production.json) and [screenshot provenance](screenshots/customer-order-path/README.md). The [hosted product page](screenshots/customer-order-path/CUSTOMER-PATH-LIVE-listing-desktop-1280.png) and [phone cart](screenshots/customer-order-path/CUSTOMER-PATH-LIVE-cart-resized-360.png) show the repaired handoff.

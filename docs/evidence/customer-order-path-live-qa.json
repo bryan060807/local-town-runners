@@ -1,0 +1,203 @@
+{
+  "recordedAt": "2026-10-28T04:27:12.829Z",
+  "source": "f47e3dd8fb928b39aee930830ee6337fb613498f",
+  "origin": "https://runners.aibrylabs.com",
+  "boundary": "One freshly created private Customer demo. Two exact assistant messages produce catalog discovery and a quote only. One exact quantity-two cart upsert and its own deletion are allowed. Fixed-origin GET/HEAD plus those explicit writes and owned-session exit only. No order preparation/creation, inventory reservation, payment, simulation, refund, runner action, notification, direct provider API or payout. TLS remains verified through the inherited proxy and system CA.",
+  "privatePreviewExplicitlyRequested": true,
+  "pageErrors": [],
+  "transportFailures": [],
+  "blockedRequests": [],
+  "apiChecks": [
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    }
+  ],
+  "screenshots": [
+    {
+      "feature": "listing-desktop-1280",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "path": "docs/screenshots/customer-order-path/CUSTOMER-PATH-LIVE-listing-desktop-1280.png",
+      "dataSource": "One fresh fictional private Customer demo on the fixed production origin"
+    },
+    {
+      "feature": "listing-resized-360",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "path": "docs/screenshots/customer-order-path/CUSTOMER-PATH-LIVE-listing-resized-360.png",
+      "dataSource": "One fresh fictional private Customer demo on the fixed production origin"
+    },
+    {
+      "feature": "cart-desktop-1280",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "path": "docs/screenshots/customer-order-path/CUSTOMER-PATH-LIVE-cart-desktop-1280.png",
+      "dataSource": "One fresh fictional private Customer demo on the fixed production origin"
+    },
+    {
+      "feature": "cart-resized-360",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "path": "docs/screenshots/customer-order-path/CUSTOMER-PATH-LIVE-cart-resized-360.png",
+      "dataSource": "One fresh fictional private Customer demo on the fixed production origin"
+    }
+  ],
+  "demoEntryCalls": 1,
+  "demoExitCalls": 1,
+  "assistantCalls": 2,
+  "cartAddCalls": 1,
+  "cartDeleteCalls": 1,
+  "financialProviderCalls": 0,
+  "directExternalRequests": 0,
+  "newOrders": 0,
+  "prepareButtonObserved": true,
+  "prepareInvoked": false,
+  "runnerAssigned": false,
+  "httpOnlyDemoTicket": true,
+  "demo": {
+    "active": true,
+    "role": "customer",
+    "name": "Alex Carter"
+  },
+  "assistant": {
+    "discoveryInput": "Enter",
+    "quoteInput": "Send",
+    "listingId": "8cf6434d-f1bf-4968-be12-1d8fb5cfd610",
+    "title": "Habanero Cinnamon Rolls",
+    "unitPriceCents": 450,
+    "quoteQuantity": 2,
+    "quoteTotalCents": 900,
+    "tools": ["prepareOrder"],
+    "quoteCreatedOrder": false
+  },
+  "cart": {
+    "listingId": "8cf6434d-f1bf-4968-be12-1d8fb5cfd610",
+    "title": "Habanero Cinnamon Rolls",
+    "vendorName": "Demo Hearth Bakery",
+    "quantity": 2,
+    "unitPriceCents": 450,
+    "totalCents": 900,
+    "survivedReload": true,
+    "inventoryUnchanged": true,
+    "newOrders": 0
+  },
+  "passed": true,
+  "ownedCartEmptyAfterCleanup": true,
+  "inactiveAfterExit": true,
+  "exitStatus": 200
+}

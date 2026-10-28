@@ -1,0 +1,154 @@
+{
+  "recordedAt": "2026-10-28T04:39:11.517Z",
+  "source": "f47e3dd8fb928b39aee930830ee6337fb613498f",
+  "problem": "Shareable listing CTA returned to / without selecting or saving the item. Assistant submission needed clearer readiness, pending-state feedback and retry behavior.",
+  "result": "Quantity and actual total on SELL listings, exact-item persistent cart upsert and explicit preparation in the existing cart; quote requests on MAKE/DO. Native Enter and visible Send, hydration gating, focused read-only pending input, duplicate-request guard and retained failed message.",
+  "evidence": {
+    "ci": "customer-order-path-ci.json",
+    "liveBrowser": "customer-order-path-live-qa.json",
+    "production": "customer-order-path-production.json",
+    "screenshots": "../screenshots/customer-order-path/README.md"
+  },
+  "local": {
+    "projectCheck": {
+      "unitAndDatabasePassed": 116,
+      "failed": 0
+    },
+    "assistantBaseline": {
+      "viewports": 4,
+      "passed": 4,
+      "sourceBeforeChange": "6878cf086d84faf9425e7fc0254d9c3e0aafe21c",
+      "finding": "Exact discovery Enter and two-roll Send already worked after hydration; a server send failure was not reproduced."
+    },
+    "focusedBrowser": {
+      "passed": 20,
+      "failed": 0,
+      "viewports": ["desktop", "360x800", "390x844", "430x932"],
+      "scenarios": [
+        "Enter discovery and Send quantity-two quote; zero orders",
+        "Held503, single pending request, retained focus/draft and successful retry",
+        "Actual storefront and product CTA, persistent $9 cart, explicit single unpaid DRAFT, exact stock reservation and no ledger/PayPal/runner assignment",
+        "Guest and vendor/runner UI permissions; customer quote creates only an inquiry",
+        "Stale stock409 retains quantity; retry and update leave one cart row and no reservation"
+      ]
+    },
+    "counting": "Local focused checks overlap the final CI suite; they are not added to the distinct browser total."
+  },
+  "finalCI": {
+    "runId": 40632052895,
+    "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40632052895",
+    "conclusion": "success",
+    "counts": {
+      "unitAndDatabase": {
+        "total": 116,
+        "passed": 116,
+        "failed": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "offlineBrowser": {
+        "total": 40,
+        "passed": 40,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "reportedDuration": "1.3m"
+      },
+      "connectedBrowser": {
+        "total": 108,
+        "passed": 108,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "reportedDuration": "13.1m"
+      },
+      "totalDistinctBrowserChecksPassed": 148
+    },
+    "audit": {
+      "command": "npm audit --audit-level=high",
+      "reportedVulnerabilities": 0,
+      "conclusion": "success"
+    },
+    "freshBackendAndAllThreeSeedStagesPassed": true
+  },
+  "production": {
+    "project": "local-town-runners",
+    "deployment": "dpl_GFfnjARxHFQZv2W5gxX6UY1rebKv",
+    "readyState": "READY",
+    "url": "local-town-runners-fy5twn8xh-bryan060807s-projects.vercel.app",
+    "source": "f47e3dd8fb928b39aee930830ee6337fb613498f",
+    "branch": "main",
+    "aliases": [
+      "runners.aibrylabs.com",
+      "local-town-runners.vercel.app",
+      "local-town-runners-bryan060807s-projects.vercel.app",
+      "local-town-runners-git-main-bryan060807s-projects.vercel.app"
+    ],
+    "productionTargetMatches": true,
+    "nodeVersion": "24.x",
+    "framework": "nextjs"
+  },
+  "productionChecks": {
+    "apiResponsesPrivate": true,
+    "productionReady": true,
+    "productionVariableNamesPresent": true,
+    "marketplaceAvailable": true,
+    "anonymousOrderApiDenied": true,
+    "anonymousProtectedPagesRedirect": true,
+    "anonymousCronDenied": true,
+    "securityHeadersPresent": true,
+    "onboardingStoragePrivate": true,
+    "genuinePaymentHistoryPreserved": true
+  },
+  "live": {
+    "passed": true,
+    "assistant": {
+      "discoveryInput": "Enter",
+      "quoteInput": "Send",
+      "listingId": "8cf6434d-f1bf-4968-be12-1d8fb5cfd610",
+      "title": "Habanero Cinnamon Rolls",
+      "unitPriceCents": 450,
+      "quoteQuantity": 2,
+      "quoteTotalCents": 900,
+      "tools": ["prepareOrder"],
+      "quoteCreatedOrder": false
+    },
+    "cart": {
+      "listingId": "8cf6434d-f1bf-4968-be12-1d8fb5cfd610",
+      "title": "Habanero Cinnamon Rolls",
+      "vendorName": "Demo Hearth Bakery",
+      "quantity": 2,
+      "unitPriceCents": 450,
+      "totalCents": 900,
+      "survivedReload": true,
+      "inventoryUnchanged": true,
+      "newOrders": 0
+    },
+    "prepareButtonObserved": true,
+    "prepareInvoked": false,
+    "newOrders": 0,
+    "runnerAssigned": false,
+    "ownedCartEmptyAfterCleanup": true,
+    "inactiveAfterExit": true,
+    "financialProviderCalls": 0,
+    "directExternalRequests": 0,
+    "pageErrors": 0,
+    "transportFailures": 0,
+    "blockedRequests": 0,
+    "screenshotCount": 4
+  },
+  "protectedPayments": {
+    "orderCount": 3,
+    "totalCapturedCents": 4400,
+    "ledgerRows": 12,
+    "digest": "c2960efc7e2ddfdc7ceedbe905da5a9f20a5f3b3d6c8688cce7bc4dd3b624785",
+    "unchanged": true,
+    "postLivePreviewVerified": true
+  },
+  "limits": [
+    "Hosted QA deliberately stopped at cart review; explicit DRAFT preparation was verified on the connected local backend, not invoked on Production.",
+    "This release does not add login return navigation; anonymous visitors receive sign-in/private-demo guidance rather than an automatic cart action.",
+    "No schema, dependency, environment configuration, provider financial transaction or actual payout changed.",
+    "Previously documented optional Resend delivery-feedback configuration remains a separate operational follow-up."
+  ]
+}
