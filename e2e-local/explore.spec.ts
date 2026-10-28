@@ -183,10 +183,12 @@ test("Explore highlights vendors, bounds featured items and keeps every availabl
       exact: true,
     })
     .click();
+  await expect(page).toHaveURL(/\/vendors\/[0-9a-f-]{36}$/);
   await expect(
     page.getByRole("heading", {
       name: "Riverbend Market & Goods",
       exact: true,
+      level: 1,
     }),
   ).toBeVisible();
   await expect(page.locator("main:not([role=status])")).toContainText(

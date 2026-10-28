@@ -55,10 +55,12 @@ test("isolated demo switches real sessions; cart, quotes and fulfillment persist
     .order("title");
   expect(listings.data).toHaveLength(10);
   await expect(
-    page.getByRole("heading", {
-      name: "Riverbend Market & Goods",
-      exact: true,
-    }),
+    page
+      .getByRole("region", { name: "Vendor storefront cards", exact: true })
+      .getByRole("heading", {
+        name: "Riverbend Market & Goods",
+        exact: true,
+      }),
   ).toBeVisible();
   await expect(
     page.getByRole("link", {
