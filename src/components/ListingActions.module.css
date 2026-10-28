@@ -1,0 +1,50 @@
+.panel {
+  margin-top: 28px;
+}
+
+.fields {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.selection {
+  display: grid;
+  grid-template-columns: minmax(90px, 140px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+}
+
+.selection label {
+  font-weight: 600;
+}
+
+.total {
+  display: grid;
+  gap: 5px;
+  text-align: right;
+}
+
+.total span {
+  color: #586750;
+}
+
+.total strong {
+  font-size: 24px;
+  overflow-wrap: anywhere;
+}
+
+.panel .note {
+  font-size: 13px;
+  color: #586750;
+}
+
+.next {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #315a43;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

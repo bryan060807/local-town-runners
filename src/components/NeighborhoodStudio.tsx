@@ -154,6 +154,7 @@ export default function NeighborhoodStudio({
   privateDemo,
   onReview,
   onAsk,
+  askDisabled = false,
   canEnterDemo = false,
   onEnterDemo,
 }: {
@@ -165,6 +166,7 @@ export default function NeighborhoodStudio({
   privateDemo: boolean;
   onReview: (listingId: string, runnerId?: string) => void;
   onAsk: (listingId: string) => void;
+  askDisabled?: boolean;
   canEnterDemo?: boolean;
   onEnterDemo?: () => Promise<void>;
 }) {
@@ -447,6 +449,7 @@ export default function NeighborhoodStudio({
               <button
                 type="button"
                 className={styles.ask}
+                disabled={askDisabled}
                 onClick={() => onAsk(selected.listing.id)}
               >
                 <Sparkles size={15} aria-hidden="true" /> Ask Sidekick

@@ -29,6 +29,7 @@ import { brand } from "@/lib/brand";
 import { Listing, Vendor, money } from "@/lib/catalog";
 import ExploreVendors from "./ExploreVendors";
 import styles from "./ExploreCatalog.module.css";
+import assistantStyles from "./MarketplaceAssistant.module.css";
 import NeighborhoodStudio from "./NeighborhoodStudio";
 const WorldMap = dynamic(() => import("./WorldMap"), {
   ssr: false,
@@ -118,6 +119,7 @@ export default function Marketplace({
     "Ask me what’s good, what’s local, or who’s already heading your way.",
   );
   const [busy, setBusy] = useState(false);
+  const assistantInFlight = useRef(false);
   const [notice, setNotice] = useState("");
   const [matchedRunnerId, setMatchedRunnerId] = useState<string | undefined>();
   const [conversationListing, setConversationListing] = useState<
@@ -146,7 +148,8 @@ export default function Marketplace({
     [listings],
   );
   async function ask(text: string, contextListingId?: string) {
-    if (!text.trim() || busy) return;
+    if (!text.trim() || !hydrated || assistantInFlight.current) return;
+    assistantInFlight.current = true;
     setBusy(true);
     setMessage("");
     try {
@@ -181,12 +184,12 @@ export default function Marketplace({
         }
       }
     } catch (e) {
+      setMessage(text);
       setReply(
-        e instanceof Error
-          ? e.message
-          : "Assistant unavailable. Try search instead.",
+        `${e instanceof Error ? e.message : "Assistant unavailable."} Your message is still below; try Send again.`,
       );
     } finally {
+      assistantInFlight.current = false;
       setBusy(false);
     }
   }
@@ -373,6 +376,7 @@ export default function Marketplace({
           offline={demo}
           privateDemo={isolatedDemo}
           canEnterDemo={canEnterDemo}
+          askDisabled={!hydrated || busy}
           onEnterDemo={async () => {
             const response = await fetch("/api/demo", {
               method: "POST",
@@ -416,6 +420,7 @@ export default function Marketplace({
             setNotice("");
           }}
           onAsk={(listingId) => {
+            if (!hydrated || assistantInFlight.current) return;
             const listing = listings.find(
               (item) =>
                 item.id === listingId && item.active && item.inventory > 0,
@@ -482,7 +487,12 @@ export default function Marketplace({
                     "A birthday gift under $40",
                     "Who has cinnamon rolls?",
                   ].map((s) => (
-                    <button disabled={!hydrated} key={s} onClick={() => ask(s)}>
+                    <button
+                      type="button"
+                      disabled={!hydrated || busy}
+                      key={s}
+                      onClick={() => ask(s)}
+                    >
                       {s}
                       <ArrowUpRight size={14} />
                     </button>
@@ -516,24 +526,33 @@ export default function Marketplace({
                 )}
               </div>
               <form
-                className="ask"
+                className={`ask ${assistantStyles.composer}`}
+                aria-label="Message Sidekick"
+                aria-busy={busy}
                 onSubmit={(e) => {
                   e.preventDefault();
-                  ask(message);
+                  void ask(message);
                 }}
               >
                 <input
                   aria-label="Ask your local sidekick"
+                  name="message"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Ask something local…"
                   maxLength={1000}
+                  enterKeyHint="send"
+                  disabled={!hydrated}
+                  readOnly={busy}
                 />
                 <button
+                  type="submit"
+                  className={assistantStyles.send}
                   aria-label="Send message"
-                  disabled={busy || !message.trim()}
+                  disabled={!hydrated || busy || !message.trim()}
                 >
-                  <ArrowUp size={18} />
+                  <ArrowUp size={16} aria-hidden="true" />
+                  <span>{busy ? "Sending…" : "Send"}</span>
                 </button>
               </form>
               <div className="ai-foot">
