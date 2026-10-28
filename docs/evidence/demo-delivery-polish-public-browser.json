@@ -1,0 +1,209 @@
+{
+  "recordedAt": "2026-10-28T02:16:36.988Z",
+  "source": "4ebd41bf49f5784024563ca401d4f6c620683003",
+  "boundary": "Fresh anonymous browser contexts. Only fixed-origin GET/HEAD reads; no demo entry, checkout, capture, email, AI or data mutations. TLS verified through inherited proxy.",
+  "results": [
+    {
+      "configuration": "software-webgl",
+      "pageErrors": [],
+      "mapConsoleErrors": [],
+      "transportFailures": [],
+      "blockedRequests": [],
+      "responseStatuses": [
+        {
+          "path": "/",
+          "status": 200
+        },
+        {
+          "path": "/api/demo",
+          "status": 200
+        }
+      ],
+      "homepageStatus": 200,
+      "state": {
+        "genericError": false,
+        "catalogUnavailable": false,
+        "exploreVisible": true,
+        "demoEntryVisible": true,
+        "mapCanvasPresent": true,
+        "mapFallback": false,
+        "noHorizontalOverflow": true
+      },
+      "anonymousDemo": {
+        "status": 200,
+        "enabled": true,
+        "active": false
+      },
+      "screenshot": "docs/screenshots/demo-delivery-polish/LIVE-POLISH-PUBLIC-software-webgl.png"
+    },
+    {
+      "configuration": "default-headless",
+      "pageErrors": [],
+      "mapConsoleErrors": [],
+      "transportFailures": [],
+      "blockedRequests": [],
+      "responseStatuses": [
+        {
+          "path": "/",
+          "status": 200
+        },
+        {
+          "path": "/api/demo",
+          "status": 200
+        }
+      ],
+      "homepageStatus": 200,
+      "state": {
+        "genericError": false,
+        "catalogUnavailable": false,
+        "exploreVisible": true,
+        "demoEntryVisible": true,
+        "mapCanvasPresent": true,
+        "mapFallback": false,
+        "noHorizontalOverflow": true
+      },
+      "anonymousDemo": {
+        "status": 200,
+        "enabled": true,
+        "active": false
+      },
+      "screenshot": "docs/screenshots/demo-delivery-polish/LIVE-POLISH-PUBLIC-default-headless.png"
+    },
+    {
+      "configuration": "webgl-context-loss",
+      "pageErrors": [],
+      "mapConsoleErrors": [],
+      "transportFailures": [],
+      "blockedRequests": [],
+      "responseStatuses": [
+        {
+          "path": "/",
+          "status": 200
+        },
+        {
+          "path": "/api/demo",
+          "status": 200
+        }
+      ],
+      "homepageStatus": 200,
+      "contextLossTriggered": true,
+      "state": {
+        "genericError": false,
+        "catalogUnavailable": false,
+        "exploreVisible": true,
+        "demoEntryVisible": true,
+        "mapCanvasPresent": false,
+        "mapFallback": true,
+        "noHorizontalOverflow": true
+      },
+      "anonymousDemo": {
+        "status": 200,
+        "enabled": true,
+        "active": false
+      },
+      "screenshot": "docs/screenshots/demo-delivery-polish/LIVE-POLISH-PUBLIC-webgl-context-loss.png",
+      "fallbackScreenshot": "docs/screenshots/demo-delivery-polish/LIVE-POLISH-PUBLIC-webgl-context-loss-fallback.png"
+    },
+    {
+      "configuration": "webgl-disabled",
+      "pageErrors": [],
+      "mapConsoleErrors": [],
+      "transportFailures": [],
+      "blockedRequests": [],
+      "responseStatuses": [
+        {
+          "path": "/",
+          "status": 200
+        },
+        {
+          "path": "/api/demo",
+          "status": 200
+        }
+      ],
+      "homepageStatus": 200,
+      "state": {
+        "genericError": false,
+        "catalogUnavailable": false,
+        "exploreVisible": true,
+        "demoEntryVisible": true,
+        "mapCanvasPresent": false,
+        "mapFallback": true,
+        "noHorizontalOverflow": true
+      },
+      "anonymousDemo": {
+        "status": 200,
+        "enabled": true,
+        "active": false
+      },
+      "screenshot": "docs/screenshots/demo-delivery-polish/LIVE-POLISH-PUBLIC-webgl-disabled.png",
+      "fallbackScreenshot": "docs/screenshots/demo-delivery-polish/LIVE-POLISH-PUBLIC-webgl-disabled-fallback.png"
+    },
+    {
+      "configuration": "mobile-360",
+      "pageErrors": [],
+      "mapConsoleErrors": [],
+      "transportFailures": [],
+      "blockedRequests": [],
+      "responseStatuses": [
+        {
+          "path": "/",
+          "status": 200
+        },
+        {
+          "path": "/api/demo",
+          "status": 200
+        }
+      ],
+      "homepageStatus": 200,
+      "state": {
+        "genericError": false,
+        "catalogUnavailable": false,
+        "exploreVisible": true,
+        "demoEntryVisible": true,
+        "mapCanvasPresent": true,
+        "mapFallback": false,
+        "noHorizontalOverflow": true
+      },
+      "anonymousDemo": {
+        "status": 200,
+        "enabled": true,
+        "active": false
+      },
+      "screenshot": "docs/screenshots/demo-delivery-polish/LIVE-POLISH-PUBLIC-mobile-360.png"
+    },
+    {
+      "configuration": "mobile-360-webgl-disabled",
+      "pageErrors": [],
+      "mapConsoleErrors": [],
+      "transportFailures": [],
+      "blockedRequests": [],
+      "responseStatuses": [
+        {
+          "path": "/",
+          "status": 200
+        },
+        {
+          "path": "/api/demo",
+          "status": 200
+        }
+      ],
+      "homepageStatus": 200,
+      "state": {
+        "genericError": false,
+        "catalogUnavailable": false,
+        "exploreVisible": true,
+        "demoEntryVisible": true,
+        "mapCanvasPresent": false,
+        "mapFallback": true,
+        "noHorizontalOverflow": true
+      },
+      "anonymousDemo": {
+        "status": 200,
+        "enabled": true,
+        "active": false
+      },
+      "screenshot": "docs/screenshots/demo-delivery-polish/LIVE-POLISH-PUBLIC-mobile-360-webgl-disabled.png",
+      "fallbackScreenshot": "docs/screenshots/demo-delivery-polish/LIVE-POLISH-PUBLIC-mobile-360-webgl-disabled-fallback.png"
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "recordedAt": "2026-10-28T02:27:27.444401+00:00",
+  "source": "4ebd41bf49f5784024563ca401d4f6c620683003",
+  "scope": "Graceful map failure, guided private demo and warmer landing presentation. No new genuine Sandbox transaction, Live payment, payout, hosted schema change or external notification send.",
+  "baseline": {
+    "source": "1accbf98d62b9ebca0dc1d671feaf9c1da4eff6d",
+    "results": [
+      {
+        "configuration": "software-webgl",
+        "homepageStatus": 200,
+        "state": {
+          "genericError": false,
+          "catalogUnavailable": false,
+          "exploreVisible": true,
+          "demoEntryVisible": true,
+          "mapCanvasPresent": true
+        },
+        "anonymousDemo": {
+          "status": 200,
+          "enabled": true,
+          "active": false
+        }
+      },
+      {
+        "configuration": "default-headless",
+        "homepageStatus": 200,
+        "state": {
+          "genericError": false,
+          "catalogUnavailable": false,
+          "exploreVisible": true,
+          "demoEntryVisible": true,
+          "mapCanvasPresent": true
+        },
+        "anonymousDemo": {
+          "status": 200,
+          "enabled": true,
+          "active": false
+        }
+      },
+      {
+        "configuration": "webgl-disabled",
+        "homepageStatus": 200,
+        "state": {
+          "genericError": true,
+          "catalogUnavailable": false,
+          "exploreVisible": false,
+          "demoEntryVisible": true,
+          "mapCanvasPresent": false
+        },
+        "anonymousDemo": {
+          "status": 200,
+          "enabled": true,
+          "active": false
+        }
+      }
+    ]
+  },
+  "localVerification": {
+    "source": "7eed5b1257f230bbfdfd200fbdfc1d2e9a39e100",
+    "unitAndDatabase": {
+      "passed": 108,
+      "failed": 0
+    },
+    "targetedOfflineBrowser": {
+      "passed": 8,
+      "failed": 0
+    },
+    "targetedConnectedBrowser": {
+      "passed": 20,
+      "failed": 0
+    },
+    "note": "Targeted checks are subsets of final CI, not additional distinct browser scenarios. Final source only replaces a decorative Unicode arrow with an SVG; final CI covers that exact source."
+  },
+  "finalCI": {
+    "source": "4ebd41bf49f5784024563ca401d4f6c620683003",
+    "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40619734500",
+    "unitAndDatabasePassed": 108,
+    "offlineBrowserPassed": 32,
+    "connectedBrowserPassed": 80,
+    "totalDistinctBrowserChecks": 112,
+    "failed": 0,
+    "dependencyVulnerabilities": 0,
+    "evidence": "demo-delivery-polish-ci.json"
+  },
+  "production": {
+    "ready": true,
+    "source": "4ebd41bf49f5784024563ca401d4f6c620683003",
+    "deployment": "dpl_DoPeVVD8ywSXYQqURmDf4NVuUTh7",
+    "operationalChecksPassed": 10,
+    "evidence": "demo-delivery-polish-production.json"
+  },
+  "livePublicBrowsers": {
+    "source": "4ebd41bf49f5784024563ca401d4f6c620683003",
+    "profiles": 6,
+    "includes": [
+      "default headless",
+      "software WebGL",
+      "unsupported WebGL desktop/phone",
+      "actual context loss",
+      "360px phone"
+    ],
+    "uncaughtPageErrors": 0,
+    "transportFailures": 0,
+    "horizontalOverflow": false,
+    "evidence": "demo-delivery-polish-public-browser.json"
+  },
+  "hostedPrivateSimulation": {
+    "source": "7eed5b1257f230bbfdfd200fbdfc1d2e9a39e100",
+    "orderId": "c6ab0e07-9974-4e16-a7e9-85d7107e7987",
+    "totalCents": 2800,
+    "state": "COMPLETED",
+    "defaultRunnerTripReused": true,
+    "simulatedLedgerRows": 4,
+    "genuineCustomerPaymentRowsCreated": 0,
+    "actualPayoutsCents": 0,
+    "financialProviderCalls": 0,
+    "simulationReplayIdempotent": true,
+    "completionReplayRejectedWithoutChanges": true,
+    "exitedSuccessfully": true,
+    "verificationMode": "Hosted private API workflow and dashboard HTML reads; visible browser handoffs are independently verified by the local connected suite.",
+    "finalSourceDifference": "Only the decorative map-fallback link icon changed after this workflow; API, fulfillment, ledger and payment code are unchanged. Final-source connected CI independently repeats the full visible gift workflow.",
+    "evidence": "demo-delivery-polish-live-simulation.json"
+  },
+  "protectedGenuinePayments": {
+    "orders": 3,
+    "capturedCents": 4400,
+    "ledgerRows": 12,
+    "unchanged": true,
+    "digest": "c2960efc7e2ddfdc7ceedbe905da5a9f20a5f3b3d6c8688cce7bc4dd3b624785"
+  },
+  "localGiftScreenshots": [
+    {
+      "environment": "local Auth/PostgreSQL/browser fixture",
+      "viewport": "desktop",
+      "path": "docs/screenshots/demo-delivery-polish/LOCAL-SIMULATED-desktop-gift-story-complete.png",
+      "paymentSource": "explicit private simulation; no PayPal charge"
+    },
+    {
+      "environment": "local Auth/PostgreSQL/browser fixture",
+      "viewport": "mobile-360",
+      "path": "docs/screenshots/demo-delivery-polish/LOCAL-SIMULATED-mobile-360-gift-story-complete.png",
+      "paymentSource": "explicit private simulation; no PayPal charge"
+    },
+    {
+      "environment": "local Auth/PostgreSQL/browser fixture",
+      "viewport": "mobile-390",
+      "path": "docs/screenshots/demo-delivery-polish/LOCAL-SIMULATED-mobile-390-gift-story-complete.png",
+      "paymentSource": "explicit private simulation; no PayPal charge"
+    },
+    {
+      "environment": "local Auth/PostgreSQL/browser fixture",
+      "viewport": "mobile-430",
+      "path": "docs/screenshots/demo-delivery-polish/LOCAL-SIMULATED-mobile-430-gift-story-complete.png",
+      "paymentSource": "explicit private simulation; no PayPal charge"
+    }
+  ],
+  "limitations": [
+    "The hosted workflow used API actions and dashboard HTML reads; visible browser handoffs and private role guidance were tested through local Auth/PostgreSQL and final-source CI.",
+    "Existing genuine captures and signed PayPal webhook evidence remain historical proof; no new financial/provider transaction was initiated.",
+    "No full WCAG, load, backup/restore or commercial operations certification is inferred from this release.",
+    "Monitoring/retention implementation and commercial payouts remain separate work."
+  ]
+}

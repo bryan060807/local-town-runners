@@ -1,0 +1,125 @@
+{
+  "recordedAt": "2026-10-28T02:26:56.254280+00:00",
+  "boundary": "GitHub-hosted project checks and offline/connected-local browser suites using generated local credentials. No production secrets are supplied to this workflow. Local payment fixtures and simulated orders are not new genuine PayPal captures, signed provider deliveries or real payouts. Monitoring this run did not rerun/cancel workflows or change provider state.",
+  "source": "4ebd41bf49f5784024563ca401d4f6c620683003",
+  "runId": 40619734500,
+  "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40619734500",
+  "status": "completed",
+  "conclusion": "success",
+  "createdAt": "2026-10-28T02:14:16Z",
+  "updatedAt": "2026-10-28T02:25:15Z",
+  "jobs": [
+    {
+      "name": "Browser checks (connected-local)",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40619734500/job/122590700217",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T02:14:42Z",
+      "completedAt": "2026-10-28T02:25:14Z"
+    },
+    {
+      "name": "Types, lint and database safeguards",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40619734500/job/122590700374",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T02:14:42Z",
+      "completedAt": "2026-10-28T02:16:13Z"
+    },
+    {
+      "name": "Browser checks (offline)",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40619734500/job/122590700659",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T02:14:42Z",
+      "completedAt": "2026-10-28T02:16:28Z"
+    }
+  ],
+  "verification": {
+    "unitAndDatabase": {
+      "total": 108,
+      "passed": 108,
+      "failed": 0,
+      "skipped": 0
+    },
+    "dependencyAudit": {
+      "reportedVulnerabilities": 0
+    },
+    "offlineBrowser": {
+      "total": 32,
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "reportedDuration": "1.1m"
+    },
+    "connectedBrowser": {
+      "total": 80,
+      "passed": 80,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "reportedDuration": "9.4m"
+    },
+    "totalDistinctBrowserChecksPassed": 112,
+    "freshBackendAndAllThreeSeedStagesPassed": true,
+    "productionBuilds": {
+      "offline": "passed",
+      "connectedLocal": "passed"
+    }
+  },
+  "logProof": {
+    "unit": "tests 108; pass 108; fail 0; skipped 0",
+    "audit": "found 0 vulnerabilities",
+    "offline": "32 passed (1.1m)",
+    "connected": "80 passed (9.4m)"
+  },
+  "previousAttempt": {
+    "runId": 40619011807,
+    "source": "7eed5b1257f230bbfdfd200fbdfc1d2e9a39e100",
+    "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40619011807",
+    "status": "completed",
+    "conclusion": "cancelled",
+    "createdAt": "2026-10-28T02:06:52Z",
+    "updatedAt": "2026-10-28T02:14:40Z",
+    "assessment": "Superseded by a two-line fallback icon replacement; main-branch workflow concurrency cancelled the earlier connected run. This is not recorded as a failed test result.",
+    "jobs": [
+      {
+        "name": "Types, lint and database safeguards",
+        "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40619011807/job/122588183183",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Browser checks (offline)",
+        "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40619011807/job/122588183437",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Browser checks (connected-local)",
+        "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40619011807/job/122588183530",
+        "status": "completed",
+        "conclusion": "cancelled"
+      }
+    ],
+    "completedVerification": {
+      "unitAndDatabase": {
+        "passed": 108,
+        "failed": 0
+      },
+      "dependencyAudit": {
+        "reportedVulnerabilities": 0
+      },
+      "offlineBrowser": {
+        "passed": 32,
+        "failed": 0
+      },
+      "connectedBrowser": "Cancelled before a complete suite result; not counted as passed or failed."
+    }
+  },
+  "limitations": [
+    "These automated checks run against an isolated local backend, not the hosted Supabase project.",
+    "Final public-browser behavior, the live private simulation and protected genuine Sandbox history are recorded in separate release evidence.",
+    "The reduced local backend excludes Storage, SMTP and Realtime; CI does not establish recovery capacity or a new hosted provider delivery."
+  ]
+}
