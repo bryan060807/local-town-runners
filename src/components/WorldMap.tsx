@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
+import { ArrowUpRight } from "lucide-react";
 import { coarsenCoordinates } from "@/lib/location";
 import { PublicRunner } from "@/lib/map-types";
 import { Vendor } from "@/lib/catalog";
@@ -231,7 +232,7 @@ export default function WorldMap({
             heading?.focus();
           }}
         >
-          Browse local vendors <span aria-hidden="true">↗</span>
+          Browse local vendors <ArrowUpRight size={15} aria-hidden="true" />
         </a>
       </div>
     );
