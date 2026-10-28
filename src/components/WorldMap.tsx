@@ -5,6 +5,7 @@ import { coarsenCoordinates } from "@/lib/location";
 import { PublicRunner } from "@/lib/map-types";
 import { Vendor } from "@/lib/catalog";
 import { brand } from "@/lib/brand";
+import styles from "./WorldMap.module.css";
 export default function WorldMap({
   runners,
   vendors,
@@ -22,6 +23,7 @@ export default function WorldMap({
   const map = useRef<maplibregl.Map | null>(null);
   const marks = useRef<Map<string, HTMLButtonElement>>(new Map());
   const [error, setError] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
   const [locationStatus, setLocationStatus] = useState("");
   const runnerMarks = useRef<Map<string, HTMLButtonElement>>(new Map());
   const customerMarker = useRef<maplibregl.Marker | null>(null);
@@ -59,100 +61,137 @@ export default function WorldMap({
   }
   useEffect(() => {
     if (!root.current) return;
-    maplibregl.setWorkerUrl("/maplibre-worker.mjs");
     const markerElements = marks.current;
     const runnerElements = runnerMarks.current;
-    const m = new maplibregl.Map({
-      container: root.current,
-      style: {
-        version: 8,
-        sources: {
-          osm: {
-            type: "raster",
-            tiles: ["/tiles/{z}/{x}/{y}"],
-            tileSize: 256,
-            attribution: "© OpenStreetMap contributors",
-          },
-        },
-        layers: [
-          {
-            id: "base",
-            type: "raster",
-            source: "osm",
-            paint: { "raster-saturation": -0.85, "raster-opacity": 0.75 },
-          },
-        ],
-      },
-      center: brand.center,
-      zoom: 13.4,
-    });
-    map.current = m;
-    m.addControl(new maplibregl.NavigationControl(), "bottom-right");
-    m.on("error", () => setError(true));
-    vendors.forEach((v) => {
-      const el = document.createElement("button");
-      el.className = "map-pin";
-      el.textContent =
-        v.category === "Food"
-          ? "🍴"
-          : v.category === "Gifts"
-            ? "✿"
-            : v.category === "Services"
-              ? "⚒"
-              : "⌂";
-      el.setAttribute("aria-label", v.name + (v.demo ? " (demo)" : ""));
-      el.onclick = () => onSelect(v.id);
-      marks.current.set(v.id, el);
-      new maplibregl.Marker({ element: el }).setLngLat(v.coordinates).addTo(m);
-    });
-    runners.forEach((r) => {
-      const el = document.createElement("button");
-      el.className = "map-pin runner-pin";
-      el.textContent = "↗";
-      el.setAttribute("aria-label", `${r.name} · approximate location`);
-      el.onclick = () => {
-        if (r.destinationVendorId) onSelect(r.destinationVendorId);
-      };
-      runnerMarks.current.set(r.id, el);
-      new maplibregl.Marker({ element: el }).setLngLat(r.area).addTo(m);
-    });
-    m.on("load", () => {
-      const features = runners.flatMap((r) => {
-        const vendor = vendors.find((v) => v.id === r.destinationVendorId);
-        return vendor
-          ? [
-              {
-                type: "Feature" as const,
-                properties: {},
-                geometry: {
-                  type: "LineString" as const,
-                  coordinates: [r.area, vendor.coordinates],
-                },
-              },
-            ]
-          : [];
-      });
-      m.addSource("intentions", {
-        type: "geojson",
-        data: { type: "FeatureCollection", features },
-      });
-      m.addLayer({
-        id: "trip-intentions",
-        type: "line",
-        source: "intentions",
-        paint: {
-          "line-color": "#b88a52",
-          "line-width": 2,
-          "line-dasharray": [2, 3],
-        },
-      });
-    });
-    return () => {
-      m.remove();
+    let disposed = false;
+    let instance: maplibregl.Map | undefined;
+    function clearMap() {
+      const previous = instance;
+      instance = undefined;
       map.current = null;
       customerMarker.current = null;
       markerElements.clear();
       runnerElements.clear();
+      try {
+        previous?.remove();
+      } catch {
+        // A failed graphics context must not prevent the rest of Explore
+        // from rendering, including while partial setup is being removed.
+      }
+    }
+    function reportUnavailable() {
+      if (disposed) return;
+      clearMap();
+      // Initialization can fail synchronously. Publish its external status
+      // after setup, and ignore a superseded Strict Mode effect.
+      queueMicrotask(() => {
+        if (!disposed) setUnavailable(true);
+      });
+    }
+    try {
+      maplibregl.setWorkerUrl("/maplibre-worker.mjs");
+      const m = new maplibregl.Map({
+        container: root.current,
+        style: {
+          version: 8,
+          sources: {
+            osm: {
+              type: "raster",
+              tiles: ["/tiles/{z}/{x}/{y}"],
+              tileSize: 256,
+              attribution: "© OpenStreetMap contributors",
+            },
+          },
+          layers: [
+            {
+              id: "base",
+              type: "raster",
+              source: "osm",
+              paint: { "raster-saturation": -0.85, "raster-opacity": 0.75 },
+            },
+          ],
+        },
+        center: brand.center,
+        zoom: 13.4,
+      });
+      instance = m;
+      map.current = m;
+      m.addControl(new maplibregl.NavigationControl(), "bottom-right");
+      m.on("error", () => {
+        if (!disposed) setError(true);
+      });
+      m.on("webglcontextlost", reportUnavailable);
+      vendors.forEach((v) => {
+        const el = document.createElement("button");
+        el.className = "map-pin";
+        el.textContent =
+          v.category === "Food"
+            ? "🍴"
+            : v.category === "Gifts"
+              ? "✿"
+              : v.category === "Services"
+                ? "⚒"
+                : "⌂";
+        el.setAttribute("aria-label", v.name + (v.demo ? " (demo)" : ""));
+        el.onclick = () => onSelect(v.id);
+        marks.current.set(v.id, el);
+        new maplibregl.Marker({ element: el })
+          .setLngLat(v.coordinates)
+          .addTo(m);
+      });
+      runners.forEach((r) => {
+        const el = document.createElement("button");
+        el.className = "map-pin runner-pin";
+        el.textContent = "↗";
+        el.setAttribute("aria-label", `${r.name} · approximate location`);
+        el.onclick = () => {
+          if (r.destinationVendorId) onSelect(r.destinationVendorId);
+        };
+        runnerMarks.current.set(r.id, el);
+        new maplibregl.Marker({ element: el }).setLngLat(r.area).addTo(m);
+      });
+      m.on("load", () => {
+        if (disposed || map.current !== m) return;
+        try {
+          const features = runners.flatMap((r) => {
+            const vendor = vendors.find((v) => v.id === r.destinationVendorId);
+            return vendor
+              ? [
+                  {
+                    type: "Feature" as const,
+                    properties: {},
+                    geometry: {
+                      type: "LineString" as const,
+                      coordinates: [r.area, vendor.coordinates],
+                    },
+                  },
+                ]
+              : [];
+          });
+          m.addSource("intentions", {
+            type: "geojson",
+            data: { type: "FeatureCollection", features },
+          });
+          m.addLayer({
+            id: "trip-intentions",
+            type: "line",
+            source: "intentions",
+            paint: {
+              "line-color": "#b88a52",
+              "line-width": 2,
+              "line-dasharray": [2, 3],
+            },
+          });
+        } catch {
+          reportUnavailable();
+        }
+      });
+    } catch {
+      reportUnavailable();
+    }
+    return () => {
+      disposed = true;
+      clearMap();
     };
   }, [onSelect, vendors, runners]);
   useEffect(() => {
@@ -168,6 +207,34 @@ export default function WorldMap({
         : undefined;
     if (v) map.current?.easeTo({ center: v.coordinates, duration: 500 });
   }, [highlight, matchedRunnerId, vendors]);
+  if (unavailable)
+    return (
+      <div className={`map-shell ${styles.fallback}`} role="status">
+        <div className={styles.neighborhood} aria-hidden="true">
+          <span>⌂</span>
+          <span className={styles.path} />
+          <span>✿</span>
+          <span className={styles.path} />
+          <span>⌂</span>
+        </div>
+        <span className={styles.eyebrow}>A NEIGHBORHOOD OF POSSIBILITIES</span>
+        <h3>Good finds are still close by.</h3>
+        <p>
+          The map isn’t available in this browser. Meet local vendors and
+          explore their finds below.
+        </p>
+        <a
+          href="#vendor-directory-heading"
+          onClick={() => {
+            const heading = document.getElementById("vendor-directory-heading");
+            heading?.setAttribute("tabindex", "-1");
+            heading?.focus();
+          }}
+        >
+          Browse local vendors <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    );
   return (
     <div className="map-shell">
       <div ref={root} className="world-map" />

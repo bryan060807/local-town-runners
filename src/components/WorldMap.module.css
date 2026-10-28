@@ -1,0 +1,98 @@
+.fallback:global(.map-shell) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px;
+  text-align: center;
+  color: #284d3a;
+  background:
+    radial-gradient(ellipse at 15% 10%, #dfc49c45, transparent 65%),
+    linear-gradient(135deg, #f8f4e9, #e8eddb);
+  border: 1px solid #e1dccb;
+  height: auto;
+  min-height: 470px;
+}
+
+.neighborhood {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.neighborhood > span:not(.path) {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border: 1px solid #d4ddc9;
+  border-radius: 18px;
+  background: #ffffffb3;
+  font-size: 29px;
+}
+
+.path {
+  width: 25px;
+  border-top: 2px dashed #b28758;
+}
+
+.eyebrow {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.fallback h3 {
+  max-width: 370px;
+  margin: 0;
+  font-size: clamp(25px, 3vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.fallback p {
+  max-width: 365px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #52624c;
+}
+
+.fallback a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 17px;
+  border-radius: 10px;
+  background: #315a43;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.fallback a:hover {
+  background: #244732;
+}
+
+.fallback a:focus-visible {
+  outline: 3px solid #b28758;
+  outline-offset: 4px;
+}
+
+@media (max-width: 760px) {
+  .fallback:global(.map-shell) {
+    gap: 13px;
+    padding: 24px 20px;
+    min-height: 350px;
+  }
+
+  .neighborhood > span:not(.path) {
+    width: 46px;
+    height: 46px;
+  }
+}

@@ -8,10 +8,10 @@ The current showcase uses fictional vendors, private demo workspaces and PayPal 
 
 ## What works
 
-- **Explore:** map discovery, searchable vendor storefronts, four featured finds and a paginated full catalog. Paid sponsorship and premium subscriptions are not implemented.
+- **Explore:** map discovery, searchable vendor storefronts, four featured finds and a paginated full catalog. Browsing remains available when the map cannot initialize. Paid sponsorship and premium subscriptions are not implemented.
 - **Grounded assistant:** validated catalog searches, comparisons, availability, runner matching and authorized order-status reads. Preparing through the assistant produces a reviewable quote; it cannot confirm a payment or execute protected writes. Without an AI key, deterministic discovery remains available and labeled.
 - **Orders:** persistent, vendor-grouped multi-item carts, atomic stock reservations, explicit payment choice and state-gated pickup/delivery/completion.
-- **Private Demo Mode:** Customer, Vendor and Runner share one visitor's workspace. **Simulate demo payment** enables the full walkthrough with explicit simulation labels, separate ledger evidence and no PayPal request. Stay in the same session when switching roles; leaving and re-entering creates a fresh workspace.
+- **Private Demo Mode:** Customer, Vendor and Runner share one visitor's workspace. The profile bar identifies the current role, and each simulated order names the next role and action. **Simulate demo payment** enables the full walkthrough with explicit simulation labels, separate ledger evidence and no PayPal request. Stay in the same session when switching roles; leaving and re-entering creates a fresh workspace.
 - **Vendor and runner tools:** searchable compact catalog editors, inventory management, quote inquiries/replies, expiring availability, trip intentions, matching and fulfillment controls.
 - **Reputation:** completed-order vendor ratings, an earned community badge and private, noncash customer recognition. Simulated activity contributes only inside its private demo workspace; it does not manufacture public reputation.
 - **Real account intake:** email-verification and customer-consent gates, vendor/runner applications, versioned consent, private PDFs, administrator review and retryable Resend notifications. These permissions cover Sandbox/demo participation.
@@ -20,6 +20,8 @@ The current showcase uses fictional vendors, private demo workspaces and PayPal 
 Three genuine marketplace Sandbox payments total **$44.00 USD**, each matched to a PAID order, completed webhook evidence and exactly one customer-payment ledger entry. This is separate from the hosted simulated walkthrough. See [Sandbox verification](docs/phase-4.3-sandbox-verification.md) and [simulation evidence](docs/evidence/demo-order-simulation-production-2026-10-27.json).
 
 The latest [hardening review](docs/hardening-2026-10-27.md) describes the security/reliability fixes, regression evidence, operational limits and recommended next steps. GitHub Actions runs project and browser checks without production credentials.
+
+The [demo delivery update](docs/demo-delivery-polish.md) adds map-failure recovery, a clearer three-role walkthrough and a warmer introduction. The judge story follows one $28 gift with an existing declared runner trip; genuine Sandbox verification is shown separately.
 
 ## Run locally
 

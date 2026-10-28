@@ -31,12 +31,22 @@ async function account(
   });
   let id = created.data.user?.id;
   if (created.error) {
+    const perPage = 1000;
     const result = await client.auth.admin.listUsers({
       page: 1,
-      perPage: 1000,
+      perPage,
     });
     if (result.error) throw result.error;
     id = result.data.users.find((u) => u.email === email)?.id;
+    const lastPage = Math.max(
+      result.data.lastPage,
+      Math.ceil(result.data.total / perPage),
+    );
+    for (let page = 2; !id && page <= lastPage; page++) {
+      const next = await client.auth.admin.listUsers({ page, perPage });
+      if (next.error) throw next.error;
+      id = next.data.users.find((u) => u.email === email)?.id;
+    }
     if (!id) throw created.error;
   }
   await checked(

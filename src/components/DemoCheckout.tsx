@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import PaymentActions from "./PaymentActions";
+import styles from "./DemoJourney.module.css";
 
 export default function DemoCheckout({ orderId }: { orderId: string }) {
   const router = useRouter();
@@ -31,10 +32,11 @@ export default function DemoCheckout({ orderId }: { orderId: string }) {
     }
   }
   return (
-    <div className="demo-checkout">
+    <div className={`demo-checkout ${styles.checkout}`}>
+      <h3>Continue your demo order</h3>
       <p>
-        Walk through this order with your demo Customer, Vendor and Runner.
-        Simulation stays in your private demo and makes no PayPal charge.
+        Simulate payment, then follow the next-step guide across Vendor and
+        Runner. This stays in your private demo and makes no PayPal charge.
       </p>
       <fieldset disabled={busy} style={{ border: 0, padding: 0, minWidth: 0 }}>
         <button type="button" className="primary" onClick={simulate}>
@@ -49,7 +51,9 @@ export default function DemoCheckout({ orderId }: { orderId: string }) {
           <PaymentActions orderId={orderId} pending={false} />
         </details>
       </fieldset>
-      <p role="status">{status}</p>
+      <p className={styles.status} role="status">
+        {status}
+      </p>
     </div>
   );
 }

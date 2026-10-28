@@ -30,6 +30,7 @@ import { brand } from "@/lib/brand";
 import { Listing, Vendor, money } from "@/lib/catalog";
 import ExploreVendors from "./ExploreVendors";
 import styles from "./ExploreCatalog.module.css";
+import introStyles from "./MarketplaceIntro.module.css";
 const WorldMap = dynamic(() => import("./WorldMap"), {
   ssr: false,
   loading: () => (
@@ -356,8 +357,11 @@ export default function Marketplace({
         </Link>
       </header>
       <main inert={Boolean(selected)}>
-        <section className="intro">
-          <div>
+        <section
+          className={introStyles.intro}
+          aria-label="Meet your neighborhood"
+        >
+          <div className={introStyles.copy}>
             <div className="eyebrow">
               <span className="pulse" /> YOUR NEIGHBORHOOD, CONNECTED
             </div>
@@ -367,21 +371,65 @@ export default function Marketplace({
               <span>Close to home.</span>
             </h1>
             <p>
-              Discover the makers, meals, and everyday magic around you.
-              <br className="desktop" /> Let a neighbor bring it your way.
+              A treat from a local baker. A gift from down the road. Find it
+              here, then see whether a neighbor is already heading that way.
             </p>
+            <div className={introStyles.actions}>
+              <Link className={introStyles.start} href="#explore">
+                Find something nearby{" "}
+                <ArrowUpRight size={16} aria-hidden="true" />
+              </Link>
+              <span>Start with a question. You choose what happens next.</span>
+            </div>
+            <ol
+              className={introStyles.journey}
+              aria-label="How local orders work"
+            >
+              <li>
+                <span aria-hidden="true">01</span>
+                <strong>Find a local favorite</strong>
+              </li>
+              <li>
+                <span aria-hidden="true">02</span>
+                <strong>Review the details</strong>
+              </li>
+              <li>
+                <span aria-hidden="true">03</span>
+                <strong>Coordinate a pickup</strong>
+              </li>
+            </ol>
           </div>
-          <div className="town-note">
-            <MapPin size={18} />
-            <span>
-              {brand.town}
-              <small>A little town. A lot to discover.</small>
+          <aside
+            className={introStyles.townNote}
+            aria-label="Our starting town"
+          >
+            <span className={introStyles.townEyebrow}>
+              OUR FIRST NEIGHBORHOOD
             </span>
-            <span className="town-code">
-              39.45° N<br />
-              91.05° W
-            </span>
-          </div>
+            <strong className={introStyles.townName}>
+              <MapPin size={17} aria-hidden="true" /> {brand.town}
+            </strong>
+            <svg
+              className={introStyles.street}
+              viewBox="0 0 248 70"
+              fill="none"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <g
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M4 62h240M16 54V27l22-16 22 16v27M12 29l26-19 26 19M31 54V38h14v16M23 29h8v8h-8M47 29h6v8h-6" />
+                <path d="M90 54V29h62v25M86 29l7-15h56l7 15H86M99 29V14m15 15V14m15 15V14m15 15V14M100 54V39h14v15M124 39h18v9h-18" />
+                <path d="M183 54V27l19-13 19 13v27M179 29l23-16 23 16M196 54V40h12v14M188 30h8v8h-8M208 30h8v8h-8M75 54V38m0 8c-8 0-10-6-10-6s8-2 10 6Zm0-4c8 0 10-7 10-7s-8-1-10 7Z" />
+              </g>
+              <circle cx="231" cy="12" r="6" fill="#e4c080" />
+            </svg>
+            <p>Rooted here. Made for your town, too.</p>
+          </aside>
         </section>
         <section id="explore" className="explore">
           <div className="section-top">

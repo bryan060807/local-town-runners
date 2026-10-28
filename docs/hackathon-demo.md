@@ -1,36 +1,35 @@
-# Local Town Runners — short hackathon walkthrough
+# Local Town Runners — a three-minute neighbor story
 
-Goal: show a grounded discovery experience, a real persisted marketplace workflow and honest payment evidence without depending on another PayPal approval during judging.
+“You need a birthday gift. A local maker has one. A neighbor is already heading to that shop. Local Town Runners helps you connect the three.”
+
+Use one story throughout: **one Handmade River Mug, $28.00, from Riverbend Market & Goods**. The fresh demo runner already has a fictional trip to this shop. Louisiana, Missouri is the starting community; the same need can exist in another town.
+
+## Before presenting
+
+Open https://runners.aibrylabs.com in one browser and choose **Enter Demo Mode**. Keep that session throughout; **Switch demo profile** changes your view without losing the order. Enter shortly before the presentation because runner availability and trip intentions expire after one hour. The map is optional: vendor cards, search and the assistant remain the browsing path when it is unavailable.
+
+Say once at the start: “These are fictional profiles in my private demo. This walkthrough uses an explicitly simulated payment; no PayPal charge or payout is made.” Keep the visible demo labels on screen.
+
+Have one sanitized, already prepared proof slide available for the close, labeled **Separate verified PayPal Sandbox payment — $4.50**. Use the existing verification evidence below; no administrator sign-in or new PayPal request is needed during the presentation.
 
 ## Three-minute story
 
-**0:00–0:35 — The problem and discovery.** Open https://runners.aibrylabs.com and enter Demo Mode as Alex Carter. Explain: “Local goods can be hard to discover, and delivery does not always need a dedicated trip. We connect available inventory with a neighbor already going that way.” Ask **“I would like a mug for my desk, maximum $30.”** Show the actual catalog item and price. Follow with **“Tell me more about it.”** Use the map and optional approximate-location control. Make no precise GPS, route-time or guaranteed-delivery claim.
+| Time      | Show                                                                                                                               | Say                                                                                                                                                                                                                                           |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0:00–0:20 | The neighborhood and local storefronts                                                                                             | “Small-town goods are easy to miss. Getting them home should not always require a separate trip.”                                                                                                                                             |
+| 0:20–1:00 | In the assistant, ask **“A birthday gift under $30”**, then **“Tell me about Handmade River Mug”**, then **“Who could bring it?”** | “The assistant uses available catalog items and prices. Jordan's declared trip is already headed to this shop; Jordan still has to accept the run.”                                                                                           |
+| 1:00–1:30 | Ask **“Get me one.”** Review the $28.00 quote and fictional address, choose **Prepare order**, then **Simulate demo payment**      | “I review the item and total before acting. The prepared order persists. This button simulates payment only inside this demo.” Show **SIMULATED DEMO ORDER — NO PAYPAL CHARGE**.                                                              |
+| 1:30–2:40 | Follow **Up next** through Vendor → Runner → Vendor → Runner → Customer, using the steps below                                     | “The shop accepts, the neighbor accepts the pickup, and each person confirms their part. The customer confirms completion.”                                                                                                                   |
+| 2:40–3:00 | The completed $28 simulated order, then the separately labeled $4.50 PayPal Sandbox proof slide                                    | “One local need, one shop, one neighbor; this walkthrough was simulated and actual payouts stay $0.00. Separately, this existing $4.50 PayPal Sandbox payment has a verified completed capture, signed webhook and one payment ledger entry.” |
 
-**0:35–1:10 — Review before action.** Ask **“Get me two.”** Show the reviewable quote; it does not reserve inventory or charge. Open the product, adjust quantity, add to cart and prepare a vendor order. Show the persisted DRAFT and explicit payment button. A quote, a reservation and a verified payment are separate steps. Do not initiate another Sandbox transaction just to finish the pitch.
+The handoffs are: Vendor **Accept demo order** → **Find a runner**; Runner **Accept run**; Vendor **Mark ready for pickup**; Runner **Confirm pickup** → **Start delivery** → **Confirm delivered**; Customer **Confirm order complete**. Use the [full click-by-click walkthrough](demo-order-walkthrough.md) while rehearsing. A review is optional and can wait until questions.
 
-**1:10–1:45 — Payment proof.** Use the existing Phase 4.3 evidence: $4.50 USD, canonical merchant capture `17M125027B131373Y`, marketplace order `29945be0-236d-4a80-845a-36cf43b4fb1a`, PAID, one customer-payment entry and matching completed webhook. The administrator can view it through their own real account outside Demo Mode. Do not share an administrator password or claim that a fresh demo inherits that order. The three actual marketplace Sandbox tests total $44.00 with one payment entry each.
+These are narration budgets, not a guarantee that every page transition fits. Time a rehearsal. If the handoffs take longer, use a clearly labeled recording of a completed rehearsal or allow a longer hands-on demonstration. Never skip a required confirmation or imply a recorded order is the current live order. Keep a backup recording available even when presenting live.
 
-**1:45–2:35 — Neighbor fulfillment.** On your fresh draft, choose **Simulate demo payment** and show **SIMULATED DEMO ORDER — NO PAYPAL CHARGE**. Switch Vendor → Accept demo order → Find a runner. Switch Runner → availability/trip intention → Accept run. Show that the exact fictional delivery address becomes available only after assignment. Vendor marks ready; Runner confirms pickup, delivery and delivered; Customer confirms completion and can leave a review. Show one completed run and ten demo reward points. Actual vendor/runner payouts stay $0.00. Use the [full simulation walkthrough](demo-order-walkthrough.md) for rehearsal; a labeled recording is a fallback if time is short.
+## PayPal proof and questions
 
-**2:35–3:00 — Close with execution.** Show the mobile search and cart, or the quote request/vendor reply flow. Summarize the controls: catalog-grounded tools, explicit approval, state-gated fulfillment, account/workspace isolation, signed payment verification and exactly-once payment credit. State that the current product uses fictional vendors and PayPal Sandbox; commercial onboarding and real payouts are not enabled.
+Keep genuine PayPal Sandbox evidence separate from the $28 simulated story. Three actual marketplace Sandbox payments total **$44.00 USD**, each matched to a PAID order, a completed signed webhook and exactly one customer-payment ledger entry. The [Sandbox verification report](phase-4.3-sandbox-verification.md) includes the existing $4.50 capture `17M125027B131373Y` for order `29945be0-236d-4a80-845a-36cf43b4fb1a`. A fresh private demo does not inherit that order. Show sanitized evidence or the administrator's own authorized view; do not initiate another payment during the pitch.
 
-## Judge self-service path
+For deeper questions, use [architecture](architecture.md), [security](security.md), [community recognition](community-recognition.md) and the [hardening report](hardening-2026-10-27.md). Matching uses approximate proximity and declared trips; it does not promise a road ETA or delivery. Commercial payments, actual payouts and sponsored billing remain outside the current showcase.
 
-Enter Demo Mode and use the same browser throughout. Search/filter the catalog, use the assistant, open a listing and prepare a cart. Switch Customer/Vendor/Runner with the profile selector; quote inquiries and vendor responses work without payment. Catalog changes persist in the same isolated workspace. Exit and re-enter to start a fresh workspace; that does not erase old payment history.
-
-Explore now starts with vendor storefront cards and four featured finds. On phones, swipe the vendor cards horizontally; **Browse all items** opens the full catalog in pages of twelve. Fresh demo storefronts honestly show no completed-order reviews, and fresh customers start with zero community points.
-
-The recorded local fulfillment walkthrough also shows a completed purchase earning ten points, followed by a detailed one-star review earning five more. The storefront displays the actual one-star aggregate; the customer's points remain private. Keep these screenshots captioned as local fixtures. [Community recognition rules and setup](community-recognition.md) explain the milestones and earned vendor badge.
-
-In the Vendor dashboard, **Your catalog** shows ten compact item rows per page. Search by item name, filter by category, storefront or listing status, and sort by name, price or stock. Select an item name to expand its editor, then save. The row updates immediately; closing or filtering an item keeps its unsaved price and stock edits until the page is reloaded.
-
-Judges can prepare a draft and choose **Simulate demo payment** to follow the entire hosted workflow without a PayPal buyer. All three profiles share that visitor's private demo workspace. The separate PayPal Sandbox option still requires explicit buyer approval and provider verification. An existing PayPal attempt cannot be converted to a simulation; prepare a new draft instead.
-
-## Ready-to-present checklist
-
-- Use the deployed URL and a fresh demo ticket in one browser.
-- Keep genuine Sandbox payment evidence and the simulated walkthrough clearly labeled and separate.
-- Have the three-minute walkthrough and screenshots ready before the presentation.
-- Keep credentials, exact real addresses, private applications and unredacted legal documents off-screen.
-- Test the appearance once on your own phone and rehearse the story once.
-- Fill the submission platform's required fields and attach the final video/repository links through the operator's own account.
+Before submitting, check the flow once on your own phone, verify that the recording and screenshots retain their simulation labels, and keep credentials, real addresses and private application documents off screen. Use the operator's own submission account for the final video, repository and deployed URL.

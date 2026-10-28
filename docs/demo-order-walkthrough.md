@@ -1,18 +1,22 @@
-# Demonstrate an order without PayPal
+# One gift, one shop, one neighbor
 
-Use **Enter Demo Mode** and keep the same browser session throughout. Customer, Vendor and Runner are three fictional accounts in your own private workspace. Switching profiles keeps the same orders and inventory; exiting Demo Mode and entering again starts a fresh workspace.
+Use **Enter Demo Mode** and keep the same browser session throughout. Customer, Vendor and Runner are three fictional accounts in your own private workspace. Switching profiles keeps the same orders and inventory; exiting Demo Mode and entering again starts a fresh workspace and does not erase the old history.
+
+The presentation story uses **one Handmade River Mug at $28.00 from Riverbend Market & Goods**. A fresh demo runner already has a fictional trip to that shop. Start a fresh demo shortly before rehearsing; initial runner availability and that trip expire after one hour. No real goods, trip, PayPal charge or payout occurs.
 
 ## Walkthrough
 
-1. As **Customer**, find a fictional product such as Habanero Cinnamon Rolls, add it to the cart and prepare the vendor order.
-2. On the dashboard, choose **Simulate demo payment**. The order becomes PAID for the walkthrough and displays **SIMULATED DEMO ORDER — NO PAYPAL CHARGE**.
-3. Switch to **Vendor**. Choose **Accept demo order**, then **Find a runner**.
-4. Switch to **Runner**. Confirm availability, transportation and a trip to the vendor, then **Accept run**. Initial demo runner availability expires after one hour; it can be renewed in the dashboard.
-5. Switch to **Vendor** and choose **Mark ready for pickup**.
-6. Switch to **Runner** and choose **Confirm pickup**, **Start delivery**, then **Confirm delivered**.
-7. Switch to **Customer** and choose **Confirm order complete**. Customer recognition and runner rewards update once. An optional detailed review adds five customer recognition points, regardless of its star rating.
+1. **Customer — find and review.** Ask the assistant **“A birthday gift under $30”**, **“Tell me about Handmade River Mug”**, then **“Who could bring it?”** Check the item, current price and the runner's declared trip. Ask **“Get me one.”** This opens a reviewable quote; it does not reserve inventory or charge. Keep quantity 1, review the fictional delivery address, then choose **Prepare order**. Alternatively, search the vendor/item list and open the mug directly. Browsing does not require a working map.
+2. **Customer — start the simulated walkthrough.** On the dashboard, choose **Simulate demo payment**. The order becomes PAID for the walkthrough and displays **SIMULATED DEMO ORDER — NO PAYPAL CHARGE**. Follow its **Up next** guide.
+3. **Vendor — accept the order.** Use **Switch demo profile** to view Vendor. Choose **Accept demo order**, then **Find a runner**.
+4. **Runner — accept the pickup.** Switch to Runner and choose **Accept run** for this order. If availability has expired, renew it with **Available for the next hour** and confirm a trip to Riverbend Market & Goods before continuing. Runner acceptance is required even when the assistant found an existing trip.
+5. **Vendor — prepare the item.** Switch to Vendor and choose **Mark ready for pickup**.
+6. **Runner — complete the handoff.** Switch to Runner. Choose **Confirm pickup**, **Start delivery**, then **Confirm delivered** in order.
+7. **Customer — confirm the outcome.** Switch to Customer and choose **Confirm order complete**. The guide shows **Walkthrough complete**. Customer recognition and runner rewards update once. An optional detailed review adds five customer recognition points, regardless of its star rating.
 
-Each simulated order includes a next-step guide. The unassigned runner's offer also identifies it as simulated. This walkthrough reserves fictional inventory and updates all three demo accounts; it has no effect on another visitor's workspace, real accounts or public vendor reputation.
+The profile bar identifies the role you are viewing. **How the demo works** explains the three responsibilities, and each simulated order names the next role and action. The unassigned runner's offer also identifies it as simulated. This walkthrough reserves fictional inventory and updates all three demo accounts; it has no effect on another visitor's workspace, real accounts or public vendor reputation. Actual payouts stay $0.00.
+
+For a short presentation, use the [three-minute story](hackathon-demo.md). Rehearse the full handoff before timing it. A clearly labeled recording is a backup when live page transitions would rush the story; preserve the required confirmations and distinguish a recorded rehearsal order from the current live order.
 
 Before a runner is assigned, the Vendor can choose **Cancel simulated order**. Inventory is restored once and the canceled simulation remains in history. This performs no PayPal refund.
 
@@ -20,13 +24,13 @@ Before a runner is assigned, the Vendor can choose **Cancel simulated order**. I
 
 The simulation creates a separate `DEMO_PAYMENT` ledger entry with `simulated=true`. Its PayPal order, capture and refund IDs stay empty. Captured Sandbox payment totals stay unchanged, and actual vendor/runner payouts remain zero. Demo order values have a separate summary and retain their simulation label after completion or cancellation.
 
+The three-minute presentation closes with a separately labeled slide of an existing verified $4.50 PayPal Sandbox payment. It demonstrates genuine capture/webhook/ledger verification, not a payment for the new $28 simulated mug order. Prepare that sanitized evidence in advance; the presentation does not require a new provider transaction or administrator sign-in.
+
 **Use PayPal Sandbox instead** is a separate option for an actual Sandbox approval/capture test. Once a draft starts PayPal checkout, it cannot be converted to a simulation; prepare a new draft for the simulated walkthrough. Existing pending and captured PayPal transactions remain genuine Sandbox records and cannot be simulated or canceled through the demo-only endpoint.
 
 ## Setup
 
-Run [the simulation upgrade SQL](sql/demo-order-simulation-upgrade.sql) once after the community recognition upgrade. The migration adds explicit simulation provenance, private-session checks, payment guards and separate demo ledger support. It can be retried without awarding points twice or changing existing financial records. Existing Demo Mode configuration is reused; this feature needs no additional API key.
-
-The existing hosted project already has this upgrade; the hardening release requires no additional SQL. Fresh installations should follow the complete migration sequence in the [README](../README.md).
+The existing hosted project already has the simulation upgrade; this presentation update requires no additional SQL or API key. Fresh installations should follow the complete migration sequence in the [README](../README.md). For an older installation following its documented upgrade path, [the simulation upgrade SQL](sql/demo-order-simulation-upgrade.sql) follows the community recognition upgrade and adds explicit simulation provenance, private-session checks, payment guards and separate demo ledger support. Do not reset or reseed the hosted project to rehearse.
 
 ## Verification
 
