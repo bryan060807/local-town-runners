@@ -1,0 +1,82 @@
+{
+  "recordedAt": "2026-10-28T12:38:07.349035+00:00",
+  "boundary": "GitHub-hosted project checks and offline/connected-local browser suites use generated local credentials; this workflow receives no production secrets. Model transport fixtures and browser model stubs are not genuine hosted AI-provider inference evidence. Local payment fixtures and private demo simulations are not new genuine PayPal captures, signed provider deliveries or actual payouts. The monitoring agent only read workflow status/logs and wrote this evidence file; it did not rerun/cancel workflows, invoke providers or alter financial state.",
+  "source": "e7267cb679aab283789fe07450ae5d3f0f7b5778",
+  "runId": 40687360965,
+  "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40687360965",
+  "status": "completed",
+  "conclusion": "success",
+  "createdAt": "2026-10-28T12:23:10Z",
+  "updatedAt": "2026-10-28T12:36:42Z",
+  "jobs": [
+    {
+      "name": "Types, lint and database safeguards",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40687360965/job/122813056686",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T12:23:13Z",
+      "completedAt": "2026-10-28T12:24:50Z"
+    },
+    {
+      "name": "Browser checks (connected-local)",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40687360965/job/122813057048",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T12:23:13Z",
+      "completedAt": "2026-10-28T12:36:42Z"
+    },
+    {
+      "name": "Browser checks (offline)",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40687360965/job/122813057122",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T12:23:13Z",
+      "completedAt": "2026-10-28T12:25:22Z"
+    }
+  ],
+  "counts": {
+    "unitAndDatabase": {
+      "total": 146,
+      "passed": 146,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    "offlineBrowser": {
+      "total": 44,
+      "passed": 44,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "reportedDuration": "1.5m"
+    },
+    "connectedBrowser": {
+      "total": 124,
+      "passed": 124,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "reportedDuration": "12.3m"
+    },
+    "totalDistinctBrowserChecksPassed": 168
+  },
+  "audit": {
+    "command": "npm audit --audit-level=high",
+    "reportedVulnerabilities": 0,
+    "conclusion": "success"
+  },
+  "freshBackendAndAllThreeSeedStagesPassed": true,
+  "logProof": {
+    "unit": "tests 146; pass 146; fail 0; skipped 0; cancelled 0",
+    "audit": "found 0 vulnerabilities",
+    "offline": "44 passed (1.5m)",
+    "connected": "124 passed (12.3m)",
+    "freshBackend": "Local PostgreSQL, Supabase Auth and PostgREST are healthy. Migrations applied once.",
+    "seedStages": ["local:seed", "local:seed:phase3", "local:seed:phase4"],
+    "downloadedJobLogSha256": {
+      "quality": "0d51833612d065eec4a85b5fba19327aeec4530f4572b575e0182eaab7f687ca",
+      "offline": "1a752bbc644ef139a27d6efadd08e5c72880e3420b2be7d1d57150930c8c544b",
+      "connected": "79cbff81eb8962f89feb6de520527b7d85987ae89949d4b8003a3ab9303b5c08"
+    }
+  }
+}

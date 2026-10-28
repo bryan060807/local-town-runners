@@ -1,0 +1,529 @@
+{
+  "recordedAt": "2026-10-28T12:25:40.877Z",
+  "source": "e7267cb679aab283789fe07450ae5d3f0f7b5778",
+  "boundary": "Actual configured OpenAI requests against fictional in-memory catalog data only. Separate from hosted QA and mocked-provider CI. No production database/cart/order/payment/payout request. Production model ID was selected explicitly; cloud configuration was not changed.",
+  "bakeryComparisonAndRevision": {
+    "recordedAt": "2026-10-28T11:55:52.148Z",
+    "boundary": "Two bounded actual OpenAI requests using fictional in-memory catalog data only. No production database/session/cart/order, PayPal, email, runner assignment or payout request. Configured Production model was selected explicitly for this probe; cloud configuration was not changed.",
+    "providerCalls": 2,
+    "passed": true,
+    "reports": [
+      {
+        "request": {
+          "message": "I need two cinnamon rolls and one more bakery item to share, under $20 total. Compare two combinations from one shop and check pickup.",
+          "turns": []
+        },
+        "proposal": {
+          "status": "recommend",
+          "understoodNeed": "Two cinnamon rolls and one more bakery item to share, under $20 total, from one shop with pickup check",
+          "budgetCents": 2000,
+          "localOnly": false,
+          "singleVendor": true,
+          "question": null,
+          "options": [
+            {
+              "items": [
+                {
+                  "listingId": "probe-listing-10",
+                  "quantity": 2
+                },
+                {
+                  "listingId": "probe-listing-11",
+                  "quantity": 1
+                }
+              ],
+              "reasonCodes": [
+                "WITHIN_BUDGET",
+                "ONE_SHOP",
+                "CURRENT_TRIP",
+                "MADE_LOCAL"
+              ]
+            },
+            {
+              "items": [
+                {
+                  "listingId": "probe-listing-10",
+                  "quantity": 2
+                },
+                {
+                  "listingId": "probe-listing-13",
+                  "quantity": 1
+                }
+              ],
+              "reasonCodes": [
+                "WITHIN_BUDGET",
+                "ONE_SHOP",
+                "CURRENT_TRIP",
+                "MADE_LOCAL"
+              ]
+            }
+          ],
+          "recommendedIndex": 0
+        },
+        "plan": {
+          "status": "recommend",
+          "understoodNeed": "Two cinnamon rolls and one more bakery item to share, under $20 total, from one shop with pickup check",
+          "budgetCents": 2000,
+          "constraints": {
+            "localOnly": false,
+            "singleVendor": true
+          },
+          "options": [
+            {
+              "id": "option-1",
+              "items": [
+                {
+                  "listing": {
+                    "shop": 1,
+                    "title": "Habanero Cinnamon Rolls",
+                    "category": "Food",
+                    "price": 450,
+                    "mode": "SELL",
+                    "emoji": "\ud83e\udd50",
+                    "local": true,
+                    "secondhand": false,
+                    "inventory": 12,
+                    "description": "Fictional demo listing. Test stock and price are persisted; no real goods are promised. ",
+                    "id": "probe-listing-10",
+                    "vendorId": "probe-vendor-1",
+                    "active": true,
+                    "photos": []
+                  },
+                  "quantity": 2,
+                  "lineTotalCents": 900
+                },
+                {
+                  "listing": {
+                    "shop": 1,
+                    "title": "Honey Oat Loaf",
+                    "category": "Food",
+                    "price": 850,
+                    "mode": "SELL",
+                    "emoji": "\ud83c\udf5e",
+                    "local": true,
+                    "secondhand": false,
+                    "inventory": 12,
+                    "description": "Fictional demo listing. Test stock and price are persisted; no real goods are promised. ",
+                    "id": "probe-listing-11",
+                    "vendorId": "probe-vendor-1",
+                    "active": true,
+                    "photos": []
+                  },
+                  "quantity": 1,
+                  "lineTotalCents": 850
+                }
+              ],
+              "subtotalCents": 1750,
+              "vendorGroups": [
+                {
+                  "vendor": {
+                    "name": "Demo Hearth Bakery",
+                    "category": "Food",
+                    "description": "Fictional baked goods for a Sandbox marketplace demonstration.",
+                    "coordinates": [-91.06, 39.45],
+                    "id": "probe-vendor-1",
+                    "demo": true
+                  },
+                  "subtotalCents": 1750,
+                  "pickup": {
+                    "status": "declared_trip",
+                    "runnerName": "Fictional Jordan",
+                    "validUntil": 1793189147315
+                  }
+                }
+              ],
+              "reasons": [
+                "Within your $20.00 item budget.",
+                "All selected items come from one shop.",
+                "Each shop has a current declared-trip candidate who must accept.",
+                "Every selected item is marked made locally in the catalog."
+              ]
+            },
+            {
+              "id": "option-2",
+              "items": [
+                {
+                  "listing": {
+                    "shop": 1,
+                    "title": "Habanero Cinnamon Rolls",
+                    "category": "Food",
+                    "price": 450,
+                    "mode": "SELL",
+                    "emoji": "\ud83e\udd50",
+                    "local": true,
+                    "secondhand": false,
+                    "inventory": 12,
+                    "description": "Fictional demo listing. Test stock and price are persisted; no real goods are promised. ",
+                    "id": "probe-listing-10",
+                    "vendorId": "probe-vendor-1",
+                    "active": true,
+                    "photos": []
+                  },
+                  "quantity": 2,
+                  "lineTotalCents": 900
+                },
+                {
+                  "listing": {
+                    "shop": 1,
+                    "title": "Berry Scone Pair",
+                    "category": "Food",
+                    "price": 700,
+                    "mode": "SELL",
+                    "emoji": "\ud83e\uded0",
+                    "local": true,
+                    "secondhand": false,
+                    "inventory": 12,
+                    "description": "Fictional demo listing. Test stock and price are persisted; no real goods are promised. ",
+                    "id": "probe-listing-13",
+                    "vendorId": "probe-vendor-1",
+                    "active": true,
+                    "photos": []
+                  },
+                  "quantity": 1,
+                  "lineTotalCents": 700
+                }
+              ],
+              "subtotalCents": 1600,
+              "vendorGroups": [
+                {
+                  "vendor": {
+                    "name": "Demo Hearth Bakery",
+                    "category": "Food",
+                    "description": "Fictional baked goods for a Sandbox marketplace demonstration.",
+                    "coordinates": [-91.06, 39.45],
+                    "id": "probe-vendor-1",
+                    "demo": true
+                  },
+                  "subtotalCents": 1600,
+                  "pickup": {
+                    "status": "declared_trip",
+                    "runnerName": "Fictional Jordan",
+                    "validUntil": 1793189147315
+                  }
+                }
+              ],
+              "reasons": [
+                "Within your $20.00 item budget.",
+                "All selected items come from one shop.",
+                "Each shop has a current declared-trip candidate who must accept.",
+                "Every selected item is marked made locally in the catalog."
+              ]
+            }
+          ],
+          "recommendedIndex": 0,
+          "provenance": {
+            "engine": "model",
+            "model": "gpt-4.1-mini-2025-04-14"
+          },
+          "catalogCount": 25,
+          "catalogCompared": 25,
+          "suggestions": [],
+          "notes": [
+            "Prices and stock are a current catalog snapshot. Review them again before preparing an order.",
+            "Item totals are not a delivery quote. Pickup candidates are temporary and must accept; no road ETA or delivery guarantee is quoted.",
+            "The item budget comes from your explicit request or budget control.",
+            "Confirm food portions, ingredients and dietary suitability with the vendor."
+          ]
+        },
+        "elapsedMs": 2827
+      },
+      {
+        "request": {
+          "message": "Actually, just the two rolls.",
+          "turns": [
+            {
+              "role": "user",
+              "text": "I need two cinnamon rolls and one more bakery item to share, under $20 total. Compare two combinations from one shop and check pickup."
+            },
+            {
+              "role": "assistant",
+              "text": "{\"budgetCents\":2000,\"options\":[{\"items\":[{\"listingId\":\"probe-listing-10\",\"quantity\":2},{\"listingId\":\"probe-listing-11\",\"quantity\":1}]},{\"items\":[{\"listingId\":\"probe-listing-10\",\"quantity\":2},{\"listingId\":\"probe-listing-13\",\"quantity\":1}]}]}"
+            }
+          ]
+        },
+        "proposal": {
+          "status": "recommend",
+          "understoodNeed": "Two cinnamon rolls only, no additional items, from one shop with pickup",
+          "budgetCents": null,
+          "localOnly": false,
+          "singleVendor": true,
+          "question": null,
+          "options": [
+            {
+              "items": [
+                {
+                  "listingId": "probe-listing-10",
+                  "quantity": 2
+                }
+              ],
+              "reasonCodes": ["ONE_SHOP", "MADE_LOCAL", "CURRENT_TRIP"]
+            },
+            {
+              "items": [
+                {
+                  "listingId": "probe-listing-10",
+                  "quantity": 2
+                }
+              ],
+              "reasonCodes": ["ONE_SHOP", "MADE_LOCAL", "CURRENT_TRIP"]
+            }
+          ],
+          "recommendedIndex": 0
+        },
+        "plan": {
+          "status": "recommend",
+          "understoodNeed": "Two cinnamon rolls only, no additional items, from one shop with pickup",
+          "budgetCents": 2000,
+          "constraints": {
+            "localOnly": false,
+            "singleVendor": true
+          },
+          "options": [
+            {
+              "id": "option-1",
+              "items": [
+                {
+                  "listing": {
+                    "shop": 1,
+                    "title": "Habanero Cinnamon Rolls",
+                    "category": "Food",
+                    "price": 450,
+                    "mode": "SELL",
+                    "emoji": "\ud83e\udd50",
+                    "local": true,
+                    "secondhand": false,
+                    "inventory": 12,
+                    "description": "Fictional demo listing. Test stock and price are persisted; no real goods are promised. ",
+                    "id": "probe-listing-10",
+                    "vendorId": "probe-vendor-1",
+                    "active": true,
+                    "photos": []
+                  },
+                  "quantity": 2,
+                  "lineTotalCents": 900
+                }
+              ],
+              "subtotalCents": 900,
+              "vendorGroups": [
+                {
+                  "vendor": {
+                    "name": "Demo Hearth Bakery",
+                    "category": "Food",
+                    "description": "Fictional baked goods for a Sandbox marketplace demonstration.",
+                    "coordinates": [-91.06, 39.45],
+                    "id": "probe-vendor-1",
+                    "demo": true
+                  },
+                  "subtotalCents": 900,
+                  "pickup": {
+                    "status": "declared_trip",
+                    "runnerName": "Fictional Jordan",
+                    "validUntil": 1793189147315
+                  }
+                }
+              ],
+              "reasons": [
+                "All selected items come from one shop.",
+                "Every selected item is marked made locally in the catalog.",
+                "Each shop has a current declared-trip candidate who must accept."
+              ]
+            }
+          ],
+          "recommendedIndex": 0,
+          "provenance": {
+            "engine": "model",
+            "model": "gpt-4.1-mini-2025-04-14"
+          },
+          "catalogCount": 25,
+          "catalogCompared": 25,
+          "suggestions": [],
+          "notes": [
+            "Prices and stock are a current catalog snapshot. Review them again before preparing an order.",
+            "Item totals are not a delivery quote. Pickup candidates are temporary and must accept; no road ETA or delivery guarantee is quoted.",
+            "The item budget comes from your explicit request or budget control.",
+            "Confirm food portions, ingredients and dietary suitability with the vendor."
+          ]
+        },
+        "elapsedMs": 2005
+      }
+    ]
+  },
+  "semanticGiftClarificationAndRefinement": {
+    "recordedAt": "2026-10-28T12:13:18.215Z",
+    "boundary": "Real model semantic gift clarification/refinement with fictional in-memory catalog only. No production data/session/cart/order/payment/payout action.",
+    "passed": true,
+    "providerCalls": 1,
+    "priorClarification": {
+      "request": {
+        "message": "I need a thank-you gift for a neighbor who loves coffee and keeps a small herb garden. Under $30 total. Compare two locally made choices and check pickup possibilities.",
+        "turns": []
+      },
+      "plan": {
+        "status": "clarify",
+        "understoodNeed": "Thank-you gift for a neighbor who loves coffee and keeps a small herb garden, under $30 total, locally made with pickup possibility.",
+        "question": "Do you want the gift to include both a coffee-related item and an herb garden item, or is either type acceptable?",
+        "budgetCents": 3000,
+        "constraints": {
+          "localOnly": true,
+          "singleVendor": false
+        },
+        "options": [],
+        "recommendedIndex": null,
+        "provenance": {
+          "engine": "model",
+          "model": "gpt-4.1-mini-2025-04-14",
+          "modelAttempts": 2
+        },
+        "catalogCount": 25,
+        "catalogCompared": 25,
+        "suggestions": [],
+        "notes": [
+          "Prices and stock are a current catalog snapshot. Review them again before preparing an order.",
+          "Item totals are not a delivery quote. Pickup candidates are temporary and must accept; no road ETA or delivery guarantee is quoted.",
+          "The item budget comes from your explicit request or budget control."
+        ]
+      },
+      "providerCalls": 2
+    },
+    "request": {
+      "message": "Either interest is fine. Compare one coffee-related gift and one gardening-related gift as separate alternatives, not a bundle. Keep each option under $30 and locally made.",
+      "turns": [
+        {
+          "role": "user",
+          "text": "I need a thank-you gift for a neighbor who loves coffee and keeps a small herb garden. Under $30 total. Compare two locally made choices and check pickup possibilities."
+        },
+        {
+          "role": "assistant",
+          "text": "{\"need\":\"Thank-you gift for a neighbor who loves coffee and keeps a small herb garden, under $30 total, locally made with pickup possibility.\",\"question\":\"Do you want the gift to include both a coffee-related item and an herb garden item, or is either type acceptable?\",\"budgetCents\":3000}"
+        }
+      ]
+    },
+    "plan": {
+      "status": "recommend",
+      "understoodNeed": "Two separate gift alternatives under $30 each, one coffee-related and one gardening-related, both locally made with pickup possibility.",
+      "budgetCents": 3000,
+      "constraints": {
+        "localOnly": true,
+        "singleVendor": false
+      },
+      "options": [
+        {
+          "id": "option-1",
+          "items": [
+            {
+              "listing": {
+                "shop": 0,
+                "title": "Handmade River Mug",
+                "category": "Gifts",
+                "price": 2800,
+                "mode": "SELL",
+                "emoji": "\ud83c\udffa",
+                "local": true,
+                "secondhand": false,
+                "inventory": 12,
+                "description": "Fictional demo listing. Test stock and price are persisted; no real goods are promised. ",
+                "id": "probe-listing-0",
+                "vendorId": "probe-vendor-0",
+                "active": true,
+                "photos": []
+              },
+              "quantity": 1,
+              "lineTotalCents": 2800
+            }
+          ],
+          "subtotalCents": 2800,
+          "vendorGroups": [
+            {
+              "vendor": {
+                "name": "Riverbend Market & Goods",
+                "category": "Gifts",
+                "description": "Fictional demo general store with gifts, practical household finds and independently made crafts.",
+                "coordinates": [-91.05, 39.45],
+                "id": "probe-vendor-0",
+                "demo": true
+              },
+              "subtotalCents": 2800,
+              "pickup": {
+                "status": "none"
+              }
+            }
+          ],
+          "reasons": [
+            "Within your $30.00 item budget.",
+            "Every selected item is marked made locally in the catalog.",
+            "All selected items come from one shop."
+          ]
+        },
+        {
+          "id": "option-2",
+          "items": [
+            {
+              "listing": {
+                "shop": 0,
+                "title": "Kitchen Herb Planter",
+                "category": "Gifts",
+                "price": 1800,
+                "mode": "SELL",
+                "emoji": "\ud83c\udf3f",
+                "local": true,
+                "secondhand": false,
+                "inventory": 12,
+                "description": "Fictional demo listing. Test stock and price are persisted; no real goods are promised. ",
+                "id": "probe-listing-3",
+                "vendorId": "probe-vendor-0",
+                "active": true,
+                "photos": []
+              },
+              "quantity": 1,
+              "lineTotalCents": 1800
+            }
+          ],
+          "subtotalCents": 1800,
+          "vendorGroups": [
+            {
+              "vendor": {
+                "name": "Riverbend Market & Goods",
+                "category": "Gifts",
+                "description": "Fictional demo general store with gifts, practical household finds and independently made crafts.",
+                "coordinates": [-91.05, 39.45],
+                "id": "probe-vendor-0",
+                "demo": true
+              },
+              "subtotalCents": 1800,
+              "pickup": {
+                "status": "none"
+              }
+            }
+          ],
+          "reasons": [
+            "Within your $30.00 item budget.",
+            "Every selected item is marked made locally in the catalog.",
+            "All selected items come from one shop."
+          ]
+        }
+      ],
+      "recommendedIndex": 0,
+      "provenance": {
+        "engine": "model",
+        "model": "gpt-4.1-mini-2025-04-14",
+        "modelAttempts": 1
+      },
+      "catalogCount": 25,
+      "catalogCompared": 25,
+      "suggestions": [],
+      "notes": [
+        "Prices and stock are a current catalog snapshot. Review them again before preparing an order.",
+        "Item totals are not a delivery quote. Pickup candidates are temporary and must accept; no road ETA or delivery guarantee is quoted.",
+        "The item budget comes from your explicit request or budget control."
+      ]
+    },
+    "providerCallsScope": "The outer providerCalls counts refinement only. The prior clarification count is nested separately.",
+    "totalProviderCallsForDocumentedGiftSequence": 3
+  },
+  "diagnostics": {
+    "initialBakeryProbe": "The first comparison passed, but a repeated whole option in its follow-up was rejected. Whole-option deduplication now happens only after canonical validation; corrected real comparison/revision passed.",
+    "initialGiftProbe": "A proposal exceeded the item budget and was rejected. The bounded corrective pass then returned a valid clarifying question; answering it produced separate $28 mug/$18 planter options.",
+    "mockedProviderTests": "Unit/browser fixtures are separate from these actual provider calls and are labeled accordingly."
+  },
+  "sourceMeaning": "Release association. Development probes used fictional in-memory data before deployment; hosted evidence separately verifies the exact deployed source."
+}

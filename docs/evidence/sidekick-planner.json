@@ -1,0 +1,136 @@
+{
+  "recordedAt": "2026-10-28T12:39:06.886Z",
+  "source": "e7267cb679aab283789fe07450ae5d3f0f7b5778",
+  "feature": "Sidekick Errand Planner: actual model-first, bounded multi-item comparison, clarifying questions and follow-up revisions with fresh canonical facts and explicit review/cart action.",
+  "boundaries": {
+    "normalModelCalls": 1,
+    "maximumModelAttempts": 2,
+    "timeoutPerModelCallMs": 20000,
+    "correctionTrigger": "Only schema-valid proposals rejected by canonical validation. No automatic retry for HTTP/provider/auth/transport failure.",
+    "catalogLimit": 100,
+    "recentConversationTurns": 6,
+    "writeAuthority": "The model has no application write tools. Only a separate user review/save calls existing scoped cart upserts; preparation, payment and fulfillment remain explicit.",
+    "noNewSchemaDependencyOrEnvironmentVariable": true
+  },
+  "evidence": {
+    "ci": "sidekick-planner-ci.json",
+    "hostedAi": "sidekick-planner-live-qa.json",
+    "actualProviderDevelopmentProbes": "sidekick-planner-model-verification.json",
+    "productionOperations": "sidekick-planner-production.json",
+    "screenshots": "../screenshots/sidekick-planner/README.md"
+  },
+  "localVerification": {
+    "projectUnitAndDatabase": {
+      "passed": 146,
+      "failed": 0
+    },
+    "focusedOffline": {
+      "passed": 4,
+      "failed": 0
+    },
+    "focusedConnected": {
+      "passed": 16,
+      "failed": 0
+    },
+    "initialConnectedAttempt": {
+      "passed": 4,
+      "failed": 12,
+      "cause": "Three test-contract mismatches across four viewports: new modelAttempts=0 field, compact history item-pair encoding, and a global main selector matching Next loading plus page content.",
+      "correction": "Exact contract assertions updated; retained quantity/ID/partial-save/expiry checks and scoped real page content. All16 passed on rerun."
+    },
+    "counting": "Focused local cases overlap final CI; they are not added to its distinct browser total."
+  },
+  "finalCI": {
+    "runId": 40687360965,
+    "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40687360965",
+    "conclusion": "success",
+    "counts": {
+      "unitAndDatabase": {
+        "total": 146,
+        "passed": 146,
+        "failed": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "offlineBrowser": {
+        "total": 44,
+        "passed": 44,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "reportedDuration": "1.5m"
+      },
+      "connectedBrowser": {
+        "total": 124,
+        "passed": 124,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "reportedDuration": "12.3m"
+      },
+      "totalDistinctBrowserChecksPassed": 168
+    },
+    "audit": {
+      "command": "npm audit --audit-level=high",
+      "reportedVulnerabilities": 0,
+      "conclusion": "success"
+    }
+  },
+  "hostedVerification": {
+    "actualAiRequests": 2,
+    "serverModelAttempts": 2,
+    "plannerResponsesMocked": false,
+    "model": "gpt-4.1-mini-2025-04-14",
+    "initialOptionTotals": [1600, 1750],
+    "refinedOptionTotals": [900],
+    "canonicalProductPagesRead": 3,
+    "readOnlyReviewCreatedCartRows": 0,
+    "cart": {
+      "listingId": "d844d88f-d980-4a22-8b9a-d160a9653fb9",
+      "title": "Habanero Cinnamon Rolls",
+      "quantity": 2,
+      "totalCents": 900,
+      "survivedReload": true,
+      "inventoryUnchanged": true,
+      "newOrders": 0
+    },
+    "ownedCartRemoved": true,
+    "ownedDemoExited": true,
+    "prepareInvoked": false,
+    "newOrders": 0,
+    "financialProviderCalls": 0,
+    "pageErrors": 0,
+    "transportFailures": 0,
+    "blockedRequests": 0,
+    "viewportProvenance": "One fresh private Customer browser at1280px then resized360px; times in these screenshots are UTC.",
+    "screenshots": 4
+  },
+  "productionChecks": {
+    "apiResponsesPrivate": true,
+    "productionReady": true,
+    "productionVariableNamesPresent": true,
+    "marketplaceAvailable": true,
+    "anonymousOrderApiDenied": true,
+    "anonymousProtectedPagesRedirect": true,
+    "anonymousCronDenied": true,
+    "securityHeadersPresent": true,
+    "onboardingStoragePrivate": true,
+    "genuinePaymentHistoryPreserved": true
+  },
+  "protectedPayments": {
+    "orderCount": 3,
+    "totalCapturedCents": 4400,
+    "ledgerRows": 12,
+    "digest": "c2960efc7e2ddfdc7ceedbe905da5a9f20a5f3b3d6c8688cce7bc4dd3b624785",
+    "unchanged": true,
+    "verifiedAgainAfterHostedQa": true
+  },
+  "limits": [
+    "A successful structured model response can still require user clarification; it does not promise an optimal or exhaustive recommendation.",
+    "Numbers, stock, allowed IDs and pickup eligibility are re-read and validated after model latency. Displayed snapshots need fresh server approval before preparation.",
+    "Stored private addresses/account data are not attached to the provider payload; the user-entered request and bounded conversation are submitted.",
+    "Cart saving is sequential, may partially succeed and sets selected quantities; other cart items are excluded from planner subtotal.",
+    "No new PayPal capture, signed webhook delivery, real payout or commercial launch is asserted by this AI release. Existing Sandbox payment evidence remains separate.",
+    "Existing optional Resend delivery-feedback configuration is unchanged and remains a separate operational follow-up."
+  ]
+}

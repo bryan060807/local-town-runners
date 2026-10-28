@@ -1,0 +1,362 @@
+{
+  "recordedAt": "2026-10-28T12:25:40.877Z",
+  "source": "e7267cb679aab283789fe07450ae5d3f0f7b5778",
+  "origin": "https://runners.aibrylabs.com",
+  "boundary": "One freshly created private Customer demo. Exactly two actual /api/assistant/plan UI requests use the configured server AI provider, with up to two bounded model attempts per request. No mocked planner responses. One exact quantity-two private cinnamon-roll cart upsert and its owned deletion are allowed after explicit UI review. Fixed-origin GET/HEAD, explicit metadata reads, these bounded writes and owned-session exit only. No order preparation/creation, inventory reservation, payment, simulation, refund, runner action, notification, admin access, direct provider API or payout. TLS remains verified through the inherited proxy and system CA.",
+  "privatePreviewExplicitlyRequested": true,
+  "pageErrors": [],
+  "transportFailures": [],
+  "blockedRequests": [],
+  "apiChecks": [
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/plan",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/plan",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/cart",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    }
+  ],
+  "screenshots": [
+    {
+      "feature": "two-options-desktop-1280",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "path": "docs/screenshots/sidekick-planner/SIDEKICK-PLANNER-LIVE-two-options-desktop-1280.png",
+      "dataSource": "One fresh fictional private Customer demo on the fixed production origin"
+    },
+    {
+      "feature": "refined-desktop-1280",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "path": "docs/screenshots/sidekick-planner/SIDEKICK-PLANNER-LIVE-refined-desktop-1280.png",
+      "dataSource": "One fresh fictional private Customer demo on the fixed production origin"
+    },
+    {
+      "feature": "review-resized-mobile-360",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "path": "docs/screenshots/sidekick-planner/SIDEKICK-PLANNER-LIVE-review-resized-mobile-360.png",
+      "dataSource": "One fresh fictional private Customer demo on the fixed production origin"
+    },
+    {
+      "feature": "cart-resized-mobile-360",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "path": "docs/screenshots/sidekick-planner/SIDEKICK-PLANNER-LIVE-cart-resized-mobile-360.png",
+      "dataSource": "One fresh fictional private Customer demo on the fixed production origin"
+    }
+  ],
+  "demoEntryCalls": 1,
+  "demoExitCalls": 1,
+  "plannerCalls": 2,
+  "cartAddCalls": 1,
+  "cartDeleteCalls": 1,
+  "financialProviderCalls": 0,
+  "directExternalRequests": 0,
+  "newOrders": 0,
+  "plannerResponsesMocked": false,
+  "realConfiguredAiRequests": true,
+  "serverModelAttempts": 2,
+  "canonicalListings": [
+    {
+      "listingId": "d844d88f-d980-4a22-8b9a-d160a9653fb9",
+      "title": "Habanero Cinnamon Rolls",
+      "unitPriceCents": 450,
+      "inventory": 12,
+      "vendorId": "0cc134e9-2229-4327-b45b-a49bed8c5da2",
+      "authenticatedListingPageStatus": 200,
+      "samePrivateCatalogRead": true
+    },
+    {
+      "listingId": "8d23cde8-a0f4-4094-806c-a0830dc77947",
+      "title": "Berry Scone Pair",
+      "unitPriceCents": 700,
+      "inventory": 12,
+      "vendorId": "0cc134e9-2229-4327-b45b-a49bed8c5da2",
+      "authenticatedListingPageStatus": 200,
+      "samePrivateCatalogRead": true
+    },
+    {
+      "listingId": "d189f3e1-9c47-40a6-a6fc-e00456e258db",
+      "title": "Honey Oat Loaf",
+      "unitPriceCents": 850,
+      "inventory": 12,
+      "vendorId": "0cc134e9-2229-4327-b45b-a49bed8c5da2",
+      "authenticatedListingPageStatus": 200,
+      "samePrivateCatalogRead": true
+    }
+  ],
+  "plannerRequests": [
+    {
+      "message": "I need two cinnamon rolls and one more bakery item to share, under $20 total. Compare two combinations from one shop and check pickup.",
+      "turnCount": 0,
+      "historyValidated": true,
+      "explicitFormOverrides": false
+    },
+    {
+      "message": "Actually, just the two rolls.",
+      "turnCount": 2,
+      "historyValidated": true,
+      "explicitFormOverrides": false
+    }
+  ],
+  "prepareButtonObserved": true,
+  "prepareInvoked": false,
+  "runnerAssigned": false,
+  "httpOnlyDemoTicket": true,
+  "demo": {
+    "active": true,
+    "role": "customer",
+    "name": "Alex Carter"
+  },
+  "firstPlan": {
+    "status": "recommend",
+    "provenance": {
+      "engine": "model",
+      "model": "gpt-4.1-mini-2025-04-14",
+      "modelAttempts": 1
+    },
+    "budgetCents": 2000,
+    "constraints": {
+      "localOnly": false,
+      "singleVendor": true
+    },
+    "catalogCount": 25,
+    "catalogCompared": 25,
+    "options": [
+      {
+        "id": "option-1",
+        "subtotalCents": 1600,
+        "items": [
+          {
+            "listingId": "d844d88f-d980-4a22-8b9a-d160a9653fb9",
+            "title": "Habanero Cinnamon Rolls",
+            "vendorId": "0cc134e9-2229-4327-b45b-a49bed8c5da2",
+            "quantity": 2,
+            "inventory": 12,
+            "unitPriceCents": 450,
+            "lineTotalCents": 900
+          },
+          {
+            "listingId": "8d23cde8-a0f4-4094-806c-a0830dc77947",
+            "title": "Berry Scone Pair",
+            "vendorId": "0cc134e9-2229-4327-b45b-a49bed8c5da2",
+            "quantity": 1,
+            "inventory": 12,
+            "unitPriceCents": 700,
+            "lineTotalCents": 700
+          }
+        ],
+        "vendorName": "Demo Hearth Bakery",
+        "pickup": {
+          "status": "candidate",
+          "runnerName": "Jordan Ellis",
+          "validUntil": 1793193947427
+        }
+      },
+      {
+        "id": "option-2",
+        "subtotalCents": 1750,
+        "items": [
+          {
+            "listingId": "d844d88f-d980-4a22-8b9a-d160a9653fb9",
+            "title": "Habanero Cinnamon Rolls",
+            "vendorId": "0cc134e9-2229-4327-b45b-a49bed8c5da2",
+            "quantity": 2,
+            "inventory": 12,
+            "unitPriceCents": 450,
+            "lineTotalCents": 900
+          },
+          {
+            "listingId": "d189f3e1-9c47-40a6-a6fc-e00456e258db",
+            "title": "Honey Oat Loaf",
+            "vendorId": "0cc134e9-2229-4327-b45b-a49bed8c5da2",
+            "quantity": 1,
+            "inventory": 12,
+            "unitPriceCents": 850,
+            "lineTotalCents": 850
+          }
+        ],
+        "vendorName": "Demo Hearth Bakery",
+        "pickup": {
+          "status": "candidate",
+          "runnerName": "Jordan Ellis",
+          "validUntil": 1793193947427
+        }
+      }
+    ]
+  },
+  "refinedPlan": {
+    "status": "recommend",
+    "provenance": {
+      "engine": "model",
+      "model": "gpt-4.1-mini-2025-04-14",
+      "modelAttempts": 1
+    },
+    "budgetCents": 2000,
+    "constraints": {
+      "localOnly": false,
+      "singleVendor": true
+    },
+    "catalogCount": 25,
+    "catalogCompared": 25,
+    "options": [
+      {
+        "id": "option-1",
+        "subtotalCents": 900,
+        "items": [
+          {
+            "listingId": "d844d88f-d980-4a22-8b9a-d160a9653fb9",
+            "title": "Habanero Cinnamon Rolls",
+            "vendorId": "0cc134e9-2229-4327-b45b-a49bed8c5da2",
+            "quantity": 2,
+            "inventory": 12,
+            "unitPriceCents": 450,
+            "lineTotalCents": 900
+          }
+        ],
+        "vendorName": "Demo Hearth Bakery",
+        "pickup": {
+          "status": "candidate",
+          "runnerName": "Jordan Ellis",
+          "validUntil": 1793193947427
+        }
+      }
+    ]
+  },
+  "readOnlyReviewCreatedCartRows": 0,
+  "cart": {
+    "listingId": "d844d88f-d980-4a22-8b9a-d160a9653fb9",
+    "title": "Habanero Cinnamon Rolls",
+    "quantity": 2,
+    "totalCents": 900,
+    "survivedReload": true,
+    "inventoryUnchanged": true,
+    "newOrders": 0
+  },
+  "passed": true,
+  "ownedCartEmptyAfterCleanup": true,
+  "inactiveAfterExit": true,
+  "exitStatus": 200
+}
