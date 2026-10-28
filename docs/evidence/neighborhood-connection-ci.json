@@ -1,0 +1,216 @@
+{
+  "recordedAt": "2026-10-28T04:05:00.209962+00:00",
+  "boundary": "GitHub-hosted project checks and offline/connected-local browser suites using generated local credentials; no production secrets are supplied to this workflow. Browser fixtures and simulated orders are not new genuine provider captures, signed webhook deliveries or actual payouts. The monitoring agent did not rerun/cancel workflows or alter provider state.",
+  "source": "080381b1643b4ee0ba65da501d579b80c18c47bc",
+  "runId": 40629054371,
+  "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40629054371",
+  "status": "completed",
+  "conclusion": "success",
+  "createdAt": "2026-10-28T03:51:34Z",
+  "updatedAt": "2026-10-28T04:03:16Z",
+  "jobs": [
+    {
+      "name": "Browser checks (offline)",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40629054371/job/122620860043",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:51:36Z",
+      "completedAt": "2026-10-28T03:53:55Z"
+    },
+    {
+      "name": "Types, lint and database safeguards",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40629054371/job/122620860239",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:51:36Z",
+      "completedAt": "2026-10-28T03:53:21Z"
+    },
+    {
+      "name": "Browser checks (connected-local)",
+      "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40629054371/job/122620860426",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:51:36Z",
+      "completedAt": "2026-10-28T04:03:16Z"
+    }
+  ],
+  "verification": {
+    "unitAndDatabase": {
+      "total": 116,
+      "passed": 116,
+      "failed": 0,
+      "skipped": 0
+    },
+    "dependencyAudit": {
+      "reportedVulnerabilities": 0
+    },
+    "offlineBrowser": {
+      "total": 40,
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "reportedDuration": "1.6m"
+    },
+    "connectedBrowser": {
+      "total": 88,
+      "passed": 88,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "reportedDuration": "10.6m"
+    },
+    "totalDistinctBrowserChecksPassed": 128,
+    "freshBackendAndAllThreeSeedStagesPassed": true,
+    "productionBuilds": {
+      "offline": "passed",
+      "connectedLocal": "passed"
+    }
+  },
+  "logProof": {
+    "unit": "tests 116; pass 116; fail 0; skipped 0",
+    "audit": "found 0 vulnerabilities",
+    "offline": "40 passed (1.6m)",
+    "connected": "88 passed (10.6m)"
+  },
+  "previousAttempt": {
+    "recordedAt": "2026-10-28T03:52:27.024236+00:00",
+    "boundary": "Read-only GitHub Actions status and log inspection. Workflow uses generated local credentials and does not receive production secrets. Browser fixtures/simulations do not prove new genuine provider captures, signed deliveries or actual payouts. This monitor did not rerun/cancel workflows or alter provider state.",
+    "source": "fffbf2cbaee70659a9be1c6d9aa0feb51e3ea56c",
+    "runId": 40627840268,
+    "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40627840268",
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-10-28T03:38:28Z",
+    "updatedAt": "2026-10-28T03:49:10Z",
+    "jobs": [
+      {
+        "name": "Browser checks (connected-local)",
+        "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40627840268/job/122616945435",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-10-28T03:38:30Z",
+        "completedAt": "2026-10-28T03:49:09Z",
+        "failedSteps": ["Connected browser checks"]
+      },
+      {
+        "name": "Browser checks (offline)",
+        "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40627840268/job/122616945667",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-10-28T03:38:31Z",
+        "completedAt": "2026-10-28T03:40:49Z",
+        "failedSteps": []
+      },
+      {
+        "name": "Types, lint and database safeguards",
+        "url": "https://github.com/bryan060807/local-town-runners/actions/runs/40627840268/job/122616945893",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-10-28T03:38:32Z",
+        "completedAt": "2026-10-28T03:40:21Z",
+        "failedSteps": []
+      }
+    ],
+    "verification": {
+      "unitAndDatabase": {
+        "total": 116,
+        "passed": 116,
+        "failed": 0,
+        "skipped": 0
+      },
+      "dependencyAudit": {
+        "reportedVulnerabilities": 0
+      },
+      "offlineBrowser": {
+        "total": 40,
+        "passed": 40,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "reportedDuration": "1.6m"
+      },
+      "connectedBrowser": {
+        "total": 88,
+        "passed": 80,
+        "failed": 8,
+        "skipped": 0,
+        "flaky": 0,
+        "reportedDuration": "9.7m"
+      },
+      "freshBackendAndAllThreeSeedStagesPassed": true
+    },
+    "logProof": {
+      "unit": "tests 116; pass 116; fail 0; skipped 0",
+      "audit": "found 0 vulnerabilities",
+      "offline": "40 passed (1.6m)",
+      "connected": "8 failed; 80 passed (9.7m)"
+    },
+    "failedTests": [
+      {
+        "project": "desktop",
+        "file": "e2e-local/demo.spec.ts",
+        "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
+      },
+      {
+        "project": "desktop",
+        "file": "e2e-local/explore.spec.ts",
+        "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
+      },
+      {
+        "project": "mobile-360",
+        "file": "e2e-local/demo.spec.ts",
+        "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
+      },
+      {
+        "project": "mobile-360",
+        "file": "e2e-local/explore.spec.ts",
+        "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
+      },
+      {
+        "project": "mobile-390",
+        "file": "e2e-local/demo.spec.ts",
+        "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
+      },
+      {
+        "project": "mobile-390",
+        "file": "e2e-local/explore.spec.ts",
+        "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
+      },
+      {
+        "project": "mobile-430",
+        "file": "e2e-local/demo.spec.ts",
+        "name": "isolated demo switches real sessions; cart, quotes and fulfillment persist at every viewport"
+      },
+      {
+        "project": "mobile-430",
+        "file": "e2e-local/explore.spec.ts",
+        "name": "Explore highlights vendors, bounds featured items and keeps every available item reachable"
+      }
+    ],
+    "failureAssessment": {
+      "cause": "Two legacy global heading locators now match both the new Neighborhood Connection shop h3 and the vendor directory h4. All four viewports failed on those same two assertions.",
+      "demoAssertion": "Before navigation, assert the exact shop heading inside the named Vendor storefront cards region.",
+      "exploreAssertion": "After clicking Visit storefront, wait for the /vendors/<UUID> URL and assert the exact storefront level-1 heading. This also removes a pre-navigation race.",
+      "correctionScope": "Only test locators/navigation synchronization changed; application source was not changed. Assertions remain strict and preserve their intended behavior.",
+      "status": "correction_awaiting_verification"
+    }
+  },
+  "correction": {
+    "source": "080381b1643b4ee0ba65da501d579b80c18c47bc",
+    "files": ["e2e-local/demo.spec.ts", "e2e-local/explore.spec.ts"],
+    "scope": "Only strict test-locator scope and storefront navigation synchronization changed after the first run. No application runtime code changed.",
+    "details": [
+      "The pre-navigation directory assertion targets the named Vendor storefront cards region.",
+      "The storefront visit assertion waits for its /vendors/<UUID> URL and checks the exact level-1 shop heading."
+    ],
+    "localFocusedVerification": {
+      "passed": 8,
+      "failed": 0
+    },
+    "completeConnectedVerification": {
+      "passed": 88,
+      "failed": 0
+    }
+  }
+}

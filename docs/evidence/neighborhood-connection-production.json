@@ -1,0 +1,330 @@
+{
+  "recordedAt": "2026-10-28T03:54:16.931Z",
+  "boundary": "Read-only Vercel metadata, fixed public app GETs and Supabase SELECT/storage bucket metadata only. No configuration/data mutation, authentication as an operator, demo entry, cron execution, provider AI/email/PayPal requests or financial action.",
+  "findings": [
+    {
+      "severity": "operational",
+      "code": "RESEND_DELIVERY_WEBHOOK_NOT_CONFIGURED",
+      "impact": "Provider acceptance is available, but automatic delivered/bounced/complained feedback is not configured in Production. This does not mean email sending is broken."
+    }
+  ],
+  "limitations": [
+    "Environment metadata verifies variable names and Production targets, not decrypted values or provider credential validity.",
+    "Cron registration and anonymous rejection were checked; the authenticated notification worker was not executed.",
+    "Existing payment and ledger records were selected without PayPal API calls, capture, refund, reconciliation or mutation.",
+    "Hosted Auth sign-in, email delivery and signed webhooks were not retriggered during this read-only audit."
+  ],
+  "production": {
+    "project": "local-town-runners",
+    "deployment": "dpl_GBgFh5dktr86HErFyPVY5CxKNDZA",
+    "readyState": "READY",
+    "url": "local-town-runners-qzqr3wnmm-bryan060807s-projects.vercel.app",
+    "source": "080381b1643b4ee0ba65da501d579b80c18c47bc",
+    "branch": "main",
+    "aliases": [
+      "runners.aibrylabs.com",
+      "local-town-runners.vercel.app",
+      "local-town-runners-bryan060807s-projects.vercel.app",
+      "local-town-runners-git-main-bryan060807s-projects.vercel.app"
+    ],
+    "productionTargetMatches": true,
+    "nodeVersion": "24.x",
+    "framework": "nextjs"
+  },
+  "environmentMetadata": [
+    {
+      "name": "AI_API_KEY",
+      "targets": ["production", "development"],
+      "type": "sensitive"
+    },
+    {
+      "name": "AI_BASE_URL",
+      "targets": ["production", "development"],
+      "type": "sensitive"
+    },
+    {
+      "name": "AI_MODEL",
+      "targets": ["development", "production"],
+      "type": "encrypted"
+    },
+    {
+      "name": "APP_URL",
+      "targets": ["production", "development"],
+      "type": "encrypted"
+    },
+    {
+      "name": "CRON_SECRET",
+      "targets": ["production", "development"],
+      "type": "sensitive"
+    },
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+      "targets": ["production", "development"],
+      "type": "encrypted"
+    },
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_URL",
+      "targets": ["production", "development"],
+      "type": "encrypted"
+    },
+    {
+      "name": "ONBOARDING_EMAIL_FROM",
+      "targets": ["production"],
+      "type": "encrypted"
+    },
+    {
+      "name": "ONBOARDING_EMAIL_TO",
+      "targets": ["development", "production"],
+      "type": "encrypted"
+    },
+    {
+      "name": "PAYPAL_CLIENT_ID",
+      "targets": ["production", "development"],
+      "type": "sensitive"
+    },
+    {
+      "name": "PAYPAL_CLIENT_SECRET",
+      "targets": ["production", "development"],
+      "type": "sensitive"
+    },
+    {
+      "name": "PAYPAL_WEBHOOK_ID",
+      "targets": ["production", "development"],
+      "type": "sensitive"
+    },
+    {
+      "name": "RESEND_API_KEY",
+      "targets": ["production"],
+      "type": "sensitive"
+    },
+    {
+      "name": "RESEND_API_KEY",
+      "targets": ["development"],
+      "type": "sensitive"
+    },
+    {
+      "name": "SUPABASE_SERVICE_ROLE_KEY",
+      "targets": ["production", "development"],
+      "type": "sensitive"
+    }
+  ],
+  "requiredProductionVariables": {
+    "APP_URL": true,
+    "NEXT_PUBLIC_SUPABASE_URL": true,
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": true,
+    "SUPABASE_SERVICE_ROLE_KEY": true,
+    "PAYPAL_CLIENT_ID": true,
+    "PAYPAL_CLIENT_SECRET": true,
+    "PAYPAL_WEBHOOK_ID": true,
+    "RESEND_API_KEY": true,
+    "ONBOARDING_EMAIL_FROM": true,
+    "CRON_SECRET": true
+  },
+  "optionalProductionVariables": {
+    "AI_BASE_URL": true,
+    "AI_MODEL": true,
+    "AI_API_KEY": true,
+    "RESEND_WEBHOOK_SECRET": false,
+    "ONBOARDING_EMAIL_TO": true,
+    "DEMO_MODE_ENABLED": false
+  },
+  "cron": {
+    "source": [
+      {
+        "path": "/api/internal/notifications",
+        "schedule": "0 12 * * *"
+      }
+    ],
+    "projectEnabled": null,
+    "projectDefinitions": [
+      {
+        "path": "/api/internal/notifications",
+        "schedule": "0 12 * * *",
+        "host": "local-town-runners-qzqr3wnmm-bryan060807s-projects.vercel.app"
+      }
+    ],
+    "executionNotInvoked": true,
+    "definitionMatchesCurrentProduction": true
+  },
+  "publicReads": [
+    {
+      "path": "/",
+      "status": 200,
+      "location": null,
+      "headers": {
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org https://hmmabjvxahomvsgxffju.supabase.co; connect-src 'self' https://tile.openstreetmap.org; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(self), camera=(), microphone=()",
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate"
+      },
+      "marketplaceHeading": true,
+      "unavailableFallback": false
+    },
+    {
+      "path": "/login",
+      "status": 200,
+      "location": null,
+      "headers": {
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org https://hmmabjvxahomvsgxffju.supabase.co; connect-src 'self' https://tile.openstreetmap.org; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(self), camera=(), microphone=()",
+        "cache-control": "public, max-age=0, must-revalidate"
+      },
+      "loginForm": true
+    },
+    {
+      "path": "/dashboard",
+      "status": 200,
+      "location": null,
+      "headers": {
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org https://hmmabjvxahomvsgxffju.supabase.co; connect-src 'self' https://tile.openstreetmap.org; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(self), camera=(), microphone=()",
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate"
+      },
+      "streamedRedirectToLogin": true
+    },
+    {
+      "path": "/account",
+      "status": 200,
+      "location": null,
+      "headers": {
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org https://hmmabjvxahomvsgxffju.supabase.co; connect-src 'self' https://tile.openstreetmap.org; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(self), camera=(), microphone=()",
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate"
+      },
+      "streamedRedirectToLogin": true
+    },
+    {
+      "path": "/api/orders",
+      "status": 401,
+      "location": null,
+      "headers": {
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org https://hmmabjvxahomvsgxffju.supabase.co; connect-src 'self' https://tile.openstreetmap.org; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(self), camera=(), microphone=()",
+        "cache-control": "private, no-store"
+      }
+    },
+    {
+      "path": "/api/admin/paypal-diagnostics",
+      "status": 405,
+      "location": null,
+      "headers": {
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org https://hmmabjvxahomvsgxffju.supabase.co; connect-src 'self' https://tile.openstreetmap.org; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(self), camera=(), microphone=()",
+        "cache-control": "private, no-store"
+      }
+    },
+    {
+      "path": "/api/internal/notifications",
+      "status": 401,
+      "location": null,
+      "headers": {
+        "strict-transport-security": "max-age=63072000",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org https://hmmabjvxahomvsgxffju.supabase.co; connect-src 'self' https://tile.openstreetmap.org; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(self), camera=(), microphone=()",
+        "cache-control": "private, no-store"
+      },
+      "unauthorized": true
+    }
+  ],
+  "protectedPayments": {
+    "digest": "c2960efc7e2ddfdc7ceedbe905da5a9f20a5f3b3d6c8688cce7bc4dd3b624785",
+    "orderCount": 3,
+    "ledgerRows": 12,
+    "previousEvidenceDigest": "c2960efc7e2ddfdc7ceedbe905da5a9f20a5f3b3d6c8688cce7bc4dd3b624785",
+    "unchangedFromPreviousVerification": true,
+    "orders": [
+      {
+        "id": "29945be0-236d-4a80-845a-36cf43b4fb1a",
+        "state": "PAID",
+        "totalCents": 450,
+        "demoSimulated": false,
+        "hasCapture": true,
+        "genuinePaymentEntries": 1
+      },
+      {
+        "id": "3e48d73e-3ee5-4102-8877-7eaae17ea8b4",
+        "state": "PAID",
+        "totalCents": 450,
+        "demoSimulated": false,
+        "hasCapture": true,
+        "genuinePaymentEntries": 1
+      },
+      {
+        "id": "8ffc44db-c4a8-43fd-b67b-aa7ff8943b5c",
+        "state": "PAID",
+        "totalCents": 3500,
+        "demoSimulated": false,
+        "hasCapture": true,
+        "genuinePaymentEntries": 1
+      }
+    ],
+    "totalCapturedCents": 4400
+  },
+  "storage": [
+    {
+      "id": "onboarding-private",
+      "readable": true,
+      "public": false,
+      "fileSizeLimit": 5242880,
+      "allowedMimeTypes": ["application/pdf", "image/webp"]
+    },
+    {
+      "id": "marketplace-assets",
+      "readable": true,
+      "public": true,
+      "fileSizeLimit": 5242880,
+      "allowedMimeTypes": ["image/webp"]
+    }
+  ],
+  "notificationQueue": {
+    "readable": true,
+    "total": 1,
+    "statusCounts": {
+      "accepted": 1
+    },
+    "providerEventCounts": {
+      "accepted": 1
+    },
+    "autoDispatchCount": 0,
+    "exhaustedAttemptsCount": 0,
+    "errorCodes": []
+  },
+  "checks": {
+    "apiResponsesPrivate": true,
+    "productionReady": true,
+    "productionVariableNamesPresent": true,
+    "marketplaceAvailable": true,
+    "anonymousOrderApiDenied": true,
+    "anonymousProtectedPagesRedirect": true,
+    "anonymousCronDenied": true,
+    "securityHeadersPresent": true,
+    "onboardingStoragePrivate": true,
+    "genuinePaymentHistoryPreserved": true
+  }
+}

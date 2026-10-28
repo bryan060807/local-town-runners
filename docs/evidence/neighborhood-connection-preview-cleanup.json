@@ -1,0 +1,19 @@
+{
+  "recordedAt": "2026-10-28T03:53:25.175Z",
+  "source": "fffbf2cbaee70659a9be1c6d9aa0feb51e3ea56c",
+  "reason": "First live QA harness sent duplicate case-insensitive Origin headers; server correctly rejected DELETE with403. Its newly created browser context was closed without recoverable credentials.",
+  "boundary": "Expired only the single, precisely identified QA demo_sessions ticket using original expiry as a compare-and-set guard. No workspace, profile, Auth account, order, trip, payment or ledger mutation/deletion.",
+  "guards": {
+    "exactListingVerified": true,
+    "createdWithinOriginalTestWindow": true,
+    "privateNonTemplateWorkspace": true,
+    "exactThreeScopedActors": true,
+    "noCustomerOrVendorOrders": true
+  },
+  "matchedSessionRows": 1,
+  "ticketExpired": true,
+  "browserContextAlreadyClosed": true,
+  "authSignOutExecuted": false,
+  "protectedPaymentsUnchanged": true,
+  "protectedPaymentsDigest": "c2960efc7e2ddfdc7ceedbe905da5a9f20a5f3b3d6c8688cce7bc4dd3b624785"
+}

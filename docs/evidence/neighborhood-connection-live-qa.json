@@ -1,0 +1,423 @@
+{
+  "recordedAt": "2026-10-28T03:53:33.780Z",
+  "source": "080381b1643b4ee0ba65da501d579b80c18c47bc",
+  "origin": "https://runners.aibrylabs.com",
+  "boundary": "Fresh anonymous browser contexts plus, only with --run-private-preview, one fresh private Customer demo and its exit. Fixed-origin GET/HEAD and strictly allowlisted assistant detail reads only. No orders, carts, preparation, checkout, capture, refunds, fulfillment, runner actions, review writes, notifications, direct provider APIs or payouts. TLS verification uses the inherited proxy and system CA.",
+  "privatePreviewExplicitlyRequested": true,
+  "profiles": [
+    {
+      "profile": "public-desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "graphics": "headless software WebGL",
+      "intents": [
+        {
+          "intent": "A gift under $30",
+          "id": "ab66d0b3-2e9f-4c1b-9310-736d6573f63e",
+          "title": "Handmade River Mug",
+          "priceText": "$28.00",
+          "priceCents": 2800
+        },
+        {
+          "intent": "Something to eat",
+          "id": "7e5f68fd-6ad2-42ab-981a-a019066c440a",
+          "title": "Garden Lunch Bowl",
+          "priceText": "$14.00",
+          "priceCents": 1400
+        },
+        {
+          "intent": "Made nearby",
+          "id": "150a847e-930c-4536-a8eb-10d0544d69d2",
+          "title": "Seasonal Door Wreath",
+          "priceText": "$38.00",
+          "priceCents": 3800
+        }
+      ],
+      "anonymousDemo": {
+        "enabled": true,
+        "active": false
+      },
+      "assistantRead": {
+        "selectedListingId": "150a847e-930c-4536-a8eb-10d0544d69d2",
+        "returnedListingIds": ["150a847e-930c-4536-a8eb-10d0544d69d2"],
+        "tools": ["getListingDetails"],
+        "status": 200
+      },
+      "noHorizontalOverflow": true,
+      "screenshots": {
+        "intro": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-desktop-intro.png",
+        "panel": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-desktop-panel.png"
+      },
+      "passed": true
+    },
+    {
+      "profile": "public-mobile-360",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "graphics": "headless software WebGL",
+      "intents": [
+        {
+          "intent": "A gift under $30",
+          "id": "ab66d0b3-2e9f-4c1b-9310-736d6573f63e",
+          "title": "Handmade River Mug",
+          "priceText": "$28.00",
+          "priceCents": 2800
+        },
+        {
+          "intent": "Something to eat",
+          "id": "7e5f68fd-6ad2-42ab-981a-a019066c440a",
+          "title": "Garden Lunch Bowl",
+          "priceText": "$14.00",
+          "priceCents": 1400
+        },
+        {
+          "intent": "Made nearby",
+          "id": "150a847e-930c-4536-a8eb-10d0544d69d2",
+          "title": "Seasonal Door Wreath",
+          "priceText": "$38.00",
+          "priceCents": 3800
+        }
+      ],
+      "anonymousDemo": {
+        "enabled": true,
+        "active": false
+      },
+      "assistantRead": {
+        "selectedListingId": "150a847e-930c-4536-a8eb-10d0544d69d2",
+        "returnedListingIds": ["150a847e-930c-4536-a8eb-10d0544d69d2"],
+        "tools": ["getListingDetails"],
+        "status": 200
+      },
+      "noHorizontalOverflow": true,
+      "screenshots": {
+        "intro": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-360-intro.png",
+        "panel": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-360-panel.png"
+      },
+      "passed": true
+    },
+    {
+      "profile": "public-mobile-430",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "graphics": "headless software WebGL",
+      "intents": [
+        {
+          "intent": "A gift under $30",
+          "id": "ab66d0b3-2e9f-4c1b-9310-736d6573f63e",
+          "title": "Handmade River Mug",
+          "priceText": "$28.00",
+          "priceCents": 2800
+        },
+        {
+          "intent": "Something to eat",
+          "id": "7e5f68fd-6ad2-42ab-981a-a019066c440a",
+          "title": "Garden Lunch Bowl",
+          "priceText": "$14.00",
+          "priceCents": 1400
+        },
+        {
+          "intent": "Made nearby",
+          "id": "150a847e-930c-4536-a8eb-10d0544d69d2",
+          "title": "Seasonal Door Wreath",
+          "priceText": "$38.00",
+          "priceCents": 3800
+        }
+      ],
+      "anonymousDemo": {
+        "enabled": true,
+        "active": false
+      },
+      "assistantRead": {
+        "selectedListingId": "150a847e-930c-4536-a8eb-10d0544d69d2",
+        "returnedListingIds": ["150a847e-930c-4536-a8eb-10d0544d69d2"],
+        "tools": ["getListingDetails"],
+        "status": 200
+      },
+      "noHorizontalOverflow": true,
+      "screenshots": {
+        "intro": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-430-intro.png",
+        "panel": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-430-panel.png"
+      },
+      "passed": true
+    },
+    {
+      "profile": "public-mobile-360-no-webgl",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "graphics": "WebGL disabled",
+      "intents": [
+        {
+          "intent": "A gift under $30",
+          "id": "ab66d0b3-2e9f-4c1b-9310-736d6573f63e",
+          "title": "Handmade River Mug",
+          "priceText": "$28.00",
+          "priceCents": 2800
+        },
+        {
+          "intent": "Something to eat",
+          "id": "7e5f68fd-6ad2-42ab-981a-a019066c440a",
+          "title": "Garden Lunch Bowl",
+          "priceText": "$14.00",
+          "priceCents": 1400
+        },
+        {
+          "intent": "Made nearby",
+          "id": "150a847e-930c-4536-a8eb-10d0544d69d2",
+          "title": "Seasonal Door Wreath",
+          "priceText": "$38.00",
+          "priceCents": 3800
+        }
+      ],
+      "anonymousDemo": {
+        "enabled": true,
+        "active": false
+      },
+      "assistantRead": {
+        "selectedListingId": "150a847e-930c-4536-a8eb-10d0544d69d2",
+        "returnedListingIds": ["150a847e-930c-4536-a8eb-10d0544d69d2"],
+        "tools": ["getListingDetails"],
+        "status": 200
+      },
+      "noHorizontalOverflow": true,
+      "screenshots": {
+        "intro": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-360-no-webgl-intro.png",
+        "panel": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-360-no-webgl-panel.png"
+      },
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    {
+      "profile": "public-desktop",
+      "feature": "first fold",
+      "path": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-desktop-intro.png"
+    },
+    {
+      "profile": "public-desktop",
+      "feature": "connection studio",
+      "path": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-desktop-panel.png"
+    },
+    {
+      "profile": "public-mobile-360",
+      "feature": "first fold",
+      "path": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-360-intro.png"
+    },
+    {
+      "profile": "public-mobile-360",
+      "feature": "connection studio",
+      "path": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-360-panel.png"
+    },
+    {
+      "profile": "public-mobile-430",
+      "feature": "first fold",
+      "path": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-430-intro.png"
+    },
+    {
+      "profile": "public-mobile-430",
+      "feature": "connection studio",
+      "path": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-430-panel.png"
+    },
+    {
+      "profile": "public-mobile-360-no-webgl",
+      "feature": "first fold",
+      "path": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-360-no-webgl-intro.png"
+    },
+    {
+      "profile": "public-mobile-360-no-webgl",
+      "feature": "connection studio",
+      "path": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-public-mobile-360-no-webgl-panel.png"
+    },
+    {
+      "profile": "private-preview",
+      "feature": "first fold",
+      "path": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-private-preview-intro.png"
+    },
+    {
+      "profile": "private-preview",
+      "feature": "connection studio",
+      "path": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-private-preview-panel.png"
+    }
+  ],
+  "pageErrors": [],
+  "transportFailures": [],
+  "blockedRequests": [],
+  "apiChecks": [
+    {
+      "profile": "public-desktop",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "public-desktop",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "public-desktop",
+      "method": "POST",
+      "path": "/api/assistant",
+      "status": 200
+    },
+    {
+      "profile": "public-mobile-360",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "public-mobile-360",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "public-mobile-360",
+      "method": "POST",
+      "path": "/api/assistant",
+      "status": 200
+    },
+    {
+      "profile": "public-mobile-430",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "public-mobile-430",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "public-mobile-430",
+      "method": "POST",
+      "path": "/api/assistant",
+      "status": 200
+    },
+    {
+      "profile": "public-mobile-360-no-webgl",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "public-mobile-360-no-webgl",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "public-mobile-360-no-webgl",
+      "method": "POST",
+      "path": "/api/assistant",
+      "status": 200
+    },
+    {
+      "profile": "private-preview",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "private-preview",
+      "method": "POST",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "private-preview",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "private-preview",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "private-preview",
+      "method": "POST",
+      "path": "/api/assistant",
+      "status": 200
+    },
+    {
+      "profile": "private-preview",
+      "method": "GET",
+      "path": "/api/orders",
+      "status": 200
+    },
+    {
+      "profile": "private-preview",
+      "method": "DELETE",
+      "path": "/api/demo",
+      "status": 200
+    },
+    {
+      "profile": "private-preview",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200
+    }
+  ],
+  "assistantReadCalls": 5,
+  "demoEntryCalls": 1,
+  "demoExitCalls": 1,
+  "financialProviderCalls": 0,
+  "directExternalRequests": 0,
+  "newOrders": 0,
+  "privatePreview": {
+    "profile": "private-preview",
+    "entryMethod": "Build a private demo",
+    "newOrders": 0,
+    "httpOnlyDemoTicket": true,
+    "demo": {
+      "enabled": true,
+      "active": true,
+      "role": "customer"
+    },
+    "find": {
+      "id": "60420a47-f196-4bf2-b2d9-6aac81d6edc6",
+      "title": "Handmade River Mug",
+      "priceText": "$28.00",
+      "priceCents": 2800
+    },
+    "sharedTripCandidate": "Jordan Ellis",
+    "runnerConfirmationRequired": true,
+    "assistantRead": {
+      "selectedListingId": "60420a47-f196-4bf2-b2d9-6aac81d6edc6",
+      "returnedListingIds": ["60420a47-f196-4bf2-b2d9-6aac81d6edc6"],
+      "tools": ["getListingDetails"],
+      "status": 200
+    },
+    "runnerAssigned": false,
+    "noHorizontalOverflow": true,
+    "screenshots": {
+      "intro": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-private-preview-intro.png",
+      "panel": "docs/screenshots/neighborhood-connection/STUDIO-LIVE-private-preview-panel.png"
+    },
+    "passed": true,
+    "exitStatus": 200,
+    "inactiveAfterExit": true
+  },
+  "passed": true,
+  "earlierAttempt": {
+    "source": "fffbf2cbaee70659a9be1c6d9aa0feb51e3ea56c",
+    "publicProfilesPassed": 4,
+    "privatePreviewUiPassed": true,
+    "finalCleanupPassed": false,
+    "cause": "Diagnostic helper constructed duplicate case-insensitive Origin headers only for cleanup. The application correctly returned403. Header normalization was corrected in the ignored QA helper; no application code was changed.",
+    "resolution": "Exact newly created QA ticket expired using guarded compare-and-set; see neighborhood-connection-preview-cleanup.json. A fresh corrected run then passed including normal owned-session exit."
+  }
+}
