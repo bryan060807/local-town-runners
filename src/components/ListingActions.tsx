@@ -151,6 +151,12 @@ export default function ListingActions({
                   />
                 </label>
               )}
+              {sell && Number.isSafeInteger(units) && units > limit && (
+                <p role="note">
+                  Only {limit} available now. Choose a smaller quantity before
+                  continuing.
+                </p>
+              )}
               <button
                 type="submit"
                 className="primary"

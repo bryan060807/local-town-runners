@@ -51,15 +51,17 @@ export async function POST(req: Request) {
           workload: 3,
           reliability: 0,
         }));
-        return Response.json(
-          call
+        return Response.json({
+          ...(call
             ? executeTool(call.name, call.args, {
                 ...catalog,
                 runners: publicRunners,
                 authenticated: false,
               })
-            : discover(p.message, p.previousListing, catalog, publicRunners),
-        );
+            : discover(p.message, p.previousListing, catalog, publicRunners)),
+          source: "catalog-tool",
+          provenance: { engine: "catalog" },
+        });
       }
       const { client, user } = actor;
       const { data: ownOrders, error: ordersError } = await client
@@ -137,18 +139,28 @@ export async function POST(req: Request) {
       contextCall ||
       (await interpret(p.message, selected, catalog.listings, p.resultIds));
     if (!call)
-      return Response.json(
-        discover(p.message, p.previousListing, catalog, runners),
-      );
-    logEvent("ai_tool_selected", { tool: call.name });
-    return Response.json(
-      executeTool(call.name, call.args, {
+      return Response.json({
+        ...discover(p.message, p.previousListing, catalog, runners),
+        source: "catalog",
+        provenance: { engine: "catalog" },
+      });
+    logEvent("assistant_tool_selected", {
+      tool: call.name,
+      stage: contextCall ? "catalog" : "model",
+    });
+    return Response.json({
+      ...executeTool(call.name, call.args, {
         ...catalog,
         runners,
         authenticated: !catalog.demo,
         orders,
       }),
-    );
+      source: contextCall ? "catalog-tool" : "model-tool",
+      provenance: {
+        engine: contextCall ? "catalog" : "model",
+        ...(!contextCall ? { model: process.env.AI_MODEL } : {}),
+      },
+    });
   } catch (e) {
     logEvent("ai_tool_failure", { outcome: "rejected_or_unavailable" });
     return failure(e);

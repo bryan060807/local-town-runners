@@ -2,6 +2,23 @@
   gap: 4px;
 }
 
+.plannerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 44px;
+  color: var(--green);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.provenance {
+  margin: 10px 15px;
+  color: #53614d;
+  font-size: 11px;
+}
+
 .composer:focus-within {
   outline: 2px solid var(--green);
   outline-offset: 2px;

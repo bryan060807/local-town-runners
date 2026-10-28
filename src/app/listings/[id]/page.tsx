@@ -10,16 +10,27 @@ import ListingActions, {
 import { authenticated, HttpError } from "@/lib/server/db";
 export default async function ListingPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ quantity?: string | string[] }>;
 }) {
-  const { id } = await params;
+  const [{ id }, query] = await Promise.all([params, searchParams]);
   const data = await publicCatalog();
   const l = data.listings.find((l) => l.id === id);
   if (!l) notFound();
   const vendor = data.vendors.find((v) => v.id === l.vendorId)!;
   let access: ListingAccess = data.demo ? "offline" : "guest";
   let initialQuantity = 1;
+  const requestedQuantity =
+    typeof query.quantity === "string" && /^\d{1,2}$/.test(query.quantity)
+      ? Number(query.quantity)
+      : null;
+  const hasRequestedQuantity =
+    requestedQuantity !== null &&
+    requestedQuantity >= 1 &&
+    requestedQuantity <= 20;
+  if (hasRequestedQuantity) initialQuantity = requestedQuantity;
   let inCart = false;
   if (!data.demo) {
     try {
@@ -42,7 +53,7 @@ export default async function ListingPage({
           .maybeSingle();
         if (cart.error) throw cart.error;
         if (cart.data) {
-          initialQuantity = cart.data.quantity;
+          if (!hasRequestedQuantity) initialQuantity = cart.data.quantity;
           inCart = true;
         }
       }

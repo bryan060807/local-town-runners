@@ -31,6 +31,7 @@ import ExploreVendors from "./ExploreVendors";
 import styles from "./ExploreCatalog.module.css";
 import assistantStyles from "./MarketplaceAssistant.module.css";
 import NeighborhoodStudio from "./NeighborhoodStudio";
+import SidekickPlanner from "./SidekickPlanner";
 const WorldMap = dynamic(() => import("./WorldMap"), {
   ssr: false,
   loading: () => (
@@ -119,6 +120,9 @@ export default function Marketplace({
     "Ask me what’s good, what’s local, or who’s already heading your way.",
   );
   const [busy, setBusy] = useState(false);
+  const [replyEngine, setReplyEngine] = useState<"catalog" | "model" | null>(
+    null,
+  );
   const assistantInFlight = useRef(false);
   const [notice, setNotice] = useState("");
   const [matchedRunnerId, setMatchedRunnerId] = useState<string | undefined>();
@@ -170,6 +174,7 @@ export default function Marketplace({
       });
       const data = await res.json();
       if (!res.ok) throw Error(data.error);
+      setReplyEngine(data.provenance?.engine === "model" ? "model" : "catalog");
       setReply(data.text);
       setHighlight(data.vendorIds);
       setRecommendations(data.listings);
@@ -184,6 +189,7 @@ export default function Marketplace({
         }
       }
     } catch (e) {
+      setReplyEngine(null);
       setMessage(text);
       setReply(
         `${e instanceof Error ? e.message : "Assistant unavailable."} Your message is still below; try Send again.`,
@@ -444,6 +450,15 @@ export default function Marketplace({
               ?.focus({ preventScroll: true });
           }}
         />
+        <SidekickPlanner
+          offline={demo}
+          onReview={(listingId, units) => {
+            if (!Number.isInteger(units) || units < 1 || units > 20) return;
+            router.push(
+              `/listings/${encodeURIComponent(listingId)}?quantity=${units}`,
+            );
+          }}
+        />
         <section id="explore" className="explore">
           <div className="section-top">
             <h2>
@@ -481,6 +496,13 @@ export default function Marketplace({
                 <p>
                   Recommendations use current catalog prices and availability.
                 </p>
+                <Link
+                  className={assistantStyles.plannerLink}
+                  href="#sidekick-planner"
+                >
+                  Plan a local errand{" "}
+                  <ArrowUpRight size={14} aria-hidden="true" />
+                </Link>
                 <div className="suggestions">
                   {[
                     "I'm hungry. What's good?",
@@ -525,6 +547,13 @@ export default function Marketplace({
                   </div>
                 )}
               </div>
+              {!busy && replyEngine && (
+                <p className={assistantStyles.provenance}>
+                  {replyEngine === "model"
+                    ? "AI-assisted answer"
+                    : "Catalog helper"}
+                </p>
+              )}
               <form
                 className={`ask ${assistantStyles.composer}`}
                 aria-label="Message Sidekick"
