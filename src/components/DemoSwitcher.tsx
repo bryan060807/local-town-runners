@@ -48,7 +48,10 @@ export default function DemoSwitcher() {
   }
   if (!state.enabled) return null;
   return (
-    <section className={`demo-bar ${styles.bar}`} aria-label="Demo Mode">
+    <section
+      className={`demo-bar ${styles.bar} ${!state.active ? styles.entryBar : ""}`}
+      aria-label="Demo Mode"
+    >
       <div className={styles.inner}>
         <div className={styles.toolbar}>
           <span className="demo-tag">DEMO ONLY</span>
@@ -87,9 +90,6 @@ export default function DemoSwitcher() {
           ) : (
             <>
               <div className={styles.intro}>
-                <strong>
-                  Try one local order, from discovery to doorstep.
-                </strong>
                 <span>Fictional profiles. Your own private demo.</span>
               </div>
               <button
@@ -102,27 +102,29 @@ export default function DemoSwitcher() {
             </>
           )}
         </div>
-        <details className={styles.help}>
-          <summary>How the demo works</summary>
-          <ol className={styles.roles} aria-label="Demo roles">
-            {demoRoles.map((role) => (
-              <li
-                key={role}
-                aria-current={
-                  state.active && state.role === role ? "true" : undefined
-                }
-              >
-                <strong>{roleLabels[role]}</strong>
-                <span>{responsibilities[role]}</span>
-              </li>
-            ))}
-          </ol>
-          <p>
-            Use Switch profile to play the next role in this browser. Choose
-            simulated payment to complete the walkthrough without a PayPal
-            charge.
-          </p>
-        </details>
+        {state.active && (
+          <details className={styles.help}>
+            <summary>How the demo works</summary>
+            <ol className={styles.roles} aria-label="Demo roles">
+              {demoRoles.map((role) => (
+                <li
+                  key={role}
+                  aria-current={
+                    state.active && state.role === role ? "true" : undefined
+                  }
+                >
+                  <strong>{roleLabels[role]}</strong>
+                  <span>{responsibilities[role]}</span>
+                </li>
+              ))}
+            </ol>
+            <p>
+              Use Switch profile to play the next role in this browser. Choose
+              simulated payment to complete the walkthrough without a PayPal
+              charge.
+            </p>
+          </details>
+        )}
         {error && (
           <p className={styles.error} role="alert">
             {error}

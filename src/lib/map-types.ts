@@ -4,5 +4,6 @@ export type PublicRunner = {
   area: [number, number];
   availableUntil: number;
   destinationVendorId?: string;
+  tripExpiresAt?: number;
   demo: boolean;
 };

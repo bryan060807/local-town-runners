@@ -1,9 +1,13 @@
 import Link from "next/link";
 import Marketplace from "@/components/Marketplace";
 import { publicCatalog } from "@/lib/server/catalog";
+import { demoEnabled } from "@/lib/server/demo";
 export const dynamic = "force-dynamic";
 export default async function Home() {
-  const data = await publicCatalog().catch(() => null);
+  const [data, canEnterDemo] = await Promise.all([
+    publicCatalog().catch(() => null),
+    demoEnabled().catch(() => false),
+  ]);
   if (!data)
     return (
       <main className="simple-page">
@@ -12,5 +16,5 @@ export default async function Home() {
         <Link href="/">Try again</Link>
       </main>
     );
-  return <Marketplace {...data} />;
+  return <Marketplace {...data} canEnterDemo={canEnterDemo} />;
 }

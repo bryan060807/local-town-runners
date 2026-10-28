@@ -16,7 +16,6 @@ import {
   ArrowUpRight,
   ArrowUp,
   Search,
-  MapPin,
   ShoppingBag,
   Compass,
   ChevronRight,
@@ -30,7 +29,7 @@ import { brand } from "@/lib/brand";
 import { Listing, Vendor, money } from "@/lib/catalog";
 import ExploreVendors from "./ExploreVendors";
 import styles from "./ExploreCatalog.module.css";
-import introStyles from "./MarketplaceIntro.module.css";
+import NeighborhoodStudio from "./NeighborhoodStudio";
 const WorldMap = dynamic(() => import("./WorldMap"), {
   ssr: false,
   loading: () => (
@@ -52,12 +51,16 @@ export default function Marketplace({
   runners,
   demo,
   isolatedDemo = false,
+  snapshotAt,
+  canEnterDemo = false,
 }: {
   listings: Listing[];
   vendors: Vendor[];
   runners: PublicRunner[];
   demo: boolean;
   isolatedDemo?: boolean;
+  snapshotAt: number;
+  canEnterDemo?: boolean;
 }) {
   const router = useRouter();
   const hydrated = useSyncExternalStore(
@@ -142,7 +145,7 @@ export default function Marketplace({
     },
     [listings],
   );
-  async function ask(text: string) {
+  async function ask(text: string, contextListingId?: string) {
     if (!text.trim() || busy) return;
     setBusy(true);
     setMessage("");
@@ -153,8 +156,13 @@ export default function Marketplace({
         body: JSON.stringify({
           message: text,
           previousListing:
-            selected?.id || conversationListing || recommendations[0]?.id,
-          resultIds: recommendations.map((l) => l.id),
+            contextListingId ||
+            selected?.id ||
+            conversationListing ||
+            recommendations[0]?.id,
+          resultIds: contextListingId
+            ? [contextListingId]
+            : recommendations.map((l) => l.id),
         }),
       });
       const data = await res.json();
@@ -357,80 +365,80 @@ export default function Marketplace({
         </Link>
       </header>
       <main inert={Boolean(selected)}>
-        <section
-          className={introStyles.intro}
-          aria-label="Meet your neighborhood"
-        >
-          <div className={introStyles.copy}>
-            <div className="eyebrow">
-              <span className="pulse" /> YOUR NEIGHBORHOOD, CONNECTED
-            </div>
-            <h1>
-              Good things.
-              <br />
-              <span>Close to home.</span>
-            </h1>
-            <p>
-              A treat from a local baker. A gift from down the road. Find it
-              here, then see whether a neighbor is already heading that way.
-            </p>
-            <div className={introStyles.actions}>
-              <Link className={introStyles.start} href="#explore">
-                Find something nearby{" "}
-                <ArrowUpRight size={16} aria-hidden="true" />
-              </Link>
-              <span>Start with a question. You choose what happens next.</span>
-            </div>
-            <ol
-              className={introStyles.journey}
-              aria-label="How local orders work"
-            >
-              <li>
-                <span aria-hidden="true">01</span>
-                <strong>Find a local favorite</strong>
-              </li>
-              <li>
-                <span aria-hidden="true">02</span>
-                <strong>Review the details</strong>
-              </li>
-              <li>
-                <span aria-hidden="true">03</span>
-                <strong>Coordinate a pickup</strong>
-              </li>
-            </ol>
-          </div>
-          <aside
-            className={introStyles.townNote}
-            aria-label="Our starting town"
-          >
-            <span className={introStyles.townEyebrow}>
-              OUR FIRST NEIGHBORHOOD
-            </span>
-            <strong className={introStyles.townName}>
-              <MapPin size={17} aria-hidden="true" /> {brand.town}
-            </strong>
-            <svg
-              className={introStyles.street}
-              viewBox="0 0 248 70"
-              fill="none"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <g
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M4 62h240M16 54V27l22-16 22 16v27M12 29l26-19 26 19M31 54V38h14v16M23 29h8v8h-8M47 29h6v8h-6" />
-                <path d="M90 54V29h62v25M86 29l7-15h56l7 15H86M99 29V14m15 15V14m15 15V14m15 15V14M100 54V39h14v15M124 39h18v9h-18" />
-                <path d="M183 54V27l19-13 19 13v27M179 29l23-16 23 16M196 54V40h12v14M188 30h8v8h-8M208 30h8v8h-8M75 54V38m0 8c-8 0-10-6-10-6s8-2 10 6Zm0-4c8 0 10-7 10-7s-8-1-10 7Z" />
-              </g>
-              <circle cx="231" cy="12" r="6" fill="#e4c080" />
-            </svg>
-            <p>Rooted here. Made for your town, too.</p>
-          </aside>
-        </section>
+        <NeighborhoodStudio
+          listings={listings}
+          vendors={vendors}
+          runners={runners}
+          snapshotAt={snapshotAt}
+          offline={demo}
+          privateDemo={isolatedDemo}
+          canEnterDemo={canEnterDemo}
+          onEnterDemo={async () => {
+            const response = await fetch("/api/demo", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ role: "customer" }),
+            });
+            if (!response.ok)
+              throw new Error(
+                response.status === 429
+                  ? "Please wait before starting another private demo. You can keep exploring below."
+                  : "The private demo is unavailable right now. Please try again or keep exploring below.",
+              );
+            // Demo entry changes the authenticated identity used by both
+            // server content and the existing client profile bar.
+            window.history.replaceState(
+              window.history.state,
+              "",
+              window.location.pathname + window.location.search,
+            );
+            window.location.reload();
+          }}
+          onReview={(listingId, runnerId) => {
+            const listing = listings.find(
+              (item) =>
+                item.id === listingId && item.active && item.inventory > 0,
+            );
+            if (!listing) return;
+            setHighlight([listing.vendorId]);
+            const now = Date.now();
+            const candidate = runners.find(
+              (runner) =>
+                runner.id === runnerId &&
+                runner.destinationVendorId === listing.vendorId &&
+                runner.availableUntil > now &&
+                (runner.tripExpiresAt || 0) > now,
+            );
+            setMatchedRunnerId(candidate?.id);
+            setConversationListing(listing.id);
+            setSelected(listing);
+            setQuantity(1);
+            setNotice("");
+          }}
+          onAsk={(listingId) => {
+            const listing = listings.find(
+              (item) =>
+                item.id === listingId && item.active && item.inventory > 0,
+            );
+            if (!listing) return;
+            setHighlight([listing.vendorId]);
+            setConversationListing(listing.id);
+            void ask("Tell me more about it.", listing.id);
+            document.getElementById("local-sidekick")?.scrollIntoView({
+              behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+                .matches
+                ? "instant"
+                : "smooth",
+              block: "start",
+            });
+            document
+              .getElementById("local-sidekick")
+              ?.querySelector<HTMLElement>(
+                '[aria-label="Ask your local sidekick"]',
+              )
+              ?.focus({ preventScroll: true });
+          }}
+        />
         <section id="explore" className="explore">
           <div className="section-top">
             <h2>
@@ -449,7 +457,7 @@ export default function Marketplace({
               matchedRunnerId={matchedRunnerId}
               onSelect={selectVendor}
             />
-            <aside className="assistant">
+            <aside id="local-sidekick" className="assistant">
               <div className="assistant-heading">
                 <span className="ai-mark">✦</span>
                 <div>

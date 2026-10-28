@@ -8,6 +8,7 @@ The current showcase uses fictional vendors, private demo workspaces and PayPal 
 
 ## What works
 
+- **Neighborhood Connection:** an interactive first-screen preview links current catalog finds, their shop and an unexpired declared runner trip. Gift, food and locally made choices open the actual listing or give Sidekick its exact context. Previewing does not reserve stock, assign a runner or make a payment. [Design and verification](docs/neighborhood-connection.md).
 - **Explore:** map discovery, searchable vendor storefronts, four featured finds and a paginated full catalog. Browsing remains available when the map cannot initialize. Paid sponsorship and premium subscriptions are not implemented.
 - **Grounded assistant:** validated catalog searches, comparisons, availability, runner matching and authorized order-status reads. Preparing through the assistant produces a reviewable quote; it cannot confirm a payment or execute protected writes. Without an AI key, deterministic discovery remains available and labeled.
 - **Orders:** persistent, vendor-grouped multi-item carts, atomic stock reservations, explicit payment choice and state-gated pickup/delivery/completion.

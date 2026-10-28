@@ -16,6 +16,7 @@ import {
 export async function publicCatalog() {
   if (!configured())
     return {
+      snapshotAt: Date.now(),
       vendors: demoVendors.map((vendor) => ({
         ...vendor,
         reputation: { averageRating: null, reviewCount: 0, completedOrders: 0 },
@@ -27,6 +28,7 @@ export async function publicCatalog() {
         area: r.area,
         availableUntil: r.until,
         destinationVendorId: r.destinationVendorId,
+        ...(r.destinationVendorId ? { tripExpiresAt: r.until } : {}),
         demo: true,
       })),
       demo: true,
@@ -115,6 +117,7 @@ export async function publicCatalog() {
     visibleRunners = visibleRunners.filter((row) => allowed.has(row.id));
   }
   return {
+    snapshotAt: Date.now(),
     demo: false,
     isolatedDemo: Boolean(
       v.data?.length &&
@@ -122,15 +125,22 @@ export async function publicCatalog() {
       v.data[0].demo_workspace !== templateWorkspace &&
       v.data.every((row) => row.demo_workspace === v.data[0].demo_workspace),
     ),
-    runners: visibleRunners.map((row) => ({
-      id: row.id,
-      name: row.display_name,
-      area: [Number(row.public_lon), Number(row.public_lat)],
-      availableUntil: Date.parse(row.available_until),
-      destinationVendorId: t.data!.find((trip) => trip.runner_id === row.id)
-        ?.destination_vendor_id,
-      demo: row.demo,
-    })) as PublicRunner[],
+    runners: visibleRunners.map((row) => {
+      const trip = t.data!.find((trip) => trip.runner_id === row.id);
+      return {
+        id: row.id,
+        name: row.display_name,
+        area: [Number(row.public_lon), Number(row.public_lat)],
+        availableUntil: Date.parse(row.available_until),
+        ...(trip
+          ? {
+              destinationVendorId: trip.destination_vendor_id,
+              tripExpiresAt: Date.parse(trip.expires_at),
+            }
+          : {}),
+        demo: row.demo,
+      };
+    }) as PublicRunner[],
     vendors: v.data.map((row) => ({
       id: row.id,
       name: row.name,

@@ -13,6 +13,7 @@ test("signature discovery, recommendations and explicit order preview", async ({
     "available options",
   );
   await page
+    .locator(".mini-results")
     .getByRole("button", { name: /Habanero Cinnamon Rolls/ })
     .first()
     .click();
@@ -36,7 +37,10 @@ test("gift discovery, search empty state, and responsive layout", async ({
     "available options",
   );
   await expect(
-    page.getByRole("button", { name: /Hand-thrown ceramic mug/ }).first(),
+    page
+      .locator(".mini-results")
+      .getByRole("button", { name: /Hand-thrown ceramic mug/ })
+      .first(),
   ).toBeVisible();
   await page.getByRole("button", { name: "Gifts", exact: true }).click();
   await expect(page.locator(".cards .product")).toHaveCount(3);
