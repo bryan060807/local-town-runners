@@ -2,7 +2,7 @@
 
 Discover local goods and coordinate pickups with a neighbor already going that way. Local Town Runners is a hackathon marketplace centered on Louisiana, Missouri, with catalog-grounded AI discovery, vendor storefronts and a complete customer → vendor → runner workflow.
 
-**[Try the app](https://runners.aibrylabs.com) · [Three-minute judge walkthrough](docs/hackathon-demo.md) · [Demo order instructions](docs/demo-order-walkthrough.md)**
+**[Try the app](https://runners.aibrylabs.com) · [Judge walkthrough](docs/hackathon-demo.md) · [Screenshots and submission checklist](docs/submission-checklist.md)**
 
 The current showcase uses fictional vendors, private demo workspaces and PayPal **Sandbox**. Vendor, runner and platform allocations are simulated; no actual payout is sent. It is not a commercial marketplace launch.
 
@@ -22,7 +22,17 @@ Three genuine marketplace Sandbox payments total **$44.00 USD**, each matched to
 
 The latest [hardening review](docs/hardening-2026-10-27.md) describes the security/reliability fixes, regression evidence, operational limits and recommended next steps. GitHub Actions runs project and browser checks without production credentials.
 
-The [demo delivery update](docs/demo-delivery-polish.md) adds map-failure recovery, a clearer three-role walkthrough and a warmer introduction. The judge story follows one $28 gift with an existing declared runner trip; genuine Sandbox verification is shown separately.
+The [demo delivery update](docs/demo-delivery-polish.md) adds map-failure recovery, a clearer three-role walkthrough and a warmer introduction. The current [judge story](docs/hackathon-demo.md) follows Sidekick comparing bakery combinations, revising the choice to two cinnamon rolls for **$9.00**, and carrying that choice through a completed simulated delivery. Set the fictional runner's declared trip to Demo Hearth Bakery before recording; genuine Sandbox verification is shown separately.
+
+## Judge access and submission materials
+
+Open the hosted app and choose **Enter Demo Mode**. The hosted walkthrough requires no personal account, API key or payment. Keep the same browser session and use **Switch demo profile** to follow Customer, Vendor and Runner through the same private workspace. The [judge guide](docs/hackathon-demo.md) gives the preparation, exact prompts and full fulfillment sequence. Genuine PayPal Sandbox proof is documented separately from this simulated order.
+
+The [submission checklist](docs/submission-checklist.md) explains how to add the project license, capture the app screenshots and prepare the final submission. Its screenshot order follows the current $9 bakery story. Existing [actual hosted AI screenshots](docs/screenshots/sidekick-planner/README.md) can support the submission with their original provenance; localhost mocked-provider images are test evidence.
+
+The earliest visible MVP commit was made **October 6, 2026 (Central)**. Subsequent October work added onboarding, payment recovery and completed Sandbox verification, private simulated fulfillment, community recognition, neighborhood discovery and actual model-backed errand planning. The latest application upgrade was committed **October 28, 2026**; the Git history and dated implementation reports document development within the competition period.
+
+Target a **2:50–2:55 public YouTube video**, including any cinematic opening. The supplied rules set the submission deadline at **November 12, 2026, 2:00 p.m. Central** and require free judge access through **December 15, 2026, 10:00 a.m. Central**. Keep the hosted app, Demo Mode and its configured AI/provider capacity available through judging, and check the organizer's current rules before submitting.
 
 ## Run locally
 
@@ -93,13 +103,13 @@ Browser suites build/start their own application and require port 3000 to be fre
 
 ## Project guide
 
-| Need                                 | Start here                                                                                                                                                               |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Rehearse or present                  | [Judge walkthrough](docs/hackathon-demo.md), [complete simulated order](docs/demo-order-walkthrough.md)                                                                  |
-| Understand architecture and limits   | [Architecture](docs/architecture.md), [current validation](docs/build-notes.md)                                                                                          |
-| Deploy or configure integrations     | [Deployment](docs/deployment.md), [PayPal](docs/paypal.md), [local backend](docs/local-backend.md)                                                                       |
-| Understand trust and data rules      | [Security](docs/security.md), [threat model](docs/threat-model.md), [database](docs/database.md)                                                                         |
-| Understand ratings and recognition   | [Community recognition](docs/community-recognition.md)                                                                                                                   |
-| Inspect onboarding and notifications | [Onboarding implementation](docs/phase-4-implementation.md), [notification repair](docs/phase-4.1-hotfix.md), [production results](docs/phase-4.1-production-results.md) |
+| Need                                 | Start here                                                                                                                                                                    |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rehearse or present                  | [Judge walkthrough](docs/hackathon-demo.md), [screenshots and submission checklist](docs/submission-checklist.md), [complete simulated order](docs/demo-order-walkthrough.md) |
+| Understand architecture and limits   | [Architecture](docs/architecture.md), [current validation](docs/build-notes.md)                                                                                               |
+| Deploy or configure integrations     | [Deployment](docs/deployment.md), [PayPal](docs/paypal.md), [local backend](docs/local-backend.md)                                                                            |
+| Understand trust and data rules      | [Security](docs/security.md), [threat model](docs/threat-model.md), [database](docs/database.md)                                                                              |
+| Understand ratings and recognition   | [Community recognition](docs/community-recognition.md)                                                                                                                        |
+| Inspect onboarding and notifications | [Onboarding implementation](docs/phase-4-implementation.md), [notification repair](docs/phase-4.1-hotfix.md), [production results](docs/phase-4.1-production-results.md)      |
 
 Dated phase reports preserve what was observed at the time; their older pending or unconfigured states are not current setup instructions. Road routing, real payouts, commercial approval, sponsored placement billing and automated retention/deletion processing remain future work. Keep the current Sandbox/demo boundary explicit in submissions and presentations.
