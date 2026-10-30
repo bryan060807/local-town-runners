@@ -1,0 +1,277 @@
+{
+  "recordedAt": "2026-10-30T22:39:07.233Z",
+  "source": "783e8708401625cb53e1f4c0cf3d8f2f635049cf",
+  "scope": "Presentation only: inactive/active demo wording, public storefront thumbnails and bounded responsive product imagery. No schema, packages, environment, catalog/account data or financial behavior changed.",
+  "production": {
+    "recordedAt": "2026-10-30T22:34:42.439Z",
+    "source": "783e8708401625cb53e1f4c0cf3d8f2f635049cf",
+    "deployment": "dpl_D1AiboZgqucAzjL9zPcxzmdibfPu",
+    "state": "READY",
+    "branch": "main",
+    "alias": [
+      "runners.aibrylabs.com",
+      "local-town-runners.vercel.app",
+      "local-town-runners-bryan060807s-projects.vercel.app",
+      "local-town-runners-git-main-bryan060807s-projects.vercel.app"
+    ],
+    "productionTarget": "dpl_D1AiboZgqucAzjL9zPcxzmdibfPu"
+  },
+  "localChecks": {
+    "formatting": "passed",
+    "lint": "passed; eight pre-existing unused-import warnings in ignored local diagnostic helpers",
+    "typecheck": "passed",
+    "unitAndDatabase": {
+      "passed": 146,
+      "failed": 0,
+      "skipped": 0
+    },
+    "focusedConnectedBrowser": {
+      "passed": 20,
+      "failed": 0,
+      "viewports": [1280, 360, 390, 430],
+      "coverage": "Existing listing/cart/quote/stale-quantity checks, catalog isolation and demo entry/switch/exit. These cases overlap the full CI suite."
+    }
+  },
+  "ci": {
+    "runId": 41138978305,
+    "url": "https://github.com/bryan060807/local-town-runners/actions/runs/41138978305",
+    "source": "783e8708401625cb53e1f4c0cf3d8f2f635049cf",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "Types, lint and database safeguards",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Browser checks (offline)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Browser checks (connected-local)",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "counts": {
+      "unitAndDatabase": {
+        "total": 146,
+        "passed": 146,
+        "failed": 0
+      },
+      "offlineBrowser": {
+        "passed": 44,
+        "failed": 0
+      },
+      "connectedBrowser": {
+        "passed": 124,
+        "failed": 0
+      },
+      "auditVulnerabilities": 0,
+      "verified": true,
+      "totalDistinctBrowserChecksPassed": 168
+    },
+    "logProof": [
+      {
+        "job": "Types, lint and database safeguards",
+        "status": 200,
+        "bytes": 45215,
+        "sha256": "a62f4f041b0de25534f18038e9a10b96c6c197af4fd55f6745da48515ea3fd26",
+        "parsed": true
+      },
+      {
+        "job": "Browser checks (offline)",
+        "status": 200,
+        "bytes": 38430,
+        "sha256": "5cdef656b51053e3c921d8a56c2b7225dc81ddb62272b1d9ed37a62d6202b121",
+        "parsed": true
+      },
+      {
+        "job": "Browser checks (connected-local)",
+        "status": 200,
+        "bytes": 41652,
+        "sha256": "a09815e8d1389633481e8e028c60f1c63c264e6d99e1527eb111d35812fd8421",
+        "parsed": true
+      }
+    ]
+  },
+  "publicChecks": {
+    "recordedAt": "2026-10-30T22:37:28.179Z",
+    "boundary": "Fresh anonymous GET/HEAD-only public storefront/listing reads through inherited verified TLS/proxy. No demo entry, account sign-in, catalog mutation, cart, assistant, checkout, simulation, payment, refund, notification or payout. Screenshots show existing approved public content; no source-photo edits.",
+    "fixture": {
+      "origin": "https://runners.aibrylabs.com",
+      "vendorPath": "/vendors/6186cb83-d08b-4028-b644-3c6944a1d681",
+      "listingPath": "/listings/95ce50fa-2876-4074-b1a4-0c9d6b558a25",
+      "vendorName": "MEM's Handcrafts",
+      "listingName": "Willie Nelson Doll",
+      "boundary": "Existing public GET-only fixture; no account creation, edits, cart, checkout, simulation or payment requests."
+    },
+    "results": [
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "pageErrors": [],
+        "transportFailures": [],
+        "blockedRequests": [],
+        "inactiveBannerAccurate": true,
+        "thumbnail": {
+          "width": 112,
+          "height": 112,
+          "naturalWidth": 111,
+          "naturalHeight": 163,
+          "objectFit": "contain"
+        },
+        "storefrontNoOverflow": true,
+        "product": {
+          "width": 522.484375,
+          "height": 518,
+          "top": 179.5,
+          "bottom": 697.5,
+          "naturalWidth": 327,
+          "naturalHeight": 479,
+          "objectFit": "contain"
+        },
+        "priceBox": {
+          "x": 670.484375,
+          "y": 317.1875,
+          "width": 499.515625,
+          "height": 32.1875
+        },
+        "productNoOverflow": true,
+        "passed": true,
+        "screenshots": [
+          "../screenshots/vendor-presentation/VENDOR-PRESENTATION-LIVE-storefront-1280.png",
+          "../screenshots/vendor-presentation/VENDOR-PRESENTATION-LIVE-listing-1280.png"
+        ]
+      },
+      {
+        "viewport": {
+          "width": 360,
+          "height": 800
+        },
+        "pageErrors": [],
+        "transportFailures": [],
+        "blockedRequests": [],
+        "inactiveBannerAccurate": true,
+        "thumbnail": {
+          "width": 80,
+          "height": 80,
+          "naturalWidth": 80,
+          "naturalHeight": 117,
+          "objectFit": "contain"
+        },
+        "storefrontNoOverflow": true,
+        "product": {
+          "width": 318,
+          "height": 334,
+          "top": 203,
+          "bottom": 537,
+          "naturalWidth": 320,
+          "naturalHeight": 468,
+          "objectFit": "contain"
+        },
+        "priceBox": {
+          "x": 20,
+          "y": 676.875,
+          "width": 320,
+          "height": 32.1875
+        },
+        "productNoOverflow": true,
+        "passed": true,
+        "screenshots": [
+          "../screenshots/vendor-presentation/VENDOR-PRESENTATION-LIVE-storefront-360.png",
+          "../screenshots/vendor-presentation/VENDOR-PRESENTATION-LIVE-listing-360.png"
+        ]
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "pageErrors": [],
+        "transportFailures": [],
+        "blockedRequests": [],
+        "inactiveBannerAccurate": true,
+        "thumbnail": {
+          "width": 80,
+          "height": 80,
+          "naturalWidth": 80,
+          "naturalHeight": 117,
+          "objectFit": "contain"
+        },
+        "storefrontNoOverflow": true,
+        "product": {
+          "width": 348,
+          "height": 352.46875,
+          "top": 203,
+          "bottom": 555.46875,
+          "naturalWidth": 350,
+          "naturalHeight": 512,
+          "objectFit": "contain"
+        },
+        "priceBox": {
+          "x": 20,
+          "y": 695.34375,
+          "width": 350,
+          "height": 32.1875
+        },
+        "productNoOverflow": true,
+        "passed": true,
+        "screenshots": []
+      },
+      {
+        "viewport": {
+          "width": 430,
+          "height": 932
+        },
+        "pageErrors": [],
+        "transportFailures": [],
+        "blockedRequests": [],
+        "inactiveBannerAccurate": true,
+        "thumbnail": {
+          "width": 80,
+          "height": 80,
+          "naturalWidth": 80,
+          "naturalHeight": 117,
+          "objectFit": "contain"
+        },
+        "storefrontNoOverflow": true,
+        "product": {
+          "width": 388,
+          "height": 358,
+          "top": 203,
+          "bottom": 561,
+          "naturalWidth": 245,
+          "naturalHeight": 359,
+          "objectFit": "contain"
+        },
+        "priceBox": {
+          "x": 20,
+          "y": 700.875,
+          "width": 390,
+          "height": 32.1875
+        },
+        "productNoOverflow": true,
+        "passed": true,
+        "screenshots": []
+      }
+    ]
+  },
+  "diagnosticNotes": [
+    "The initial public diagnostic accidentally accepted the Next.js loading heading before the storefront finished streaming. It was corrected to wait for the named vendor heading; this was a diagnostic synchronization issue, not an application failure. Final screenshots additionally wait for navigation/fonts and explicitly return to the top."
+  ],
+  "financialBoundary": "Production verification was anonymous GET/HEAD only. Existing vendor/account/consent/listing/price/stock/payment records were not mutated and no provider transaction or payout was initiated.",
+  "changedFiles": [
+    "README.md",
+    "docs/vendor-presentation.md",
+    "src/app/listings/[id]/ListingPage.module.css",
+    "src/app/listings/[id]/page.tsx",
+    "src/app/vendors/[id]/VendorPage.module.css",
+    "src/app/vendors/[id]/page.tsx",
+    "src/components/DemoSwitcher.tsx"
+  ]
+}
