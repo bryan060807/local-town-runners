@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { publicCatalog } from "@/lib/server/catalog";
 import { money } from "@/lib/catalog";
 import VendorReputation from "@/components/VendorReputation";
+import styles from "./VendorPage.module.css";
 export default async function VendorPage({
   params,
 }: {
@@ -87,19 +88,47 @@ export default async function VendorPage({
         {vendor.category} · Louisiana, Missouri. Public location is approximate;
         operational pickup addresses are private.
       </p>
-      {data.listings
-        .filter((l) => l.vendorId === id)
-        .map((l) => (
-          <div key={l.id} className="simple-card">
-            <Link href={`/listings/${l.id}`}>
-              <h2>
-                {l.emoji} {l.title} ·{" "}
-                {l.mode === "SELL" ? money(l.price) : "Quote required"}
-              </h2>
-              <p>{l.description}</p>
-            </Link>
-          </div>
-        ))}
+      <ul className={styles.listings} aria-label="Products and services">
+        {data.listings
+          .filter((l) => l.vendorId === id)
+          .map((l) => (
+            <li key={l.id}>
+              <Link
+                className={styles.listing}
+                href={`/listings/${l.id}`}
+                aria-labelledby={`listing-title-${l.id}`}
+                aria-describedby={`listing-price-${l.id}`}
+              >
+                <div className={styles.thumbnail}>
+                  {l.photos?.[0] ? (
+                    <Image
+                      className={styles.photo}
+                      src={l.photos[0]}
+                      alt={l.title}
+                      fill
+                      sizes="(max-width: 480px) 80px, 112px"
+                    />
+                  ) : (
+                    <span className={styles.emoji} aria-hidden="true">
+                      {l.emoji}
+                    </span>
+                  )}
+                </div>
+                <div className={styles.details}>
+                  <h2 id={`listing-title-${l.id}`}>{l.title}</h2>
+                  <p className={styles.description}>{l.description}</p>
+                  <div className={styles.meta}>
+                    <strong id={`listing-price-${l.id}`}>
+                      {l.mode === "SELL" ? money(l.price) : "Quote required"}
+                    </strong>
+                    {l.mode === "SELL" && <span>{l.inventory} available</span>}
+                    <span className={styles.view}>View item →</span>
+                  </div>
+                </div>
+              </Link>
+            </li>
+          ))}
+      </ul>
     </main>
   );
 }

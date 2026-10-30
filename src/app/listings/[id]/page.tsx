@@ -8,6 +8,7 @@ import ListingActions, {
   type ListingAccess,
 } from "@/components/ListingActions";
 import { authenticated, HttpError } from "@/lib/server/db";
+import styles from "./ListingPage.module.css";
 export default async function ListingPage({
   params,
   searchParams,
@@ -65,37 +66,55 @@ export default async function ListingPage({
     }
   }
   return (
-    <main className="simple-page">
-      <Link href="/">← Explore your town</Link>
-      <div className="modal-emoji">
-        {l.photos?.[0] ? (
-          <Image src={l.photos[0]} alt={l.title} width={600} height={400} />
-        ) : (
-          l.emoji
-        )}
+    <main className={`simple-page ${styles.page}`}>
+      <Link className={styles.back} href="/">
+        ← Explore your town
+      </Link>
+      <div className={styles.product}>
+        <div className={styles.media}>
+          {l.photos?.[0] ? (
+            <Image
+              className={styles.photo}
+              src={l.photos[0]}
+              alt={l.title}
+              fill
+              sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 1120px) 48vw, 520px"
+            />
+          ) : (
+            <span className={styles.emoji} aria-hidden="true">
+              {l.emoji}
+            </span>
+          )}
+        </div>
+        <section className={styles.details} aria-labelledby="listing-title">
+          <div className="eyebrow">
+            {vendor.demo ? "FICTIONAL DEMO VENDOR" : "MARKETPLACE VENDOR"} ·{" "}
+            {l.mode}
+          </div>
+          <h1 className={styles.title} id="listing-title">
+            {l.title}
+          </h1>
+          <p>{l.description}</p>
+          <h2 className={styles.price}>
+            {l.mode === "SELL"
+              ? `${money(l.price)} · ${l.inventory} available`
+              : "Quote required"}
+          </h2>
+          <p>
+            <Link className={styles.vendor} href={`/vendors/${vendor.id}`}>
+              {vendor.name} →
+            </Link>
+          </p>
+          <ListingActions
+            key={l.id}
+            listing={l}
+            access={access}
+            privateDemo={Boolean(data.isolatedDemo)}
+            initialQuantity={initialQuantity}
+            inCart={inCart}
+          />
+        </section>
       </div>
-      <div className="eyebrow">
-        {vendor.demo ? "FICTIONAL DEMO VENDOR" : "MARKETPLACE VENDOR"} ·{" "}
-        {l.mode}
-      </div>
-      <h1>{l.title}</h1>
-      <p>{l.description}</p>
-      <h2>
-        {l.mode === "SELL"
-          ? `${money(l.price)} · ${l.inventory} available`
-          : "Quote required"}
-      </h2>
-      <p>
-        <Link href={`/vendors/${vendor.id}`}>{vendor.name} →</Link>
-      </p>
-      <ListingActions
-        key={l.id}
-        listing={l}
-        access={access}
-        privateDemo={Boolean(data.isolatedDemo)}
-        initialQuantity={initialQuantity}
-        inCart={inCart}
-      />
       {!data.demo && <ReportListing id={l.id} />}
     </main>
   );

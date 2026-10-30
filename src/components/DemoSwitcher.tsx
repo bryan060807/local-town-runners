@@ -54,7 +54,9 @@ export default function DemoSwitcher() {
     >
       <div className={styles.inner}>
         <div className={styles.toolbar}>
-          <span className="demo-tag">DEMO ONLY</span>
+          <span className="demo-tag">
+            {state.active ? "DEMO ONLY" : "DEMO AVAILABLE"}
+          </span>
           {state.active ? (
             <>
               <div className={styles.identity}>
@@ -90,7 +92,9 @@ export default function DemoSwitcher() {
           ) : (
             <>
               <div className={styles.intro}>
-                <span>Fictional profiles. Your own private demo.</span>
+                <span>
+                  Try fictional profiles in a separate private demo workspace.
+                </span>
               </div>
               <button
                 className={styles.enterButton}
@@ -119,7 +123,8 @@ export default function DemoSwitcher() {
               ))}
             </ol>
             <p>
-              Use Switch profile to play the next role in this browser. Choose
+              These are fictional profiles in your private demo workspace. Use
+              Switch profile to play the next role in this browser. Choose
               simulated payment to complete the walkthrough without a PayPal
               charge.
             </p>
