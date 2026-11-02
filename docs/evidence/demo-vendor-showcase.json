@@ -82,7 +82,7 @@
         "skipped": 0,
         "flaky": 0
       },
-      "auditVulnerabilities": null,
+      "auditVulnerabilities": 16,
       "verified": true,
       "totalDistinctBrowserChecksPassed": 172
     },
@@ -108,6 +108,15 @@
         "sha256": "f6d64eb5c372c93e9caf4a86172dddee6d042553dbe18e302a3408398ee38caa",
         "parsed": true
       }
+    ],
+    "auditSummaryEvidence": [
+      "2026-11-02T19:26:22.5711606Z (node:2141) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.",
+      "2026-11-02T19:27:02.7613798Z 16 moderate severity vulnerabilities",
+      "2026-11-02T19:28:05.7582281Z ##[group]Run npm audit --audit-level=high",
+      "2026-11-02T19:28:05.7582501Z npm audit --audit-level=high",
+      "2026-11-02T19:28:07.1154248Z minimatch has potential denial of service via globparts amplification - https://github.com/advisories/GHSA-g3hv-75wg-m249",
+      "2026-11-02T19:28:07.1154622Z fix available via `npm audit fix --force`",
+      "2026-11-02T19:28:07.1175555Z 16 moderate severity vulnerabilities"
     ]
   },
   "liveChecks": {
