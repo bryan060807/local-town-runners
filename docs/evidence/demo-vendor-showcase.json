@@ -1,0 +1,368 @@
+{
+  "recordedAt": "2026-11-02T20:03:17.413276Z",
+  "source": "e8b811e80c629bc9a5ba3f4e7322825464c40b75",
+  "scope": "Separate, anonymous public vendor previews inside private Demo Mode. Public records are display-only and are never added to the transactional catalog, Sidekick, cart, runner matching or order data. No schema, dependencies, environment or existing account/catalog/payment records changed.",
+  "production": {
+    "recordedAt": "2026-11-02T19:27:46.309Z",
+    "source": "e8b811e80c629bc9a5ba3f4e7322825464c40b75",
+    "deployment": "dpl_5dtkaHhtxiBEP6ctqpgXM7Sjueap",
+    "state": "READY",
+    "branch": "main",
+    "alias": [
+      "runners.aibrylabs.com",
+      "local-town-runners.vercel.app",
+      "local-town-runners-bryan060807s-projects.vercel.app",
+      "local-town-runners-git-main-bryan060807s-projects.vercel.app"
+    ],
+    "productionTarget": "dpl_5dtkaHhtxiBEP6ctqpgXM7Sjueap"
+  },
+  "localChecks": {
+    "formatting": "passed",
+    "lint": "passed; eight pre-existing unused-import warnings in ignored local diagnostic helpers",
+    "typecheck": "passed",
+    "unitAndDatabase": {
+      "passed": 146,
+      "failed": 0,
+      "skipped": 0
+    },
+    "focusedConnectedBrowser": {
+      "distinctPassed": 12,
+      "failedAfterFixtureCorrection": 0,
+      "viewports": [1280, 360, 390, 430],
+      "coverage": "Existing catalog-scope and Customer demo journey checks (eight cases), plus public-showcase display, hidden/prohibited exclusions, source withdrawal after refresh, private catalog/AI/cart isolation and unchanged source inventory/customer records (four cases). These overlap the full CI suite."
+    }
+  },
+  "ci": {
+    "runId": 41509910706,
+    "url": "https://github.com/bryan060807/local-town-runners/actions/runs/41509910706",
+    "source": "e8b811e80c629bc9a5ba3f4e7322825464c40b75",
+    "status": "completed",
+    "conclusion": "success",
+    "recordedAt": "2026-11-02T19:41:14.553Z",
+    "jobs": [
+      {
+        "name": "Browser checks (connected-local)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-02T19:26:15Z",
+        "completedAt": "2026-11-02T19:40:36Z"
+      },
+      {
+        "name": "Types, lint and database safeguards",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-02T19:26:15Z",
+        "completedAt": "2026-11-02T19:28:57Z"
+      },
+      {
+        "name": "Browser checks (offline)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-02T19:26:15Z",
+        "completedAt": "2026-11-02T19:29:28Z"
+      }
+    ],
+    "counts": {
+      "unitAndDatabase": {
+        "total": 146,
+        "passed": 146,
+        "failed": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "offlineBrowser": {
+        "passed": 44,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0
+      },
+      "connectedBrowser": {
+        "passed": 128,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0
+      },
+      "auditVulnerabilities": null,
+      "verified": true,
+      "totalDistinctBrowserChecksPassed": 172
+    },
+    "logProof": [
+      {
+        "job": "Browser checks (connected-local)",
+        "status": 200,
+        "bytes": 42269,
+        "sha256": "616daff62761ef9bf7e789e9b6d4a3b6aaffdedd7eee26ae9e58b0f978125eff",
+        "parsed": true
+      },
+      {
+        "job": "Types, lint and database safeguards",
+        "status": 200,
+        "bytes": 52374,
+        "sha256": "0663152f3e974112799d19794bd869a5002aecda5405d9ac71efa3bb11bba00f",
+        "parsed": true
+      },
+      {
+        "job": "Browser checks (offline)",
+        "status": 200,
+        "bytes": 39029,
+        "sha256": "f6d64eb5c372c93e9caf4a86172dddee6d042553dbe18e302a3408398ee38caa",
+        "parsed": true
+      }
+    ]
+  },
+  "liveChecks": {
+    "recordedAt": "2026-11-02T19:27:51.442Z",
+    "origin": "https://runners.aibrylabs.com",
+    "passed": true,
+    "boundary": "One fresh owned fictional Customer demo and its exit. Browser requests use the fixed app origin, GET/HEAD and only one exact POST /api/demo plus its owned DELETE /api/demo. Separate anonymous public Supabase SELECT reads inspect only the two named published vendor records and their public available listings. No actual-account sign-in, vendor/catalog changes, cart/inquiry/order writes, AI/model request, preparation, checkout, payment, simulation, refund, runner action, notification, admin access or payout. TLS verification and inherited proxy remain enabled.",
+    "ownedFictionalDemo": {
+      "entries": 1,
+      "exits": 1,
+      "inactiveAfterExit": true,
+      "before": {
+        "orders": 0,
+        "cartItems": 0
+      },
+      "after": {
+        "orders": 0,
+        "cartItems": 0
+      }
+    },
+    "publicSources": {
+      "vendors": [
+        {
+          "id": "6186cb83-d08b-4028-b644-3c6944a1d681",
+          "name": "MEM's Handcrafts"
+        },
+        {
+          "id": "affb5c61-fe84-43e9-a317-f9490aa9e264",
+          "name": "AIBRY"
+        }
+      ],
+      "availableListings": 4,
+      "anonymousSelectRequests": 4,
+      "beforeDigest": "ec3b6a0b48f4f23a1cabb85f2c9d43c57d26e7516097ae51e94751c642a2ebf7",
+      "afterDigest": "ec3b6a0b48f4f23a1cabb85f2c9d43c57d26e7516097ae51e94751c642a2ebf7",
+      "unchanged": true,
+      "digestScope": "Named public vendor rows and their available public listing/price/inventory rows, not private payment data."
+    },
+    "profiles": [
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "businesses": [
+          {
+            "name": "MEM's Handcrafts",
+            "listings": [
+              {
+                "id": "22146381-8909-4ca1-9c6f-3ae6b981ab1c",
+                "title": "Dexter Morgan Doll",
+                "mode": "SELL",
+                "priceCents": 2500
+              },
+              {
+                "id": "95ce50fa-2876-4074-b1a4-0c9d6b558a25",
+                "title": "Willie Nelson Doll",
+                "mode": "SELL",
+                "priceCents": 1000
+              }
+            ]
+          },
+          {
+            "name": "AIBRY",
+            "listings": [
+              {
+                "id": "dbfe613d-c0c8-43fc-b3ff-3e556532feca",
+                "title": "Carpentry Work",
+                "mode": "DO",
+                "priceCents": 0
+              },
+              {
+                "id": "e24033b1-66ad-44df-93a7-a3ae69651036",
+                "title": "Mechanical Work",
+                "mode": "DO",
+                "priceCents": 0
+              }
+            ]
+          }
+        ],
+        "noHorizontalOverflow": true
+      },
+      {
+        "viewport": {
+          "width": 360,
+          "height": 800
+        },
+        "businesses": [
+          {
+            "name": "MEM's Handcrafts",
+            "listings": [
+              {
+                "id": "22146381-8909-4ca1-9c6f-3ae6b981ab1c",
+                "title": "Dexter Morgan Doll",
+                "mode": "SELL",
+                "priceCents": 2500
+              },
+              {
+                "id": "95ce50fa-2876-4074-b1a4-0c9d6b558a25",
+                "title": "Willie Nelson Doll",
+                "mode": "SELL",
+                "priceCents": 1000
+              }
+            ]
+          },
+          {
+            "name": "AIBRY",
+            "listings": [
+              {
+                "id": "dbfe613d-c0c8-43fc-b3ff-3e556532feca",
+                "title": "Carpentry Work",
+                "mode": "DO",
+                "priceCents": 0
+              },
+              {
+                "id": "e24033b1-66ad-44df-93a7-a3ae69651036",
+                "title": "Mechanical Work",
+                "mode": "DO",
+                "priceCents": 0
+              }
+            ]
+          }
+        ],
+        "noHorizontalOverflow": true
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "businesses": [
+          {
+            "name": "MEM's Handcrafts",
+            "listings": [
+              {
+                "id": "22146381-8909-4ca1-9c6f-3ae6b981ab1c",
+                "title": "Dexter Morgan Doll",
+                "mode": "SELL",
+                "priceCents": 2500
+              },
+              {
+                "id": "95ce50fa-2876-4074-b1a4-0c9d6b558a25",
+                "title": "Willie Nelson Doll",
+                "mode": "SELL",
+                "priceCents": 1000
+              }
+            ]
+          },
+          {
+            "name": "AIBRY",
+            "listings": [
+              {
+                "id": "dbfe613d-c0c8-43fc-b3ff-3e556532feca",
+                "title": "Carpentry Work",
+                "mode": "DO",
+                "priceCents": 0
+              },
+              {
+                "id": "e24033b1-66ad-44df-93a7-a3ae69651036",
+                "title": "Mechanical Work",
+                "mode": "DO",
+                "priceCents": 0
+              }
+            ]
+          }
+        ],
+        "noHorizontalOverflow": true
+      },
+      {
+        "viewport": {
+          "width": 430,
+          "height": 932
+        },
+        "businesses": [
+          {
+            "name": "MEM's Handcrafts",
+            "listings": [
+              {
+                "id": "22146381-8909-4ca1-9c6f-3ae6b981ab1c",
+                "title": "Dexter Morgan Doll",
+                "mode": "SELL",
+                "priceCents": 2500
+              },
+              {
+                "id": "95ce50fa-2876-4074-b1a4-0c9d6b558a25",
+                "title": "Willie Nelson Doll",
+                "mode": "SELL",
+                "priceCents": 1000
+              }
+            ]
+          },
+          {
+            "name": "AIBRY",
+            "listings": [
+              {
+                "id": "dbfe613d-c0c8-43fc-b3ff-3e556532feca",
+                "title": "Carpentry Work",
+                "mode": "DO",
+                "priceCents": 0
+              },
+              {
+                "id": "e24033b1-66ad-44df-93a7-a3ae69651036",
+                "title": "Mechanical Work",
+                "mode": "DO",
+                "priceCents": 0
+              }
+            ]
+          }
+        ],
+        "noHorizontalOverflow": true
+      }
+    ],
+    "pageErrors": [],
+    "transportFailures": [],
+    "blockedRequests": [],
+    "financialProviderCalls": 0,
+    "directExternalBrowserRequests": 0,
+    "screenshots": [
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "path": "../screenshots/demo-vendor-showcase/DEMO-SHOWCASE-LIVE-1280.png",
+        "sha256": "f7619ddc29cb0c3ed1a8ec9d62fe683ea61422318849c696b742700648667a4c"
+      },
+      {
+        "viewport": {
+          "width": 360,
+          "height": 800
+        },
+        "path": "../screenshots/demo-vendor-showcase/DEMO-SHOWCASE-LIVE-360.png",
+        "sha256": "dd96578bed9a9a60879cf91c1d7b1ff5b46b5e5b6bc9f558580ab1315d9946bb"
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "path": "../screenshots/demo-vendor-showcase/DEMO-SHOWCASE-LIVE-390.png",
+        "sha256": "c3be8a3ea5f5a2acd2867d99a61b3266b9c5095529aed277d0626fd6341907f6"
+      },
+      {
+        "viewport": {
+          "width": 430,
+          "height": 932
+        },
+        "path": "../screenshots/demo-vendor-showcase/DEMO-SHOWCASE-LIVE-430.png",
+        "sha256": "ef304faf7c716fe3c37533de676fd80fa7f541581cd3be6a6afe8a203d1bae23"
+      }
+    ],
+    "limits": "One headless Chromium Customer browser resized across four viewports; not physical-phone testing. WebGL disabled to avoid external map-tile traffic. No map interaction, additional order flow, payment re-verification or private database fingerprint check performed."
+  },
+  "diagnosticNotes": [
+    "The first focused browser run passed the eight existing checks but failed four new showcase cases during fixture setup because two local rows omitted the required emoji field. The fixture was corrected, then all four new cases passed. Application behavior was unchanged by that correction. Counts represent distinct cases, not rerun totals."
+  ],
+  "financialBoundary": "No PayPal API, model-provider API, checkout, capture, simulation, refund, payout or actual-vendor/catalog mutation was invoked by production QA. This feature does not supply new financial verification evidence."
+}

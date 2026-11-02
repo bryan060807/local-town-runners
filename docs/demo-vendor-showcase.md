@@ -33,3 +33,9 @@ Public reads have a shared five-second timeout. If the optional showcase is unav
 The connected showcase regression uses only generated local fixtures. It checks public preview display, hidden/moderated exclusions, expansion without writes, unchanged source stock and private customer records, private catalog/AI separation, denied cross-scope cart access and source withdrawal after refresh. Existing scope and demo-journey checks remain applicable.
 
 Use [the final delivery plan](final-submission-plan.md) for filming. A brief expanded real-business preview can show local participation without leaving Demo Mode or changing the tested fictional order story. Keep the showcase label visible in recordings.
+
+## Recorded verification
+
+The November 2, 2026 production check found **AIBRY** and **MEM's Handcrafts**, with four available public listings between them. Both previews expanded at 1280px, 360px, 390px and 430px without horizontal overflow. The owned Customer demo's cart and order counts stayed zero, its session exited successfully, and anonymous source reads confirmed unchanged public profiles, prices and inventory.
+
+See the [verification report](evidence/demo-vendor-showcase.json), [live screenshots](screenshots/demo-vendor-showcase/README.md) and [exact-source CI run](https://github.com/bryan060807/local-town-runners/actions/runs/41509910706). The report distinguishes local generated-fixture regressions from production presentation checks; neither represents a new sale or payment.
