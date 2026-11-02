@@ -4,7 +4,7 @@ Discover local goods and coordinate pickups with a neighbor already going that w
 
 **[Try the app](https://runners.aibrylabs.com) · [Judge walkthrough](docs/hackathon-demo.md) · [Screenshots and submission checklist](docs/submission-checklist.md)**
 
-The current showcase uses fictional vendors, private demo workspaces and PayPal **Sandbox**. Vendor, runner and platform allocations are simulated; no actual payout is sent. It is not a commercial marketplace launch.
+The showcase combines participating local vendor storefronts with fictional private Demo Mode workspaces and PayPal **Sandbox**. Vendor, runner and platform allocations are simulated; no actual payout is sent. Real storefronts are separate from the fictional role-switching walkthrough. It is not a commercial marketplace launch.
 
 ## What works
 
@@ -30,7 +30,9 @@ Open the hosted app and choose **Enter Demo Mode**. The hosted walkthrough requi
 
 The [submission checklist](docs/submission-checklist.md) explains how to add the project license, capture the app screenshots and prepare the final submission. Its screenshot order follows the current $9 bakery story. Existing [actual hosted AI screenshots](docs/screenshots/sidekick-planner/README.md) can support the submission with their original provenance; localhost mocked-provider images are test evidence.
 
-The earliest visible MVP commit was made **October 6, 2026 (Central)**. Subsequent October work added onboarding, payment recovery and completed Sandbox verification, private simulated fulfillment, community recognition, neighborhood discovery and actual model-backed errand planning. The latest application upgrade was committed **October 28, 2026**; the Git history and dated implementation reports document development within the competition period.
+The [final delivery plan](docs/final-submission-plan.md) sets the recording, optional vendor-intake cutoff and November 10 submission target. A [written entry draft](docs/hackathon-submission-draft.md) is ready for entrant review; the final video upload and Devpost submission are not yet confirmed.
+
+The earliest visible MVP commit was made **October 6, 2026 (Central)**. Subsequent October work added onboarding, payment recovery and completed Sandbox verification, private simulated fulfillment, community recognition, neighborhood discovery and actual model-backed errand planning. The latest application upgrade was committed **October 30, 2026**, improving real-vendor presentation; the Git history and dated implementation reports document development within the competition period.
 
 Target a **2:50–2:55 public YouTube video**, including any cinematic opening. The supplied rules set the submission deadline at **November 12, 2026, 2:00 p.m. Central** and require free judge access through **December 15, 2026, 10:00 a.m. Central**. Keep the hosted app, Demo Mode and its configured AI/provider capacity available through judging, and check the organizer's current rules before submitting.
 

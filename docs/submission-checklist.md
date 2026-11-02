@@ -4,6 +4,8 @@ Use the [Fred bakery walkthrough](hackathon-demo.md) for the current story: two 
 
 ## Create the project license in GitHub
 
+**Completed:** the root ISC `LICENSE` is committed and GitHub recognition was rechecked November 2, 2026. No new license file is needed. The steps below remain a reference for reproducing that setup. Use the [final delivery plan](final-submission-plan.md) for the current remaining work and schedule.
+
 The project declares **ISC** in `package.json`. ISC permits reuse, modification and redistribution, including commercial use, while requiring the copyright and permission notices to remain. It disclaims warranties. Adding the matching file makes those terms explicit for the project; third-party assets retain their own license notices.
 
 1. Sign into your GitHub account and open [Create LICENSE on main](https://github.com/bryan060807/local-town-runners/new/main?filename=LICENSE). Alternatively, open the repository, select **main**, then **Add file → Create new file**.
@@ -105,7 +107,7 @@ When publishing new images in the repository, place only reviewed, sanitized cop
 
 ## Final submission checks
 
-- [ ] Root **LICENSE** is committed on the public repository's default branch and GitHub detects ISC.
+- [x] Root **LICENSE** is committed on the public repository's default branch and GitHub detects ISC (rechecked November 2, 2026).
 - [ ] The description identifies the audience, problem, demonstrated benefit and limitations. State significant work completed during the submission period; Git history records the October 6 MVP (Central; October 7 UTC) and subsequent October AI, payment and fulfillment updates.
 - [ ] The video shows actual application footage, preserves provenance/simulation labels, and finishes in **2:50–2:55**, including the cinematic opener and closing frame. Upload it to **YouTube**, set visibility to **Public**, and test the submitted URL while signed out.
 - [ ] Cinematic images, music and voices are your own or properly licensed for the submitted use. Keep permissions and required attribution.
