@@ -1,10 +1,11 @@
-.composer {
+.discovery .composer {
   gap: 4px;
   margin: 0;
 }
 
-.discovery {
+.discovery:global(.assistant) {
   min-height: 0;
+  padding: 20px 0 0;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -92,7 +93,7 @@
   cursor: default;
 }
 
-.provenance {
+.discovery .provenance {
   margin: 0 0 12px;
   color: #53614d;
   font-size: 11px;
@@ -103,7 +104,7 @@
   outline-offset: 2px;
 }
 
-.composer input {
+.discovery .composer input {
   min-height: 44px;
   font-size: 13px;
 }
@@ -144,7 +145,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .composer input {
+  .discovery .composer input {
     font-size: 16px;
   }
 }
