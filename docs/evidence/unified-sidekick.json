@@ -1,0 +1,339 @@
+{
+  "recordedAt": "2026-11-02T20:46:29.978186Z",
+  "source": "cae917fcb8587055622f38fc5e9c9e7b0b49ff37",
+  "scope": "One shared Sidekick panel with explicit planning and quick-question tools, preserved mounted state and a full-width map. Existing discovery/plan endpoints, provenance, catalog scope, canonical validation and explicit cart/order/payment controls remain unchanged. No schema, dependency, environment or existing account/catalog/payment data changes.",
+  "production": {
+    "recordedAt": "2026-11-02T20:28:32.993Z",
+    "source": "cae917fcb8587055622f38fc5e9c9e7b0b49ff37",
+    "deployment": "dpl_PvXZXa98NBNvQeduR9sfjifubqEi",
+    "state": "READY",
+    "branch": "main",
+    "alias": [
+      "runners.aibrylabs.com",
+      "local-town-runners.vercel.app",
+      "local-town-runners-bryan060807s-projects.vercel.app",
+      "local-town-runners-git-main-bryan060807s-projects.vercel.app"
+    ],
+    "productionTarget": "dpl_PvXZXa98NBNvQeduR9sfjifubqEi"
+  },
+  "localChecks": {
+    "initialImplementationSource": "3aaecddee2e152d3e6734a2946dfea1f3e8b0683",
+    "formatting": "passed",
+    "lint": "passed; eight pre-existing unused-import warnings in ignored local diagnostic helpers",
+    "typecheck": "passed",
+    "unitAndDatabase": {
+      "passed": 146,
+      "failed": 0,
+      "skipped": 0
+    },
+    "offlineBrowser": {
+      "passed": 48,
+      "failed": 0,
+      "coverage": "Existing browsing, WebGL/tile fallback and map markers, discovery/order previews, plus one visible Sidekick composer, preserved planning/discovery drafts and map shortcut without automatic submission."
+    },
+    "focusedConnectedBrowser": {
+      "passed": 16,
+      "failed": 0,
+      "viewports": [1280, 360, 390, 430],
+      "coverage": "Enter/Send discovery, duplicate-submit protection and failure/retry draft retention, contextual item questions, mock-model plan comparison/refinement/review, preserved review and drafts across tool switches, canonical shop highlights and expired pickup withdrawal. All fixtures use the dedicated local backend and are included in the full CI suite."
+    },
+    "finalCssPolish": {
+      "source": "cae917fcb8587055622f38fc5e9c9e7b0b49ff37",
+      "focusedOfflinePassed": 4,
+      "failed": 0,
+      "coverage": "The same unified-tool regression rerun across all four offline browser projects after correcting CSS specificity. These four cases overlap the 48-case offline suite; do not add them to its total."
+    }
+  },
+  "ci": {
+    "recordedAt": "2026-11-02T20:46:00.533101Z",
+    "source": "cae917fcb8587055622f38fc5e9c9e7b0b49ff37",
+    "runId": 41519374988,
+    "url": "https://github.com/bryan060807/local-town-runners/actions/runs/41519374988",
+    "status": "completed",
+    "conclusion": "success",
+    "counts": {
+      "unitAndDatabase": {
+        "total": 146,
+        "passed": 146,
+        "failed": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "offlineBrowser": {
+        "passed": 48,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0
+      },
+      "connectedBrowser": {
+        "passed": 128,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0
+      },
+      "auditVulnerabilities": 16,
+      "verified": true,
+      "totalDistinctBrowserChecksPassed": 176
+    },
+    "jobs": [
+      {
+        "name": "Types, lint and database safeguards",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-02T20:28:03Z",
+        "completedAt": "2026-11-02T20:30:09Z"
+      },
+      {
+        "name": "Browser checks (connected-local)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-02T20:28:03Z",
+        "completedAt": "2026-11-02T20:44:55Z"
+      },
+      {
+        "name": "Browser checks (offline)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-02T20:28:13Z",
+        "completedAt": "2026-11-02T20:31:36Z"
+      }
+    ],
+    "logProof": [
+      {
+        "job": "Types, lint and database safeguards",
+        "status": 200,
+        "bytes": 52292,
+        "sha256": "83290cc053ad8a8de21c8878ac2feb76e9b92896bceac27200c46e739ed5d7d3",
+        "parsed": true
+      },
+      {
+        "job": "Browser checks (offline)",
+        "status": 200,
+        "bytes": 39212,
+        "sha256": "22200c14c14a47037f6d8874989ab02320eaf2eac7b9f60973bebc55da119ee0",
+        "parsed": true
+      },
+      {
+        "job": "Browser checks (connected-local)",
+        "status": 200,
+        "bytes": 42273,
+        "sha256": "c2907299aabd68a81b045ae48b196ed37cd39cc7140b38ead6b9a71159a96fb8",
+        "parsed": true
+      }
+    ],
+    "dependencyAudit": {
+      "reportedVulnerabilities": 16,
+      "severity": "moderate",
+      "highSeverityGate": "passed",
+      "advisory": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+      "boundary": "Existing findings are recorded; no dependency upgrade or force-fix was included in this UI change."
+    }
+  },
+  "liveChecks": {
+    "recordedAt": "2026-11-02T20:28:37.999Z",
+    "boundary": "Anonymous fixed-origin GET/HEAD-only UI check. One fresh headless Chromium browser is resized across four viewports. Outgoing browser cookies and authorization plus incoming Set-Cookie are removed. All writes, demo entry, sign-in, admin routes, assistant/model APIs and provider origins are blocked. Only GET /api/demo is allowed among API paths. Typed drafts are never submitted. No public/private catalog edits, cart/order/quote/fulfillment changes, payment, simulation, refund, notification or payout. WebGL is disabled to avoid map-tile traffic; the check verifies the map layout and fallback, not GPU/map interaction. Inherited proxy and verified TLS are preserved.",
+    "uiOnly": true,
+    "readOnlyModeExplicitlyRequested": true,
+    "anonymous": true,
+    "demoEntries": 0,
+    "assistantSubmissions": 0,
+    "providerCalls": 0,
+    "cookiesAccepted": 0,
+    "requests": {
+      "GET": 102,
+      "HEAD": 0
+    },
+    "apiReads": [
+      {
+        "method": "GET",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/demo",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/demo",
+        "status": 200
+      }
+    ],
+    "blockedRequests": [],
+    "transportFailures": [],
+    "pageErrors": [],
+    "profiles": [
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "defaultPlanning": true,
+        "singleVisibleComposer": true,
+        "planDraftPreserved": true,
+        "discoveryDraftPreserved": true,
+        "mapShortcutFocusedDiscovery": true,
+        "mapShortcutSubmitted": false,
+        "webglDisabledMapFallbackVisible": true,
+        "discoveryStyle": {
+          "panelBorderWidth": "0px",
+          "inputFontSize": "13px"
+        },
+        "layout": {
+          "gridChildren": 1,
+          "gridWidth": 1152,
+          "mapWidth": 1152,
+          "noHorizontalOverflow": true
+        },
+        "passed": true
+      },
+      {
+        "viewport": {
+          "width": 360,
+          "height": 800
+        },
+        "defaultPlanning": true,
+        "singleVisibleComposer": true,
+        "planDraftPreserved": true,
+        "discoveryDraftPreserved": true,
+        "mapShortcutFocusedDiscovery": true,
+        "mapShortcutSubmitted": false,
+        "webglDisabledMapFallbackVisible": true,
+        "discoveryStyle": {
+          "panelBorderWidth": "0px",
+          "inputFontSize": "16px"
+        },
+        "layout": {
+          "gridChildren": 1,
+          "gridWidth": 324,
+          "mapWidth": 324,
+          "noHorizontalOverflow": true
+        },
+        "passed": true
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "defaultPlanning": true,
+        "singleVisibleComposer": true,
+        "planDraftPreserved": true,
+        "discoveryDraftPreserved": true,
+        "mapShortcutFocusedDiscovery": true,
+        "mapShortcutSubmitted": false,
+        "webglDisabledMapFallbackVisible": true,
+        "discoveryStyle": {
+          "panelBorderWidth": "0px",
+          "inputFontSize": "16px"
+        },
+        "layout": {
+          "gridChildren": 1,
+          "gridWidth": 351,
+          "mapWidth": 351,
+          "noHorizontalOverflow": true
+        },
+        "passed": true
+      },
+      {
+        "viewport": {
+          "width": 430,
+          "height": 932
+        },
+        "defaultPlanning": true,
+        "singleVisibleComposer": true,
+        "planDraftPreserved": true,
+        "discoveryDraftPreserved": true,
+        "mapShortcutFocusedDiscovery": true,
+        "mapShortcutSubmitted": false,
+        "webglDisabledMapFallbackVisible": true,
+        "discoveryStyle": {
+          "panelBorderWidth": "0px",
+          "inputFontSize": "16px"
+        },
+        "layout": {
+          "gridChildren": 1,
+          "gridWidth": 387,
+          "mapWidth": 387,
+          "noHorizontalOverflow": true
+        },
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "capturedScreenshotCount": 12,
+    "publishedScreenshots": [
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "mode": "plan",
+        "path": "../screenshots/unified-sidekick/UNIFIED-SIDEKICK-LIVE-plan-1280.png",
+        "sha256": "b4c42e4c7fbeb35012663b18c5ca71471bc5634fe6e40e27cbb54fcfc62ec329"
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "mode": "discover",
+        "path": "../screenshots/unified-sidekick/UNIFIED-SIDEKICK-LIVE-discover-1280.png",
+        "sha256": "9100c8897084c39548a108ef79acdd3d6783a5cb4f6206d77df83cda3a235d9b"
+      },
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "mode": "map",
+        "path": "../screenshots/unified-sidekick/UNIFIED-SIDEKICK-LIVE-map-1280.png",
+        "sha256": "b943890de2be707bc7f4af40415f6d2cf55c3a11aace7359232e9a3c542f5895"
+      },
+      {
+        "viewport": {
+          "width": 360,
+          "height": 800
+        },
+        "mode": "plan",
+        "path": "../screenshots/unified-sidekick/UNIFIED-SIDEKICK-LIVE-plan-360.png",
+        "sha256": "d2f2c0d2ea73da687af53574028f78a6e187827ddfc29e8980c952fdde7176ab"
+      },
+      {
+        "viewport": {
+          "width": 360,
+          "height": 800
+        },
+        "mode": "discover",
+        "path": "../screenshots/unified-sidekick/UNIFIED-SIDEKICK-LIVE-discover-360.png",
+        "sha256": "ecc34d05d5905b61524b5c57b5af1dcb58178ffc3c1fa4a1f661b28feb34cc94"
+      },
+      {
+        "viewport": {
+          "width": 360,
+          "height": 800
+        },
+        "mode": "map",
+        "path": "../screenshots/unified-sidekick/UNIFIED-SIDEKICK-LIVE-map-360.png",
+        "sha256": "b707f27ae572cc7a6a13a6e839282619115694a8be4d0ca5d6cfebe4f22ef8b0"
+      }
+    ]
+  },
+  "designBoundaries": [
+    "Planning and quick discovery retain separate bounded context. Switching tools preserves page state; it does not merge their conversation histories or persist them in the database.",
+    "Both tools remain mounted under native hidden containers; one request composer is visible. In-flight answers or cart saves lock cross-tool controls. Focus changes respect reduced motion and an inert page behind an item dialog.",
+    "The map shortcut only selects and focuses the existing quick-question input. The Neighborhood Connection item shortcut still explicitly asks about that item.",
+    "Show on map resolves a plan item through the loaded scoped catalog before highlighting vendor IDs. A prior runner highlight is cleared; a returned runner name is never treated as a runner identity or assignment.",
+    "Read-only production UI verification intentionally disabled WebGL and did not invoke a model, prepare or pay for an order. Actual model and Sandbox capture evidence remains in its original reports."
+  ],
+  "diagnosticNotes": [
+    "Initial production behavior checks passed, but screenshot review exposed legacy global sidebar CSS overriding the new discovery panel. Selector specificity, spacing and mobile input typography were corrected; final-source live checks additionally verify the absence of the sidebar border and 16px mobile input text."
+  ],
+  "financialBoundary": "No provider call, PayPal transaction, capture, refund, payout, demo payment simulation or private payment-record query was made by production QA. Existing payment fingerprints were not freshly re-verified in this presentation task."
+}

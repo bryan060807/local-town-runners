@@ -49,3 +49,13 @@ The [actual provider development probes](evidence/sidekick-planner-model-verific
 All **ten read-only production checks** passed. A further SELECT-only check after hosted QA confirmed the existing three paid Sandbox orders, $44.00 and twelve ledger rows retain their previous complete fingerprint. Existing capture/webhook proof remains separate from this AI release.
 
 See the [verification report](evidence/sidekick-planner.json), [CI evidence](evidence/sidekick-planner-ci.json), [production evidence](evidence/sidekick-planner-production.json), [actual hosted comparison](screenshots/sidekick-planner/SIDEKICK-PLANNER-LIVE-two-options-desktop-1280.png) and [screenshot provenance](screenshots/sidekick-planner/README.md). The [judge walkthrough](hackathon-demo.md) uses this AI comparison/refinement before the explicitly simulated $9 order.
+
+## Unified layout verification — November 2, 2026
+
+The single-panel layout on source `cae917fcb8587055622f38fc5e9c9e7b0b49ff37` passed anonymous live UI checks at 1280px, 360px, 390px and 430px. Each view retained both drafts while switching tools, showed one request composer, and opened that same discovery input from the map shortcut without submitting it. The map filled its available row, and the page had no horizontal overflow. Mobile inputs use 16px text, and legacy sidebar borders no longer create a nested assistant card.
+
+The live check used GET/HEAD only and deliberately disabled WebGL, so its map screenshots document the fallback layout. Local regressions separately exercise map markers, contextual requests, retry protection, reviewed mocked-model plans and canonical vendor highlights. No fresh model call or financial transaction was needed for this presentation change.
+
+Exact-source CI passed **146 unit/database tests and 176 browser checks**: 48 offline and 128 connected, with no failures, skips or flaky results. The dependency audit still reported 16 moderate advisories; its high-severity gate passed. Those findings are recorded for separate maintenance, rather than claiming a clean dependency audit.
+
+See the [unified-layout report](evidence/unified-sidekick.json), [exact-source CI run](https://github.com/bryan060807/local-town-runners/actions/runs/41519374988) and [six production screenshots with provenance](screenshots/unified-sidekick/README.md). The earlier actual-provider and Sandbox records retain their original dates and sources.
