@@ -35,7 +35,9 @@ test("offline planner identifies catalog fallback honestly and opens an actual s
     name: "Sidekick Errand Planner",
     exact: true,
   });
-  await expect(planner).toContainText("Illustrative catalog");
+  await expect(
+    page.getByRole("region", { name: "Your local sidekick", exact: true }),
+  ).toContainText("Illustrative catalog");
   const message = "I need something locally made under $20.";
   await planner
     .getByRole("textbox", { name: "Tell Sidekick what you need", exact: true })

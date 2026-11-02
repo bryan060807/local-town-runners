@@ -1,10 +1,14 @@
 # Sidekick Errand Planner
 
-Sidekick now uses a model to turn a natural-language need into compared, reviewable combinations of actual marketplace items. It supports quantities, an overall item budget, local-only and one-shop preferences, clarification and follow-up revisions. The existing quick chat remains available and explicitly labels catalog-rule answers separately from model-assisted answers.
+Sidekick uses a model to turn a natural-language need into compared, reviewable combinations of actual marketplace items. It supports quantities, an overall item budget, local-only and one-shop preferences, clarification and follow-up revisions. One shared panel below Neighborhood Connection now contains both **Plan an errand** (the default) and **Find & ask** (quick discovery and authorized order questions). The second chatbot beside the map has been removed.
+
+Switching tools preserves each tool's current draft, response and review state while showing one message composer at a time. Planning refinements stay with the current plan; quick questions keep their selected-listing context. These are separate tools, not a combined conversation history. An in-flight answer or cart save locks switching until it finishes. Catalog-rule answers and actual model-assisted answers retain their distinct labels.
+
+The map now spans the available width. **Ask Sidekick about this area** opens and focuses **Find & ask** in the shared panel without submitting a request or replacing a draft. The Neighborhood Connection **Ask Sidekick** action opens the same tool with that item's context. A plan's **Show on map** action highlights its shops using current scoped catalog IDs and clears any previous runner highlight; a pickup description alone does not identify or assign a runner. Tool switching and map shortcuts do not write cart or order records.
 
 ## Try the AI experience
 
-Enter a fresh private Customer demo, then use **Sidekick Errand Planner** below the Neighborhood Connection panel. Select **Bakery stop under $20** and **Build an errand plan**. The request is:
+Enter a fresh private Customer demo, then choose **Plan an errand** in **Your local Sidekick** below the Neighborhood Connection panel. Select **Bakery stop under $20** and **Build an errand plan**. The request is:
 
 > I need two cinnamon rolls and one more bakery item to share, under $20 total. Compare two combinations from one shop and check pickup.
 

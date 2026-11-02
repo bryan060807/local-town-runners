@@ -53,6 +53,7 @@ test("a browser without WebGL can still find vendors, ask the assistant and prev
   await expect(page.locator(".cards .product")).toContainText(
     "Habanero Cinnamon Rolls",
   );
+  await page.getByRole("button", { name: "Find & ask", exact: true }).click();
   await page.getByRole("button", { name: "I'm hungry. What's good?" }).click();
   await expect(page.locator(".assistant .reply")).toContainText(
     "available options",

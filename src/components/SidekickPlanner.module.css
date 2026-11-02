@@ -50,6 +50,44 @@
   background: #faf5e8;
   font-size: 11px;
 }
+.tools {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 5px;
+  margin-top: 20px;
+  border: 1px solid #dce3d2;
+  border-radius: 11px;
+  background: #f0f3e8;
+}
+.tools button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 10px 15px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: #52664a;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+.tools button[aria-pressed="true"] {
+  border-color: #cdd8be;
+  background: white;
+  color: #315a43;
+  box-shadow: 0 2px 5px #27422d09;
+}
+.tools button:hover:not(:disabled):not([aria-pressed="true"]) {
+  background: #e8eedc;
+}
+.shell button:focus-visible {
+  outline: 3px solid #88a95e;
+  outline-offset: 3px;
+}
 .examples {
   display: flex;
   flex-wrap: wrap;
@@ -485,6 +523,28 @@
   border-color: #315a43;
   color: white;
 }
+.mapButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  margin-top: 15px;
+  padding: 10px 13px;
+  border: 1px solid #d5dfc7;
+  border-radius: 8px;
+  background: white;
+  color: #46633d;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+.mapButton:hover:not(:disabled) {
+  background: #f2f6e9;
+}
+.mapButton + .reviewButton {
+  margin-top: 8px;
+}
 .review {
   padding: 23px;
   margin-top: 20px;
@@ -657,6 +717,16 @@
   .headerNote {
     font-size: 10px;
     padding: 6px 9px;
+  }
+  .tools {
+    display: flex;
+    margin-top: 17px;
+  }
+  .tools button {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 8px;
+    font-size: 11px;
   }
   .examples {
     gap: 7px;

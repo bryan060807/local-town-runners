@@ -89,6 +89,7 @@ test("cookie-authenticated order preparation persists; missing PayPal configurat
     await login(page, "customer");
     await page.goto("/");
     await expect(page.getByText("Connected marketplace")).toBeVisible();
+    await page.getByRole("button", { name: "Find & ask", exact: true }).click();
     const discovery = page.waitForResponse(
       (r) =>
         r.url().endsWith("/api/assistant") && r.request().method() === "POST",

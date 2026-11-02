@@ -8,6 +8,7 @@ test("signature discovery, recommendations and explicit order preview", async ({
   await expect(
     page.getByRole("heading", { name: "Good things. Close to home." }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Find & ask", exact: true }).click();
   await page.getByRole("button", { name: "I'm hungry. What's good?" }).click();
   await expect(page.locator(".assistant .reply")).toContainText(
     "available options",
@@ -32,6 +33,7 @@ test("gift discovery, search empty state, and responsive layout", async ({
   page,
 }, info) => {
   await page.goto("/");
+  await page.getByRole("button", { name: "Find & ask", exact: true }).click();
   await page.getByRole("button", { name: "A birthday gift under $40" }).click();
   await expect(page.locator(".assistant .reply")).toContainText(
     "available options",
@@ -113,6 +115,7 @@ test("conversational discovery focuses the selected vendor and matches a public 
   page,
 }) => {
   await page.goto("/");
+  await page.getByRole("button", { name: "Find & ask", exact: true }).click();
   const input = page.getByRole("textbox", { name: "Ask your local sidekick" });
   async function ask(q: string) {
     await input.fill(q);
@@ -140,6 +143,7 @@ test("Made Local follow-up preserves gift context; profiles and navigation fit t
   page,
 }) => {
   await page.goto("/");
+  await page.getByRole("button", { name: "Find & ask", exact: true }).click();
   await page.getByRole("button", { name: "A birthday gift under $40" }).click();
   const input = page.getByRole("textbox", { name: "Ask your local sidekick" });
   await input.fill("Which one is actually made here?");

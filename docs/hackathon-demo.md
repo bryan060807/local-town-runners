@@ -12,7 +12,7 @@ Open https://runners.aibrylabs.com and choose **Enter Demo Mode**. Keep the same
 
 Before filming, switch to Runner **Jordan Ellis**. In **Runner availability**, choose **Available for the next hour**. Under **I’m already going to…**, select **Demo Hearth Bakery**, then **Share trip for one hour**. Return to Customer in the **same workspace**. The fresh demo’s initial trip is to Riverbend Market & Goods, so do this bakery setup deliberately. Availability and the trip expire after one hour; renew them if needed. This is a fictional declaration, and Jordan still has to accept the run.
 
-Start with an empty Customer cart and stock for two rolls. Open **Sidekick Errand Planner** and use **Bakery stop under $20** as the starting point. It fills this request; choose **Build an errand plan** to submit it:
+Start with an empty Customer cart and stock for two rolls. Choose **Plan an errand** in the single **Your local Sidekick** panel and use **Bakery stop under $20** as the starting point. It fills this request; choose **Build an errand plan** to submit it:
 
 > I need two cinnamon rolls and one more bakery item to share, under $20 total. Compare two combinations from one shop and check pickup.
 

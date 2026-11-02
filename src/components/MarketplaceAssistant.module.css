@@ -1,20 +1,99 @@
 .composer {
   gap: 4px;
+  margin: 0;
 }
 
-.plannerLink {
+.discovery {
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.discovery .body {
+  padding: 0 0 18px;
+}
+
+.discovery .body p {
+  color: #63715b;
+  font-size: 13px;
+}
+
+.discovery :global(.suggestions) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.discovery :global(.suggestions) button {
+  align-items: center;
+  min-height: 44px;
+  gap: 14px;
+  font-size: 12px;
+}
+
+.discovery :global(.reply) {
+  padding: 16px;
+  border-radius: 10px;
+  background: #f0f5e9;
+  color: #354c35;
+  font-size: 14px;
+}
+
+.discovery :global(.mini-results) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.discovery :global(.mini-results) button {
+  min-height: 44px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.mapToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.mapToolbar p {
+  color: #63715b;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.mapShortcut {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  gap: 7px;
   min-height: 44px;
-  color: var(--green);
+  padding: 10px 14px;
+  border: 1px solid #cbd8bd;
+  border-radius: 9px;
+  color: #315a43;
+  background: #f4f7ec;
+  font-size: 12px;
   font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+}
+
+.mapShortcut:focus-visible {
+  outline: 3px solid #88a95e;
+  outline-offset: 3px;
+}
+
+.mapShortcut:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .provenance {
-  margin: 10px 15px;
+  margin: 0 0 12px;
   color: #53614d;
   font-size: 11px;
 }
@@ -55,6 +134,16 @@
 }
 
 @media (max-width: 760px) {
+  .mapToolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .discovery :global(.mini-results) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .composer input {
     font-size: 16px;
   }

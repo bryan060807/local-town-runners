@@ -134,6 +134,20 @@ test("private connection preview uses the actual gift and shared trip, expires h
     expect(
       (await response.json()).listings.map((item: { id: string }) => item.id),
     ).toEqual([mug.data!.id]);
+    const sidekick = page.getByRole("region", {
+      name: "Your local sidekick",
+      exact: true,
+    });
+    await expect(
+      sidekick.getByRole("button", { name: "Find & ask", exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await expect(sidekick.getByRole("textbox")).toHaveCount(1);
+    await expect(
+      sidekick.getByRole("textbox", {
+        name: "Ask your local sidekick",
+        exact: true,
+      }),
+    ).toBeFocused();
 
     await studio
       .getByRole("button", { name: "Review this find", exact: true })

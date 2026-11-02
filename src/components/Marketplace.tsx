@@ -25,6 +25,7 @@ import {
   X,
   Plus,
   Minus,
+  Sparkles,
 } from "lucide-react";
 import { brand } from "@/lib/brand";
 import { Listing, Vendor, money } from "@/lib/catalog";
@@ -80,6 +81,10 @@ export default function Marketplace({
   const [browseAll, setBrowseAll] = useState(false);
   const [itemPage, setItemPage] = useState(1);
   const findsHeading = useRef<HTMLHeadingElement>(null);
+  const exploreHeading = useRef<HTMLHeadingElement>(null);
+  const [sidekickMode, setSidekickMode] = useState<"plan" | "discover">("plan");
+  const [sidekickFocus, setSidekickFocus] = useState(0);
+  const [plannerWorking, setPlannerWorking] = useState(false);
   const [highlight, setHighlight] = useState<string[]>([]);
   const [selected, setSelected] = useState<Listing | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -155,7 +160,13 @@ export default function Marketplace({
     [listings],
   );
   async function ask(text: string, contextListingId?: string) {
-    if (!text.trim() || !hydrated || assistantInFlight.current) return;
+    if (
+      !text.trim() ||
+      !hydrated ||
+      assistantInFlight.current ||
+      plannerWorking
+    )
+      return;
     assistantInFlight.current = true;
     setBusy(true);
     setMessage("");
@@ -385,7 +396,7 @@ export default function Marketplace({
           offline={demo}
           privateDemo={isolatedDemo}
           canEnterDemo={canEnterDemo}
-          askDisabled={!hydrated || busy}
+          askDisabled={!hydrated || busy || plannerWorking}
           onEnterDemo={async () => {
             const response = await fetch("/api/demo", {
               method: "POST",
@@ -429,84 +440,37 @@ export default function Marketplace({
             setNotice("");
           }}
           onAsk={(listingId) => {
-            if (!hydrated || assistantInFlight.current) return;
+            if (!hydrated || assistantInFlight.current || plannerWorking)
+              return;
             const listing = listings.find(
               (item) =>
                 item.id === listingId && item.active && item.inventory > 0,
             );
             if (!listing) return;
             setHighlight([listing.vendorId]);
+            setMatchedRunnerId(undefined);
             setConversationListing(listing.id);
+            setSidekickMode("discover");
+            setSidekickFocus((value) => value + 1);
             void ask("Tell me more about it.", listing.id);
-            document.getElementById("local-sidekick")?.scrollIntoView({
-              behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
-                .matches
-                ? "instant"
-                : "smooth",
-              block: "start",
-            });
-            document
-              .getElementById("local-sidekick")
-              ?.querySelector<HTMLElement>(
-                '[aria-label="Ask your local sidekick"]',
-              )
-              ?.focus({ preventScroll: true });
           }}
         />
         <SidekickPlanner
           offline={demo}
-          onReview={(listingId, units) => {
-            if (!Number.isInteger(units) || units < 1 || units > 20) return;
-            router.push(
-              `/listings/${encodeURIComponent(listingId)}?quantity=${units}`,
-            );
-          }}
-        />
-        {showcase}
-        <section id="explore" className="explore">
-          <div className="section-top">
-            <h2>
-              <Compass size={20} /> Explore your town
-            </h2>
-            <span className="live">
-              <span className="pulse" />{" "}
-              {demo ? "Offline demo catalog" : "Connected marketplace"}
-            </span>
-          </div>
-          <div className="explore-grid">
-            <WorldMap
-              runners={runners}
-              vendors={vendors}
-              highlight={highlight}
-              matchedRunnerId={matchedRunnerId}
-              onSelect={selectVendor}
-            />
-            <aside id="local-sidekick" className="assistant">
-              <div className="assistant-heading">
-                <span className="ai-mark">✦</span>
-                <div>
-                  Your local sidekick
-                  <small>Good at finding the good stuff.</small>
-                </div>
-                <span className="online" />
-              </div>
-              <div className="assistant-body">
+          mode={sidekickMode}
+          onModeChange={setSidekickMode}
+          discoveryBusy={busy}
+          focusRequest={sidekickFocus}
+          focusPaused={Boolean(selected)}
+          onBusyChange={setPlannerWorking}
+          discovery={
+            <div className={`assistant ${assistantStyles.discovery}`}>
+              <div className={`assistant-body ${assistantStyles.body}`}>
                 <span className="eyebrow">LET’S LOOK AROUND</span>
-                <h3>
-                  What brings you
-                  <br />
-                  around today?
-                </h3>
+                <h3>What would you like to find?</h3>
                 <p>
                   Recommendations use current catalog prices and availability.
                 </p>
-                <Link
-                  className={assistantStyles.plannerLink}
-                  href="#sidekick-planner"
-                >
-                  Plan a local errand{" "}
-                  <ArrowUpRight size={14} aria-hidden="true" />
-                </Link>
                 <div className="suggestions">
                   {[
                     "I'm hungry. What's good?",
@@ -515,7 +479,7 @@ export default function Marketplace({
                   ].map((s) => (
                     <button
                       type="button"
-                      disabled={!hydrated || busy}
+                      disabled={!hydrated || busy || plannerWorking}
                       key={s}
                       onClick={() => ask(s)}
                     >
@@ -575,14 +539,16 @@ export default function Marketplace({
                   placeholder="Ask something local…"
                   maxLength={1000}
                   enterKeyHint="send"
-                  disabled={!hydrated}
+                  disabled={!hydrated || plannerWorking}
                   readOnly={busy}
                 />
                 <button
                   type="submit"
                   className={assistantStyles.send}
                   aria-label="Send message"
-                  disabled={!hydrated || busy || !message.trim()}
+                  disabled={
+                    !hydrated || busy || plannerWorking || !message.trim()
+                  }
                 >
                   <ArrowUp size={16} aria-hidden="true" />
                   <span>{busy ? "Sending…" : "Send"}</span>
@@ -591,7 +557,84 @@ export default function Marketplace({
               <div className="ai-foot">
                 ✦ Catalog-grounded discovery · server validated
               </div>
-            </aside>
+            </div>
+          }
+          onHighlight={(option) => {
+            const currentVendorIds = new Set(
+              vendors.map((vendor) => vendor.id),
+            );
+            const ids = new Set(
+              (option?.items || []).flatMap((item) => {
+                const listing = listings.find(
+                  (candidate) =>
+                    candidate.id === item.listing.id &&
+                    candidate.active &&
+                    candidate.inventory >= item.quantity &&
+                    currentVendorIds.has(candidate.vendorId),
+                );
+                return listing ? [listing.vendorId] : [];
+              }),
+            );
+            setHighlight([...ids]);
+            // A plan's pickup description does not establish a runner identity.
+            setMatchedRunnerId(undefined);
+            requestAnimationFrame(() => {
+              exploreHeading.current?.focus({ preventScroll: true });
+              document.getElementById("explore")?.scrollIntoView({
+                block: "start",
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+                  .matches
+                  ? "auto"
+                  : "smooth",
+              });
+            });
+          }}
+          onReview={(listingId, units) => {
+            if (!Number.isInteger(units) || units < 1 || units > 20) return;
+            router.push(
+              `/listings/${encodeURIComponent(listingId)}?quantity=${units}`,
+            );
+          }}
+        />
+        {showcase}
+        <section id="explore" className="explore">
+          <div className="section-top">
+            <h2 ref={exploreHeading} tabIndex={-1}>
+              <Compass size={20} /> Explore your town
+            </h2>
+            <span className="live">
+              <span className="pulse" />{" "}
+              {demo ? "Offline demo catalog" : "Connected marketplace"}
+            </span>
+          </div>
+          <div className={assistantStyles.mapToolbar}>
+            <p>
+              Explore the map, or ask Sidekick to help you find something local.
+            </p>
+            <button
+              type="button"
+              className={assistantStyles.mapShortcut}
+              disabled={!hydrated || busy || plannerWorking}
+              onClick={() => {
+                if (!hydrated || assistantInFlight.current || plannerWorking)
+                  return;
+                setSidekickMode("discover");
+                setSidekickFocus((value) => value + 1);
+              }}
+            >
+              <Sparkles size={15} aria-hidden="true" /> Ask Sidekick about this
+              area
+              <ArrowUpRight size={14} aria-hidden="true" />
+            </button>
+          </div>
+          <div className="explore-grid">
+            <WorldMap
+              runners={runners}
+              vendors={vendors}
+              highlight={highlight}
+              matchedRunnerId={matchedRunnerId}
+              onSelect={selectVendor}
+            />
           </div>
           <div className="map-footer">
             <span>

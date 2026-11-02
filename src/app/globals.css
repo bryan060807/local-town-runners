@@ -202,7 +202,7 @@ h2 {
 }
 .explore-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
 }
 .map-shell {
@@ -952,7 +952,7 @@ footer span:first-child {
     display: none;
   }
   .explore-grid {
-    grid-template-columns: minmax(0, 1fr) 300px;
+    grid-template-columns: minmax(0, 1fr);
   }
   .cards {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1023,7 +1023,7 @@ footer span:first-child {
     height: 350px;
   }
   .assistant {
-    min-height: 370px;
+    min-height: 0;
   }
   .assistant-body {
     padding: 20px;

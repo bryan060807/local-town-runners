@@ -224,6 +224,7 @@ test("the under-$30 gift story follows an existing neighbor trip through one sim
       await expect(page.locator(".assistant .reply")).toHaveText(data.text);
       return data;
     }
+    await page.getByRole("button", { name: "Find & ask", exact: true }).click();
     const gifts = await ask("A birthday gift under $30");
     expect(gifts.listings).toHaveLength(4);
     expect(

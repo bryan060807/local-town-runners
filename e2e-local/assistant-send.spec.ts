@@ -84,6 +84,7 @@ test("Sidekick submits discovery with Enter and a two-roll quote with the Send b
   try {
     const session = await enterCustomer(page, context);
     entered = true;
+    await page.getByRole("button", { name: "Find & ask", exact: true }).click();
     const input = page.getByRole("textbox", {
       name: "Ask your local sidekick",
     });
@@ -173,6 +174,7 @@ test("a failed Sidekick send keeps the draft and blocks duplicate submits until 
         });
       } else await route.continue();
     });
+    await page.getByRole("button", { name: "Find & ask", exact: true }).click();
     const input = page.getByRole("textbox", {
       name: "Ask your local sidekick",
     });
@@ -189,6 +191,15 @@ test("a failed Sidekick send keeps the draft and blocks duplicate submits until 
     await expect(input).toHaveJSProperty("readOnly", true);
     await expect(input).toBeFocused();
     await expect(send).toBeDisabled();
+    await expect(
+      page.getByRole("button", { name: "Plan an errand", exact: true }),
+    ).toBeDisabled();
+    await expect(
+      page.getByRole("button", {
+        name: "Ask Sidekick about this area",
+        exact: true,
+      }),
+    ).toBeDisabled();
     await expect(
       page.getByRole("button", { name: "Ask Sidekick", exact: true }),
     ).toBeDisabled();

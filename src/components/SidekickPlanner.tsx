@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
+  type ReactNode,
 } from "react";
 import {
   ArrowUpRight,
@@ -115,9 +116,25 @@ function pickupText(pickup: Pickup, now: number | null, offline: boolean) {
 export default function SidekickPlanner({
   offline,
   onReview,
+  discovery,
+  mode: controlledMode,
+  onModeChange,
+  discoveryBusy = false,
+  focusRequest = 0,
+  focusPaused = false,
+  onBusyChange,
+  onHighlight,
 }: {
   offline: boolean;
   onReview: (listingId: string, quantity: number) => void;
+  discovery?: ReactNode;
+  mode?: "plan" | "discover";
+  onModeChange?: (mode: "plan" | "discover") => void;
+  discoveryBusy?: boolean;
+  focusRequest?: number;
+  focusPaused?: boolean;
+  onBusyChange?: (working: boolean) => void;
+  onHighlight?: (option: Option | null) => void;
 }) {
   const router = useRouter();
   const instance = useId().replaceAll(":", "");
@@ -127,6 +144,8 @@ export default function SidekickPlanner({
     () => false,
   );
   const [message, setMessage] = useState("");
+  const [localMode, setLocalMode] = useState<"plan" | "discover">("plan");
+  const mode = controlledMode ?? localMode;
   const [budget, setBudget] = useState("");
   const [localOnly, setLocalOnly] = useState<boolean | undefined>();
   const [singleVendor, setSingleVendor] = useState<boolean | undefined>();
@@ -142,9 +161,14 @@ export default function SidekickPlanner({
   const inFlight = useRef(false);
   const cartInFlight = useRef(false);
   const composer = useRef<HTMLTextAreaElement>(null);
+  const shell = useRef<HTMLElement>(null);
+  const lastFocus = useRef({ mode, request: focusRequest });
+  const lastPlanFocus = useRef<ErrandPlan | null>(null);
+  const lastReviewFocus = useRef<string | null>(null);
   const resultHeading = useRef<HTMLHeadingElement>(null);
   const reviewHeading = useRef<HTMLHeadingElement>(null);
-  const working = busy || saving;
+  const ownWorking = busy || saving;
+  const working = ownWorking || discoveryBusy;
   const reviewed = plan?.options.find((option) => option.id === reviewId);
   const budgetNumber = Number(budget);
   const budgetCents = Math.round(budgetNumber * 100);
@@ -154,6 +178,11 @@ export default function SidekickPlanner({
       budgetNumber >= 0 &&
       budgetCents <= 10000000 &&
       Math.abs(budgetNumber * 100 - budgetCents) < 0.00001);
+
+  useEffect(() => {
+    onBusyChange?.(ownWorking);
+    return () => onBusyChange?.(false);
+  }, [ownWorking, onBusyChange]);
 
   useEffect(() => {
     if (!plan) return;
@@ -179,7 +208,15 @@ export default function SidekickPlanner({
   }, [plan]);
 
   useEffect(() => {
-    if (plan) {
+    const changed = lastPlanFocus.current !== plan;
+    lastPlanFocus.current = plan;
+    if (
+      plan &&
+      changed &&
+      mode === "plan" &&
+      !focusPaused &&
+      !shell.current?.closest("[inert]")
+    ) {
       resultHeading.current?.focus({ preventScroll: true });
       resultHeading.current?.scrollIntoView({
         block: "nearest",
@@ -188,10 +225,18 @@ export default function SidekickPlanner({
           : "smooth",
       });
     }
-  }, [plan]);
+  }, [plan, mode, focusPaused]);
 
   useEffect(() => {
-    if (reviewId) {
+    const changed = lastReviewFocus.current !== reviewId;
+    lastReviewFocus.current = reviewId;
+    if (
+      reviewId &&
+      changed &&
+      mode === "plan" &&
+      !focusPaused &&
+      !shell.current?.closest("[inert]")
+    ) {
       reviewHeading.current?.focus({ preventScroll: true });
       reviewHeading.current?.scrollIntoView({
         block: "nearest",
@@ -200,7 +245,37 @@ export default function SidekickPlanner({
           : "smooth",
       });
     }
-  }, [reviewId]);
+  }, [reviewId, mode, focusPaused]);
+
+  useEffect(() => {
+    const previous = lastFocus.current;
+    lastFocus.current = { mode, request: focusRequest };
+    if (
+      !hydrated ||
+      focusPaused ||
+      shell.current?.closest("[inert]") ||
+      (previous.mode === mode && previous.request === focusRequest)
+    )
+      return;
+    const active = shell.current?.querySelector<HTMLElement>(
+      `[data-sidekick-tool="${mode}"]`,
+    );
+    active
+      ?.querySelector<HTMLElement>("textarea, input:not([type=checkbox])")
+      ?.focus({ preventScroll: true });
+    shell.current?.scrollIntoView({
+      block: "start",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+    });
+  }, [mode, focusRequest, hydrated, focusPaused]);
+
+  function changeMode(next: "plan" | "discover") {
+    if (!hydrated || working || next === mode) return;
+    setLocalMode(next);
+    onModeChange?.(next);
+  }
 
   async function requestPlan(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -209,6 +284,8 @@ export default function SidekickPlanner({
       !hydrated ||
       !text ||
       !validBudget ||
+      discoveryBusy ||
+      mode !== "plan" ||
       inFlight.current ||
       cartInFlight.current
     )
@@ -280,7 +357,7 @@ export default function SidekickPlanner({
   }
 
   function startNew() {
-    if (inFlight.current || cartInFlight.current) return;
+    if (inFlight.current || cartInFlight.current || discoveryBusy) return;
     setPlan(null);
     setTurns([]);
     setReviewId(null);
@@ -291,13 +368,18 @@ export default function SidekickPlanner({
     setBudget("");
     setLocalOnly(undefined);
     setSingleVendor(undefined);
-    requestAnimationFrame(() => composer.current?.focus());
+    requestAnimationFrame(() => {
+      if (!focusPaused && !shell.current?.closest("[inert]"))
+        composer.current?.focus();
+    });
   }
 
   async function saveChoices(option: Option) {
     if (
       !hydrated ||
       offline ||
+      discoveryBusy ||
+      mode !== "plan" ||
       inFlight.current ||
       cartInFlight.current ||
       option.items.some((item) => item.listing.mode !== "SELL") ||
@@ -479,8 +561,9 @@ export default function SidekickPlanner({
   return (
     <section
       id="sidekick-planner"
+      ref={shell}
       className={styles.shell}
-      aria-label="Sidekick Errand Planner"
+      aria-label="Your local sidekick"
     >
       <div className={styles.header}>
         <div className={styles.intro}>
@@ -489,423 +572,479 @@ export default function SidekickPlanner({
           </span>
           <h2>Plan a little more. Figure out a little less.</h2>
           <p>
-            Describe an errand, compare choices from the visible catalog, and
-            review a plan that fits.
+            Find something good nearby, ask a quick question, or compare an
+            errand that fits your budget.
           </p>
         </div>
         <span className={styles.headerNote}>
           {offline ? "Illustrative catalog" : "Review before acting"}
         </span>
       </div>
-      <div className={styles.examples} aria-label="Example errand requests">
-        <span>Try a starting point</span>
-        {examples.map((example) => (
+      {discovery && (
+        <div className={styles.tools} role="group" aria-label="Sidekick tools">
           <button
             type="button"
-            key={example.label}
+            aria-pressed={mode === "plan"}
+            aria-controls={`${instance}-plan`}
             disabled={!hydrated || working}
-            title={example.message}
-            onClick={() => {
-              setMessage(example.message);
-              composer.current?.focus();
-            }}
+            onClick={() => changeMode("plan")}
           >
-            {example.label}
-            <ArrowUpRight size={14} aria-hidden="true" />
+            <ShoppingBag size={15} aria-hidden="true" /> Plan an errand
           </button>
-        ))}
-      </div>
-      {!plan && form}
-      {plan && (
-        <div
-          className={styles.result}
-          aria-busy={busy || saving}
-          data-plan-status={plan.status}
-        >
-          <div className={styles.resultHeader}>
-            <div>
-              <span
-                className={styles.provenance}
-                data-engine={plan.provenance.engine}
+          <button
+            type="button"
+            aria-pressed={mode === "discover"}
+            aria-controls={`${instance}-discover`}
+            disabled={!hydrated || working}
+            onClick={() => changeMode("discover")}
+          >
+            <Sparkles size={15} aria-hidden="true" /> Find &amp; ask
+          </button>
+        </div>
+      )}
+      <div
+        id={`${instance}-plan`}
+        data-sidekick-tool="plan"
+        role="region"
+        aria-label="Sidekick Errand Planner"
+        hidden={mode !== "plan"}
+      >
+        <div className={styles.examples} aria-label="Example errand requests">
+          <span>Try a starting point</span>
+          {examples.map((example) => (
+            <button
+              type="button"
+              key={example.label}
+              disabled={!hydrated || working}
+              title={example.message}
+              onClick={() => {
+                setMessage(example.message);
+                composer.current?.focus();
+              }}
+            >
+              {example.label}
+              <ArrowUpRight size={14} aria-hidden="true" />
+            </button>
+          ))}
+        </div>
+        {!plan && form}
+        {plan && (
+          <div
+            className={styles.result}
+            aria-busy={busy || saving}
+            data-plan-status={plan.status}
+          >
+            <div className={styles.resultHeader}>
+              <div>
+                <span
+                  className={styles.provenance}
+                  data-engine={plan.provenance.engine}
+                >
+                  {plan.provenance.engine === "model" ? (
+                    <>
+                      <Sparkles size={14} aria-hidden="true" /> AI-assisted plan
+                    </>
+                  ) : (
+                    "Catalog suggestions — AI unavailable"
+                  )}
+                </span>
+                <h3 ref={resultHeading} tabIndex={-1}>
+                  {plan.understoodNeed}
+                </h3>
+              </div>
+              <div
+                className={styles.constraints}
+                aria-label="Interpreted plan constraints"
               >
-                {plan.provenance.engine === "model" ? (
-                  <>
-                    <Sparkles size={14} aria-hidden="true" /> AI-assisted plan
-                  </>
-                ) : (
-                  "Catalog suggestions — AI unavailable"
+                {plan.budgetCents !== null && (
+                  <span>Up to {money(plan.budgetCents)}</span>
                 )}
-              </span>
-              <h3 ref={resultHeading} tabIndex={-1}>
-                {plan.understoodNeed}
-              </h3>
+                {plan.constraints.localOnly && (
+                  <span>
+                    <Leaf size={12} aria-hidden="true" /> Locally made
+                  </span>
+                )}
+                {plan.constraints.singleVendor && (
+                  <span>
+                    <Store size={12} aria-hidden="true" /> One shop
+                  </span>
+                )}
+              </div>
             </div>
-            <div
-              className={styles.constraints}
-              aria-label="Interpreted plan constraints"
-            >
-              {plan.budgetCents !== null && (
-                <span>Up to {money(plan.budgetCents)}</span>
-              )}
-              {plan.constraints.localOnly && (
-                <span>
-                  <Leaf size={12} aria-hidden="true" /> Locally made
-                </span>
-              )}
-              {plan.constraints.singleVendor && (
-                <span>
-                  <Store size={12} aria-hidden="true" /> One shop
-                </span>
-              )}
-            </div>
-          </div>
-          {plan.status === "clarify" && (
-            <div
-              className={styles.question}
-              role="group"
-              aria-label="Sidekick clarification"
-            >
-              <span>ONE DETAIL WILL HELP</span>
-              <p>
-                {plan.question ||
-                  "Could you share a little more about what you need?"}
+            {plan.status === "clarify" && (
+              <div
+                className={styles.question}
+                role="group"
+                aria-label="Sidekick clarification"
+              >
+                <span>ONE DETAIL WILL HELP</span>
+                <p>
+                  {plan.question ||
+                    "Could you share a little more about what you need?"}
+                </p>
+                <p className={styles.small}>
+                  Answer below and Sidekick will update this request.
+                </p>
+              </div>
+            )}
+            {plan.status === "no_match" && (
+              <p className={styles.empty}>
+                No current combination matches that request. You can change a
+                constraint below or review the available suggestions.
               </p>
-              <p className={styles.small}>
-                Answer below and Sidekick will update this request.
-              </p>
-            </div>
-          )}
-          {plan.status === "no_match" && (
-            <p className={styles.empty}>
-              No current combination matches that request. You can change a
-              constraint below or review the available suggestions.
-            </p>
-          )}
-          {plan.status !== "clarify" && plan.options.length > 0 && (
-            <div className={styles.options}>
-              {plan.options.map((option, index) => {
-                const remaining =
-                  plan.budgetCents !== null
-                    ? plan.budgetCents - option.subtotalCents
-                    : null;
-                const expanded = reviewId === option.id;
-                const tripsAreCurrent =
-                  now !== null &&
-                  option.vendorGroups.length > 0 &&
-                  option.vendorGroups.every((group) => {
-                    const until = timestamp(group.pickup.validUntil);
-                    return (
-                      group.pickup.status === "declared_trip" &&
-                      until !== null &&
-                      until > now
-                    );
-                  });
-                const freshReasons = option.reasons.filter(
-                  (reason) =>
-                    !/declared[\s-]*trip/i.test(reason) || tripsAreCurrent,
-                );
-                return (
-                  <article
-                    className={`${styles.option} ${index === plan.recommendedIndex ? styles.recommended : ""}`}
-                    key={option.id}
-                    aria-label={`Plan option ${index + 1}`}
-                  >
-                    <div className={styles.optionTop}>
-                      <h4>Option {index + 1}</h4>
-                      {index === plan.recommendedIndex &&
-                        plan.provenance.engine === "model" && (
-                          <span>Suggested</span>
-                        )}
-                    </div>
-                    <ul className={styles.items}>
-                      {option.items.map((item) => (
-                        <li key={item.listing.id}>
-                          <span className={styles.itemEmoji} aria-hidden="true">
-                            {item.listing.emoji}
-                          </span>
-                          <div>
-                            <button
-                              type="button"
-                              className={styles.itemButton}
-                              disabled={working}
-                              onClick={() =>
-                                onReview(item.listing.id, item.quantity)
-                              }
-                              aria-label={`Review ${item.quantity} × ${item.listing.title}`}
+            )}
+            {plan.status !== "clarify" && plan.options.length > 0 && (
+              <div className={styles.options}>
+                {plan.options.map((option, index) => {
+                  const remaining =
+                    plan.budgetCents !== null
+                      ? plan.budgetCents - option.subtotalCents
+                      : null;
+                  const expanded = reviewId === option.id;
+                  const tripsAreCurrent =
+                    now !== null &&
+                    option.vendorGroups.length > 0 &&
+                    option.vendorGroups.every((group) => {
+                      const until = timestamp(group.pickup.validUntil);
+                      return (
+                        group.pickup.status === "declared_trip" &&
+                        until !== null &&
+                        until > now
+                      );
+                    });
+                  const freshReasons = option.reasons.filter(
+                    (reason) =>
+                      !/declared[\s-]*trip/i.test(reason) || tripsAreCurrent,
+                  );
+                  return (
+                    <article
+                      className={`${styles.option} ${index === plan.recommendedIndex ? styles.recommended : ""}`}
+                      key={option.id}
+                      aria-label={`Plan option ${index + 1}`}
+                    >
+                      <div className={styles.optionTop}>
+                        <h4>Option {index + 1}</h4>
+                        {index === plan.recommendedIndex &&
+                          plan.provenance.engine === "model" && (
+                            <span>Suggested</span>
+                          )}
+                      </div>
+                      <ul className={styles.items}>
+                        {option.items.map((item) => (
+                          <li key={item.listing.id}>
+                            <span
+                              className={styles.itemEmoji}
+                              aria-hidden="true"
                             >
-                              {item.quantity} × {item.listing.title}
-                            </button>
-                            <small>
+                              {item.listing.emoji}
+                            </span>
+                            <div>
+                              <button
+                                type="button"
+                                className={styles.itemButton}
+                                disabled={working}
+                                onClick={() =>
+                                  onReview(item.listing.id, item.quantity)
+                                }
+                                aria-label={`Review ${item.quantity} × ${item.listing.title}`}
+                              >
+                                {item.quantity} × {item.listing.title}
+                              </button>
+                              <small>
+                                {item.listing.mode === "SELL"
+                                  ? `${money(item.listing.price)} each`
+                                  : "Vendor quote required"}
+                                {item.listing.local ? " · Made locally" : ""}
+                              </small>
+                            </div>
+                            <strong>
                               {item.listing.mode === "SELL"
-                                ? `${money(item.listing.price)} each`
-                                : "Vendor quote required"}
-                              {item.listing.local ? " · Made locally" : ""}
-                            </small>
-                          </div>
-                          <strong>
-                            {item.listing.mode === "SELL"
-                              ? money(item.lineTotalCents)
-                              : "Quote"}
-                          </strong>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className={styles.optionTotal}>
-                      <span>Selected items total</span>
-                      <strong>{money(option.subtotalCents)}</strong>
-                    </div>
-                    {remaining !== null && (
-                      <p
-                        className={
-                          remaining < 0 ? styles.error : styles.budgetFit
-                        }
-                      >
-                        {remaining < 0
-                          ? `${money(-remaining)} over the stated budget`
-                          : `${money(remaining)} below the stated budget`}
-                      </p>
-                    )}
-                    {freshReasons.length > 0 && (
-                      <ul
-                        className={styles.reasons}
-                        aria-label="Why this option fits"
-                      >
-                        {freshReasons.map((reason, reasonIndex) => (
-                          <li key={reasonIndex}>
-                            <Check size={13} aria-hidden="true" />
-                            <span>{reason}</span>
+                                ? money(item.lineTotalCents)
+                                : "Quote"}
+                            </strong>
                           </li>
                         ))}
                       </ul>
-                    )}
-                    <div className={styles.shops}>
-                      {option.vendorGroups.map((group) => {
-                        const until = timestamp(group.pickup.validUntil);
-                        const current =
-                          until !== null && (now === null || until > now);
-                        return (
-                          <div className={styles.shop} key={group.vendor.id}>
-                            <div>
-                              <Store size={14} aria-hidden="true" />
-                              <Link href={`/vendors/${group.vendor.id}`}>
-                                {group.vendor.name}
-                              </Link>
-                              <strong>{money(group.subtotalCents)}</strong>
-                            </div>
-                            {group.vendor.demo && (
-                              <small>Fictional demo vendor</small>
-                            )}
-                            <p>
-                              <MapPin size={13} aria-hidden="true" />
-                              <span>
-                                {pickupText(group.pickup, now, offline)}
-                              </span>
-                            </p>
-                            {group.pickup.status !== "none" &&
-                              current &&
-                              !offline && (
-                                <small>
-                                  Window ends{" "}
-                                  {new Date(until).toLocaleTimeString([], {
-                                    hour: "numeric",
-                                    minute: "2-digit",
-                                  })}{" "}
-                                  · runner confirmation needed
-                                </small>
+                      <div className={styles.optionTotal}>
+                        <span>Selected items total</span>
+                        <strong>{money(option.subtotalCents)}</strong>
+                      </div>
+                      {remaining !== null && (
+                        <p
+                          className={
+                            remaining < 0 ? styles.error : styles.budgetFit
+                          }
+                        >
+                          {remaining < 0
+                            ? `${money(-remaining)} over the stated budget`
+                            : `${money(remaining)} below the stated budget`}
+                        </p>
+                      )}
+                      {freshReasons.length > 0 && (
+                        <ul
+                          className={styles.reasons}
+                          aria-label="Why this option fits"
+                        >
+                          {freshReasons.map((reason, reasonIndex) => (
+                            <li key={reasonIndex}>
+                              <Check size={13} aria-hidden="true" />
+                              <span>{reason}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <div className={styles.shops}>
+                        {option.vendorGroups.map((group) => {
+                          const until = timestamp(group.pickup.validUntil);
+                          const current =
+                            until !== null && (now === null || until > now);
+                          return (
+                            <div className={styles.shop} key={group.vendor.id}>
+                              <div>
+                                <Store size={14} aria-hidden="true" />
+                                <Link href={`/vendors/${group.vendor.id}`}>
+                                  {group.vendor.name}
+                                </Link>
+                                <strong>{money(group.subtotalCents)}</strong>
+                              </div>
+                              {group.vendor.demo && (
+                                <small>Fictional demo vendor</small>
                               )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <button
-                      type="button"
-                      className={styles.reviewButton}
-                      aria-expanded={expanded}
-                      aria-controls={
-                        expanded ? `${instance}-review` : undefined
-                      }
-                      disabled={working}
-                      onClick={() => {
-                        setReviewId(expanded ? null : option.id);
-                        setSave(emptySave);
-                      }}
-                    >
-                      Review this option
-                      <ChevronDown size={15} aria-hidden="true" />
-                    </button>
-                  </article>
-                );
-              })}
-            </div>
-          )}
-          {reviewed && (
-            <section
-              className={styles.review}
-              id={`${instance}-review`}
-              aria-label="Review selected plan"
-            >
-              <div className={styles.reviewHeader}>
-                <div>
-                  <span className={styles.eyebrow}>
-                    YOUR CHOICES, BEFORE YOU ACT
-                  </span>
-                  <h3 ref={reviewHeading} tabIndex={-1}>
-                    Review your choices
-                  </h3>
-                </div>
-                <ShoppingBag size={24} aria-hidden="true" />
+                              <p>
+                                <MapPin size={13} aria-hidden="true" />
+                                <span>
+                                  {pickupText(group.pickup, now, offline)}
+                                </span>
+                              </p>
+                              {group.pickup.status !== "none" &&
+                                current &&
+                                !offline && (
+                                  <small>
+                                    Window ends{" "}
+                                    {new Date(until).toLocaleTimeString([], {
+                                      hour: "numeric",
+                                      minute: "2-digit",
+                                    })}{" "}
+                                    · runner confirmation needed
+                                  </small>
+                                )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {onHighlight && (
+                        <button
+                          type="button"
+                          className={styles.mapButton}
+                          disabled={working}
+                          onClick={() => onHighlight(option)}
+                        >
+                          <MapPin size={14} aria-hidden="true" /> Show on map
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        className={styles.reviewButton}
+                        aria-expanded={expanded}
+                        aria-controls={
+                          expanded ? `${instance}-review` : undefined
+                        }
+                        disabled={working}
+                        onClick={() => {
+                          setReviewId(expanded ? null : option.id);
+                          setSave(emptySave);
+                        }}
+                      >
+                        Review this option
+                        <ChevronDown size={15} aria-hidden="true" />
+                      </button>
+                    </article>
+                  );
+                })}
               </div>
-              <ul className={styles.reviewItems}>
-                {reviewed.items.map((item) => (
-                  <li key={item.listing.id}>
-                    <span>
-                      {item.quantity} × {item.listing.title}
+            )}
+            {reviewed && (
+              <section
+                className={styles.review}
+                id={`${instance}-review`}
+                aria-label="Review selected plan"
+              >
+                <div className={styles.reviewHeader}>
+                  <div>
+                    <span className={styles.eyebrow}>
+                      YOUR CHOICES, BEFORE YOU ACT
                     </span>
-                    <strong>
-                      {item.listing.mode === "SELL"
-                        ? money(item.lineTotalCents)
-                        : "Quote required"}
-                    </strong>
-                  </li>
-                ))}
-              </ul>
-              <div className={styles.optionTotal}>
-                <span>Selected items total</span>
-                <strong>{money(reviewed.subtotalCents)}</strong>
-              </div>
-              <p>
-                Other items already in your cart are not included in this total.
-                Saving sets these item quantities; it does not reserve stock,
-                prepare an order, assign a runner or make a payment.
-              </p>
-              <p>
-                {reviewed.vendorGroups.length > 1
-                  ? "This option uses more than one shop. Review and prepare each vendor’s order separately in the cart."
-                  : "Review your full cart and delivery address before explicitly preparing this vendor’s order."}
-              </p>
-              {offline && (
+                    <h3 ref={reviewHeading} tabIndex={-1}>
+                      Review your choices
+                    </h3>
+                  </div>
+                  <ShoppingBag size={24} aria-hidden="true" />
+                </div>
+                <ul className={styles.reviewItems}>
+                  {reviewed.items.map((item) => (
+                    <li key={item.listing.id}>
+                      <span>
+                        {item.quantity} × {item.listing.title}
+                      </span>
+                      <strong>
+                        {item.listing.mode === "SELL"
+                          ? money(item.lineTotalCents)
+                          : "Quote required"}
+                      </strong>
+                    </li>
+                  ))}
+                </ul>
+                <div className={styles.optionTotal}>
+                  <span>Selected items total</span>
+                  <strong>{money(reviewed.subtotalCents)}</strong>
+                </div>
                 <p>
-                  This is an illustrative catalog. A connected Customer session
-                  is needed to save cart choices.
+                  Other items already in your cart are not included in this
+                  total. Saving sets these item quantities; it does not reserve
+                  stock, prepare an order, assign a runner or make a payment.
                 </p>
-              )}
-              {reviewed.items.some((item) => item.listing.mode !== "SELL") && (
                 <p>
-                  Custom work and services need a vendor quote before they can
-                  enter a purchase plan. Review those listing details first.
+                  {reviewed.vendorGroups.length > 1
+                    ? "This option uses more than one shop. Review and prepare each vendor’s order separately in the cart."
+                    : "Review your full cart and delivery address before explicitly preparing this vendor’s order."}
                 </p>
-              )}
-              <div className={styles.reviewActions}>
-                <button
-                  type="button"
-                  className={styles.primary}
-                  disabled={
-                    !hydrated ||
-                    working ||
-                    offline ||
-                    save.kind === "saved" ||
-                    reviewed.items.some(
-                      (item) => item.listing.mode !== "SELL",
-                    ) ||
-                    (plan.budgetCents !== null &&
-                      reviewed.subtotalCents > plan.budgetCents)
-                  }
-                  onClick={() => void saveChoices(reviewed)}
-                >
-                  <ShoppingBag size={16} aria-hidden="true" />
-                  {saving
-                    ? "Saving choices…"
-                    : save.kind === "saved"
-                      ? "Choices saved to cart"
-                      : "Save these choices to cart"}
-                </button>
-                {save.savedIds.length > 0 && (
+                {offline && (
+                  <p>
+                    This is an illustrative catalog. A connected Customer
+                    session is needed to save cart choices.
+                  </p>
+                )}
+                {reviewed.items.some(
+                  (item) => item.listing.mode !== "SELL",
+                ) && (
+                  <p>
+                    Custom work and services need a vendor quote before they can
+                    enter a purchase plan. Review those listing details first.
+                  </p>
+                )}
+                <div className={styles.reviewActions}>
                   <button
                     type="button"
-                    className={styles.secondary}
-                    onClick={openCart}
-                    disabled={working}
+                    className={styles.primary}
+                    disabled={
+                      !hydrated ||
+                      working ||
+                      offline ||
+                      save.kind === "saved" ||
+                      reviewed.items.some(
+                        (item) => item.listing.mode !== "SELL",
+                      ) ||
+                      (plan.budgetCents !== null &&
+                        reviewed.subtotalCents > plan.budgetCents)
+                    }
+                    onClick={() => void saveChoices(reviewed)}
                   >
-                    View cart
-                    <ArrowUpRight size={15} aria-hidden="true" />
+                    <ShoppingBag size={16} aria-hidden="true" />
+                    {saving
+                      ? "Saving choices…"
+                      : save.kind === "saved"
+                        ? "Choices saved to cart"
+                        : "Save these choices to cart"}
                   </button>
-                )}
-              </div>
-              {save.message && (
-                <div
-                  className={
-                    save.kind === "error" ? styles.error : styles.saved
-                  }
-                  role={save.kind === "error" ? "alert" : "status"}
-                >
-                  <p>{save.message}</p>
-                  {save.accessError && (
-                    <p>
-                      <Link href="/login">Sign in</Link> ·{" "}
-                      <Link href="/#explore">Return to the marketplace</Link>
-                    </p>
+                  {save.savedIds.length > 0 && (
+                    <button
+                      type="button"
+                      className={styles.secondary}
+                      onClick={openCart}
+                      disabled={working}
+                    >
+                      View cart
+                      <ArrowUpRight size={15} aria-hidden="true" />
+                    </button>
                   )}
                 </div>
-              )}
-            </section>
-          )}
-          {plan.options.length === 0 && plan.suggestions.length > 0 && (
-            <div
-              className={styles.catalogSuggestions}
-              aria-label="Catalog suggestions"
-            >
-              <h4>Available finds to explore</h4>
-              {plan.suggestions.map((listing) => (
-                <button
-                  type="button"
-                  key={listing.id}
-                  disabled={working}
-                  onClick={() => onReview(listing.id, 1)}
-                >
-                  <span>
-                    {listing.emoji} {listing.title}
-                  </span>
-                  <strong>
-                    {listing.mode === "SELL"
-                      ? money(listing.price)
-                      : "Quote required"}
-                  </strong>
-                  <ArrowUpRight size={14} aria-hidden="true" />
-                </button>
-              ))}
-            </div>
-          )}
-          {plan.notes.length > 0 && (
-            <ul className={styles.notes} aria-label="Plan notes">
-              {plan.notes.map((note, index) => (
-                <li key={index}>{note}</li>
-              ))}
-            </ul>
-          )}
-          <details className={styles.explanation}>
-            <summary>How this plan was made</summary>
-            <p>
-              {plan.provenance.engine === "model"
-                ? "The model interpreted your request and proposed these choices. The server resolved the choices against the visible catalog and checked quantities, prices and constraints."
-                : "This response contains catalog suggestions. A usable model-generated plan was not available for this request."}
-            </p>
-            {plan.provenance.engine === "model" && plan.provenance.model && (
-              <p>Model: {plan.provenance.model}</p>
+                {save.message && (
+                  <div
+                    className={
+                      save.kind === "error" ? styles.error : styles.saved
+                    }
+                    role={save.kind === "error" ? "alert" : "status"}
+                  >
+                    <p>{save.message}</p>
+                    {save.accessError && (
+                      <p>
+                        <Link href="/login">Sign in</Link> ·{" "}
+                        <Link href="/#explore">Return to the marketplace</Link>
+                      </p>
+                    )}
+                  </div>
+                )}
+              </section>
             )}
-            <p>
-              Catalog scope: {plan.catalogCompared} compared from{" "}
-              {plan.catalogCount} visible listings. Pickup information is a
-              snapshot; runner confirmation is required.
-            </p>
-          </details>
-          <div className={styles.followup}>
-            <h4>
-              {plan.status === "clarify"
-                ? "Add that detail"
-                : "Keep the plan, change the details"}
-            </h4>
-            {form}
+            {plan.options.length === 0 && plan.suggestions.length > 0 && (
+              <div
+                className={styles.catalogSuggestions}
+                aria-label="Catalog suggestions"
+              >
+                <h4>Available finds to explore</h4>
+                {plan.suggestions.map((listing) => (
+                  <button
+                    type="button"
+                    key={listing.id}
+                    disabled={working}
+                    onClick={() => onReview(listing.id, 1)}
+                  >
+                    <span>
+                      {listing.emoji} {listing.title}
+                    </span>
+                    <strong>
+                      {listing.mode === "SELL"
+                        ? money(listing.price)
+                        : "Quote required"}
+                    </strong>
+                    <ArrowUpRight size={14} aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
+            )}
+            {plan.notes.length > 0 && (
+              <ul className={styles.notes} aria-label="Plan notes">
+                {plan.notes.map((note, index) => (
+                  <li key={index}>{note}</li>
+                ))}
+              </ul>
+            )}
+            <details className={styles.explanation}>
+              <summary>How this plan was made</summary>
+              <p>
+                {plan.provenance.engine === "model"
+                  ? "The model interpreted your request and proposed these choices. The server resolved the choices against the visible catalog and checked quantities, prices and constraints."
+                  : "This response contains catalog suggestions. A usable model-generated plan was not available for this request."}
+              </p>
+              {plan.provenance.engine === "model" && plan.provenance.model && (
+                <p>Model: {plan.provenance.model}</p>
+              )}
+              <p>
+                Catalog scope: {plan.catalogCompared} compared from{" "}
+                {plan.catalogCount} visible listings. Pickup information is a
+                snapshot; runner confirmation is required.
+              </p>
+            </details>
+            <div className={styles.followup}>
+              <h4>
+                {plan.status === "clarify"
+                  ? "Add that detail"
+                  : "Keep the plan, change the details"}
+              </h4>
+              {form}
+            </div>
           </div>
+        )}
+      </div>
+      {discovery && (
+        <div
+          id={`${instance}-discover`}
+          data-sidekick-tool="discover"
+          role="region"
+          aria-label="Sidekick discovery"
+          hidden={mode !== "discover"}
+        >
+          {discovery}
         </div>
       )}
     </section>

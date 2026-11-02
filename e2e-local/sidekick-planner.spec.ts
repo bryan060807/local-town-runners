@@ -519,6 +519,20 @@ test("mock-model plans compare real bakery bundles, retain follow-up IDs and qua
     await expect(option(page, 1)).toContainText(
       "Each shop has a current declared-trip candidate",
     );
+    await option(page, 1)
+      .getByRole("button", { name: "Show on map", exact: true })
+      .click();
+    const bakery = f.context.vendors.find(
+      (vendor) => vendor.id === f.roll.vendorId,
+    )!;
+    await expect(
+      page.locator(".map-pin.highlight:not(.runner-pin)"),
+    ).toHaveCount(1);
+    await expect(
+      page.locator(".map-pin.highlight:not(.runner-pin)"),
+    ).toHaveAttribute("aria-label", `${bakery.name} (demo)`);
+    expect(captured).toHaveLength(1);
+    expect(observed.cartWrites).toEqual([]);
     await option(page)
       .getByRole("button", { name: "Review this option", exact: true })
       .click();
@@ -526,6 +540,38 @@ test("mock-model plans compare real bakery bundles, retain follow-up IDs and qua
     await expect(review(page)).toContainText("1 × Berry Scone Pair");
     await expect(review(page)).toContainText("$16.00");
     expect((await businessRows(session)).cart).toEqual([]);
+    expect(observed.cartWrites).toEqual([]);
+    const sidekick = page.getByRole("region", {
+      name: "Your local sidekick",
+      exact: true,
+    });
+    const unfinishedFollowup = "Keep these choices while I check the map.";
+    await composer(page).fill(unfinishedFollowup);
+    await sidekick
+      .getByRole("button", { name: "Find & ask", exact: true })
+      .click();
+    await expect(sidekick.getByRole("textbox")).toHaveCount(1);
+    const quickInput = sidekick.getByRole("textbox", {
+      name: "Ask your local sidekick",
+      exact: true,
+    });
+    await quickInput.fill("Tell me about cinnamon rolls.");
+    await page
+      .getByRole("button", {
+        name: "Ask Sidekick about this area",
+        exact: true,
+      })
+      .click();
+    await expect(quickInput).toBeFocused();
+    await expect(quickInput).toHaveValue("Tell me about cinnamon rolls.");
+    await sidekick
+      .getByRole("button", { name: "Plan an errand", exact: true })
+      .click();
+    await expect(sidekick.getByRole("textbox")).toHaveCount(1);
+    await expect(composer(page)).toHaveValue(unfinishedFollowup);
+    await expect(review(page)).toContainText("$16.00");
+    await expect(option(page, 2)).toContainText("$17.50");
+    expect(captured).toHaveLength(1);
     expect(observed.cartWrites).toEqual([]);
     await planner(page)
       .getByText("How this plan was made", { exact: true })

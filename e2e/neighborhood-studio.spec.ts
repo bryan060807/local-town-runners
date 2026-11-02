@@ -186,6 +186,20 @@ test("connection preview works with keyboard, reduced motion and no WebGL, and S
   await expect(page.locator(".assistant .reply")).not.toContainText(
     "Looking around the neighborhood",
   );
+  const sidekick = page.getByRole("region", {
+    name: "Your local sidekick",
+    exact: true,
+  });
+  await expect(
+    sidekick.getByRole("button", { name: "Find & ask", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(sidekick.getByRole("textbox")).toHaveCount(1);
+  await expect(
+    sidekick.getByRole("textbox", {
+      name: "Ask your local sidekick",
+      exact: true,
+    }),
+  ).toBeFocused();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
