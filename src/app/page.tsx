@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import Marketplace from "@/components/Marketplace";
+import ParticipatingVendors from "@/components/ParticipatingVendors";
 import { publicCatalog } from "@/lib/server/catalog";
 import { demoEnabled } from "@/lib/server/demo";
 export const dynamic = "force-dynamic";
@@ -16,5 +18,20 @@ export default async function Home() {
         <Link href="/">Try again</Link>
       </main>
     );
-  return <Marketplace {...data} canEnterDemo={canEnterDemo} />;
+  const privateDemo = "isolatedDemo" in data && data.isolatedDemo;
+  return (
+    <Marketplace
+      {...data}
+      canEnterDemo={canEnterDemo}
+      showcase={
+        privateDemo ? (
+          <Suspense
+            fallback={<p role="status">Loading local business previews…</p>}
+          >
+            <ParticipatingVendors />
+          </Suspense>
+        ) : undefined
+      }
+    />
+  );
 }

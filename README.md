@@ -4,7 +4,7 @@ Discover local goods and coordinate pickups with a neighbor already going that w
 
 **[Try the app](https://runners.aibrylabs.com) · [Judge walkthrough](docs/hackathon-demo.md) · [Screenshots and submission checklist](docs/submission-checklist.md)**
 
-The showcase combines participating local vendor storefronts with fictional private Demo Mode workspaces and PayPal **Sandbox**. Vendor, runner and platform allocations are simulated; no actual payout is sent. Real storefronts are separate from the fictional role-switching walkthrough. It is not a commercial marketplace launch.
+The showcase combines participating local vendor storefronts with fictional private Demo Mode workspaces and PayPal **Sandbox**. Vendor, runner and platform allocations are simulated; no actual payout is sent. Real-vendor previews are for browsing; fictional workspaces handle the role-switching order walkthrough. It is not a commercial marketplace launch.
 
 ## What works
 
@@ -13,6 +13,7 @@ The showcase combines participating local vendor storefronts with fictional priv
 - **Sidekick AI planning:** model-first multi-item comparisons, budget/local/one-shop constraints, clarifying questions and follow-up revisions. The server rechecks every choice against fresh catalog prices, stock and pickup facts before explicit review and cart saving. Actual model answers and catalog fallbacks are labeled separately. Quick discovery and authorized order reads remain available. [AI workflow and verification](docs/sidekick-errand-planner.md).
 - **Orders:** shareable product pages offer quantity selection and a direct cart action; persistent vendor-grouped carts lead to explicit preparation, atomic stock reservations, payment choice and state-gated pickup/delivery/completion. [Customer flow and retest](docs/customer-order-path.md).
 - **Private Demo Mode:** Customer, Vendor and Runner share one visitor's workspace. The profile bar identifies the current role, and each simulated order names the next role and action. **Simulate demo payment** enables the full walkthrough with explicit simulation labels, separate ledger evidence and no PayPal request. Stay in the same session when switching roles; leaving and re-entering creates a fresh workspace.
+- **Participating local businesses:** a separate read-only section inside Demo Mode previews published real vendors and up to three public listings each. Expand their cards below Sidekick; demo shopping and AI continue to use the fictional catalog. Published profiles refresh on the next homepage read. [Showcase guide](docs/demo-vendor-showcase.md).
 - **Vendor and runner tools:** searchable compact catalog editors, inventory management, quote inquiries/replies, expiring availability, trip intentions, matching and fulfillment controls.
 - **Reputation:** completed-order vendor ratings, an earned community badge and private, noncash customer recognition. Simulated activity contributes only inside its private demo workspace; it does not manufacture public reputation.
 - **Real account intake:** email-verification and customer-consent gates, vendor/runner applications, versioned consent, private PDFs, administrator review and retryable Resend notifications. These permissions cover Sandbox/demo participation.
@@ -28,11 +29,13 @@ The [demo delivery update](docs/demo-delivery-polish.md) adds map-failure recove
 
 Open the hosted app and choose **Enter Demo Mode**. The hosted walkthrough requires no personal account, API key or payment. Keep the same browser session and use **Switch demo profile** to follow Customer, Vendor and Runner through the same private workspace. The [judge guide](docs/hackathon-demo.md) gives the preparation, exact prompts and full fulfillment sequence. Genuine PayPal Sandbox proof is documented separately from this simulated order.
 
+For real local participation, expand a card in **Participating local businesses** below Sidekick on the demo homepage. This displays current public information without shopping, reserving stock or acting as the real vendor. See [the showcase guide](docs/demo-vendor-showcase.md).
+
 The [submission checklist](docs/submission-checklist.md) explains how to add the project license, capture the app screenshots and prepare the final submission. Its screenshot order follows the current $9 bakery story. Existing [actual hosted AI screenshots](docs/screenshots/sidekick-planner/README.md) can support the submission with their original provenance; localhost mocked-provider images are test evidence.
 
 The [final delivery plan](docs/final-submission-plan.md) sets the recording, optional vendor-intake cutoff and November 10 submission target. A [written entry draft](docs/hackathon-submission-draft.md) is ready for entrant review; the final video upload and Devpost submission are not yet confirmed.
 
-The earliest visible MVP commit was made **October 6, 2026 (Central)**. Subsequent October work added onboarding, payment recovery and completed Sandbox verification, private simulated fulfillment, community recognition, neighborhood discovery and actual model-backed errand planning. The latest application upgrade was committed **October 30, 2026**, improving real-vendor presentation; the Git history and dated implementation reports document development within the competition period.
+The earliest visible MVP commit was made **October 6, 2026 (Central)**. Subsequent work added onboarding, payment recovery and completed Sandbox verification, private simulated fulfillment, community recognition, neighborhood discovery and actual model-backed errand planning. October 30 improved real-vendor presentation; November 2 added a read-only real-business showcase inside Demo Mode. The Git history and dated implementation reports document development within the competition period.
 
 Target a **2:50–2:55 public YouTube video**, including any cinematic opening. The supplied rules set the submission deadline at **November 12, 2026, 2:00 p.m. Central** and require free judge access through **December 15, 2026, 10:00 a.m. Central**. Keep the hosted app, Demo Mode and its configured AI/provider capacity available through judging, and check the organizer's current rules before submitting.
 

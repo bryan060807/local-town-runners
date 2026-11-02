@@ -28,7 +28,7 @@ Aim for **one more independent local vendor**, with **two additional vendors as 
 - Use the existing owner-created, email-verified application and administrator review flow. Obtain permission and review the actual consent/PDF before approval; no account impersonation or signatures on someone else's behalf.
 - Each optional vendor supplies two or three approved listings, clear descriptions/prices, owner-provided photos and accurately labeled demo availability. Ask one practical question about how they currently manage orders or pickups and record their actual answer with permission.
 - Existing participation is permission for the demo/Sandbox scope, not proof of paying customers, endorsement, commercial approval or measured market demand.
-- Real vendors stay in the reviewed marketplace scope. They do not automatically appear inside **Enter Demo Mode**. Show a short real-storefront cutaway and keep the tested fictional role-switching flow for fulfillment; adding real-vendor demo cloning is outside this finish plan.
+- Real vendors stay in the reviewed marketplace scope. Their published information also appears in the separate read-only **Participating local businesses** section inside Demo Mode on homepage refresh. Show a short expanded preview and keep the tested fictional role-switching flow for fulfillment. See [the showcase guide](demo-vendor-showcase.md); interactive real-vendor demo cloning is outside this finish plan.
 - If intake requires a new capability or misses the cutoff, defer it. The submission can proceed with the participating vendor already demonstrated.
 
 ## One story for the video

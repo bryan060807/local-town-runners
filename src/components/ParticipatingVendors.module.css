@@ -1,0 +1,293 @@
+.shell {
+  margin: 36px 0;
+  padding: 28px;
+  border: 1px solid #d6dfcb;
+  border-radius: 20px;
+  background: #f0f3e8;
+  color: #273d2e;
+}
+
+.heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.heading > div {
+  min-width: 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 5px 8px;
+  border: 1px solid #cad7bd;
+  border-radius: 5px;
+  background: #e3ebd8;
+  color: #365a40;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.title {
+  margin: 12px 0 0;
+  font-size: clamp(23px, 2.8vw, 30px);
+  line-height: 1.25;
+  letter-spacing: -0.8px;
+  overflow-wrap: anywhere;
+}
+
+.count {
+  flex-shrink: 0;
+  padding-bottom: 3px;
+  color: #5a6b52;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.intro {
+  max-width: 80ch;
+  margin: 14px 0 22px;
+  color: #53654c;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px;
+}
+
+.business {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #dce4d2;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  min-height: 112px;
+  padding: 18px;
+  list-style: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary:hover {
+  background: #fbfcf8;
+}
+
+.summary:focus-visible {
+  outline: 3px solid #88a95e;
+  outline-offset: -4px;
+  border-radius: 12px;
+}
+
+.art,
+.itemArt {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f0f3e9;
+}
+
+.photo {
+  padding: 5px;
+  object-fit: contain;
+}
+
+.emoji {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.identity {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.category {
+  color: #65775a;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.name {
+  font-family: Manrope, sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.description {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #63715b;
+  font-size: 12px;
+  line-height: 1.6;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  color: #315a43;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.arrow {
+  flex-shrink: 0;
+}
+
+.business[open] .arrow {
+  transform: rotate(180deg);
+}
+
+.contents {
+  padding: 0 18px 18px;
+}
+
+.listings {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 16px 0 0;
+  border-top: 1px solid #e7ecdf;
+  list-style: none;
+}
+
+.listing {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.itemArt {
+  flex: 0 0 64px;
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+}
+
+.itemCopy {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.itemTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.itemCopy p {
+  margin: 7px 0 9px;
+  color: #63715b;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.price {
+  color: #315a43;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.notice {
+  margin: 18px 0 0;
+  padding: 16px;
+  border: 1px solid #dce4d2;
+  border-radius: 10px;
+  background: #fff;
+  color: #53654c;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.contents .notice {
+  margin: 0;
+  padding: 12px 0;
+  border: 0;
+  border-top: 1px solid #e7ecdf;
+  border-radius: 0;
+}
+
+.note,
+.previewNote {
+  margin: 14px 0 0;
+  color: #63715b;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+  .shell {
+    margin: 28px 0;
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .shell {
+    padding: 16px;
+  }
+
+  .summary {
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .art {
+    width: 64px;
+    height: 64px;
+  }
+
+  .name {
+    font-size: 16px;
+  }
+
+  .contents {
+    padding: 0 14px 14px;
+  }
+
+  .listing {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

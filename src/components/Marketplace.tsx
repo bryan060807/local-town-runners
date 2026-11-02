@@ -11,6 +11,7 @@ import {
   useEffect,
   useRef,
   useSyncExternalStore,
+  type ReactNode,
 } from "react";
 import {
   ArrowUpRight,
@@ -55,6 +56,7 @@ export default function Marketplace({
   isolatedDemo = false,
   snapshotAt,
   canEnterDemo = false,
+  showcase,
 }: {
   listings: Listing[];
   vendors: Vendor[];
@@ -63,6 +65,7 @@ export default function Marketplace({
   isolatedDemo?: boolean;
   snapshotAt: number;
   canEnterDemo?: boolean;
+  showcase?: ReactNode;
 }) {
   const router = useRouter();
   const hydrated = useSyncExternalStore(
@@ -459,6 +462,7 @@ export default function Marketplace({
             );
           }}
         />
+        {showcase}
         <section id="explore" className="explore">
           <div className="section-top">
             <h2>
