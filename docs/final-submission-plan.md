@@ -1,24 +1,27 @@
-# Final hackathon delivery plan
+# Final hackathon delivery plan — owner sign-off and historical plan
 
-Updated **November 2, 2026 (America/Chicago)**. The application is ready for submission production. The largest remaining task is the video; the complete package also needs selected gallery images, the written entry, final judge-access checks and a confirmed submission.
+**Judging status as of November 11, 2026: JUDGE READY (owner approved).** The owner reports the finished YouTube video exceeds expectations and that the hosted three-role demonstration has completed successfully several times. This is operator acceptance; automated audit did not independently view or time the submitted video or reproduce those particular sessions.
 
-The [official rules](https://paypalaihackathon.devpost.com/rules) were read successfully on November 2 and still show **November 12, 2026, noon Pacific / 2 p.m. Central** as the deadline. Our working submission target is **November 10**, leaving two days for actual blockers. Free functional judge access must continue through **December 15, 2026, 10 a.m. Central**.
+**Submitted entry:** [Local Town Runners on Devpost](https://devpost.com/software/paypal-proofpay), submitted November 4, 2026. **Video linked in entry:** [YouTube](https://youtu.be/3_TTpw0K51g). **Hosted app:** [runners.aibrylabs.com](https://runners.aibrylabs.com). **Public source:** [GitHub](https://github.com/bryan060807/local-town-runners). The repo includes the root ISC license, judge walkthrough and setup instructions.
 
-## What is ready and what remains
+## Final evidence and boundaries
 
-| Deliverable          | Confirmed state                                                                                                                                                              | Remaining acceptance check                                                                                              |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Application          | Hosted demo, AI planning, full simulated fulfillment and real vendor storefronts implemented. Latest counted application CI passed 146 unit/database and 168 browser checks. | Final recording rehearsal; fix observed blockers only.                                                                  |
-| Source and licensing | Public repository; GitHub recognizes ISC. Rechecked November 2.                                                                                                              | Keep submitted source link and license accessible.                                                                      |
-| AI evidence          | Actual model comparison and follow-up revision are documented, separately from mocked tests.                                                                                 | Show actual AI-assisted output in the recording; recheck provider availability before filming.                          |
-| PayPal evidence      | Three genuine completed Sandbox payments total $44. Existing $4.50 capture/order/webhook/ledger proof is documented.                                                         | Prepare one readable proof segment; no new payment needed.                                                              |
-| Real participation   | MEM's Handcrafts storefront and product page published; its public page returned 200 on November 2.                                                                          | Confirm the owner's preferred public information and any additional recording content. Additional vendors are optional. |
-| Video                | **Not recorded**, confirmed by the user November 2. A timed script already exists.                                                                                           | Public YouTube video, 2:50–2:55 including opening/closing/credits, actual app footage and clear disclosures.            |
-| Gallery              | Actual hosted AI and vendor screenshots already exist. Completion of the user's planned capture set is unconfirmed.                                                          | Select four or five readable images; capture missing matching $9 completion frames while recording.                     |
-| Written entry        | [Copy-ready draft](hackathon-submission-draft.md) prepared; not submitted.                                                                                                   | User reviews claims, personal/team details and any actual additional vendor feedback.                                   |
-| Final entry          | Devpost registration/draft/final submission state is not verified here.                                                                                                      | Complete all required fields, submit and retain confirmation plus public entry URL.                                     |
+| Area | November 11 status | Evidence boundary |
+| --- | --- | --- |
+| Presentation | Owner-approved video is linked to published Devpost entry | No independent public video playback or duration check in this audit |
+| User journey | Owner completed Customer → Vendor → Runner → Customer flow repeatedly | Operator-confirmed, not a fresh automated acceptance run |
+| Source and production | GitHub `main` at `269eddd` matched Vercel READY production deployment before this documentation closeout | A documentation-only commit may produce a later Vercel deployment; verify its status after publication |
+| Automated checks | November 2 exact-implementation CI passed **146 unit/database + 176 browser checks**, zero test failures | Latest documentation/screenshot commit made no application-code change; 16 moderate npm advisories were recorded, high-severity gate passed |
+| Database | Supabase reported ACTIVE_HEALTHY; Demo Mode enabled; 3 genuine PAID Sandbox orders totaling **$44.00** and 0 duplicate genuine customer-payment credits | These are existing Sandbox transactions, not Live revenue or real payouts |
+| AI | Historical hosted model requests and canonically validated planner revisions are documented | Current provider quota and live request response were not independently retested |
+| Vendor showcase | Live database included 2 active real-vendor storefronts and 4 active real-vendor listings | Real showcase is distinct from fictional order/fulfillment demo |
+| Submission status | Published Devpost project with video, app and repository links; submitted November 4 | Organizer eligibility decision, gallery contents and custom-answer fields were not independently confirmed |
 
-Fresh November 2 checks were public page/GitHub/rules reads only. They do not constitute a new authenticated walkthrough, AI-provider test, payment verification or consent audit. The counted application tests and payment evidence retain their own documented dates.
+**What remains intentionally open:** signed-out viewing, video duration and gallery review, continued AI quota/provider availability, and hosting through the December 21 winner announcement. No new financial transactions, production data changes or live-payment enablement are required. Preserve the difference between the $9 simulated fulfillment and separate $4.50 genuine Sandbox proof.
+
+## Historical planning notes (written November 2)
+
+The original sequence below is preserved as a planning record, **not a list of tasks still uncompleted**. The November 11 owner acceptance and published Devpost entry supersede earlier statements that the video or submission were pending.
 
 ## Additional real vendors: small, optional and time-boxed
 
@@ -48,7 +51,7 @@ Record the complete screen story **before polishing cinematics**. Trim loading a
 
 ## Owners and schedule
 
-This is a recommended schedule, not a claim that work or outside participation is already completed.
+Historical schedule as drafted November 2. Actual completion evidence and operator sign-off are recorded above.
 
 | Dates         | User / operator                                                                                                          | Assistant support and exit condition                                                                                         |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -72,16 +75,16 @@ Choose four or five highlights rather than trying to make ten new gallery images
 
 The [ten-checkpoint screenshot guide](submission-checklist.md) remains useful for supporting documentation. Existing [actual hosted AI images](screenshots/sidekick-planner/README.md) and [vendor presentation captures](screenshots/vendor-presentation/README.md) can be reused with their original captions/provenance. Do not substitute a historical $28 order screenshot as proof that the new $9 order completed.
 
-## Final gates
+## Final gates (November 11 reconciliation)
 
-- [ ] Video is Public on YouTube, under three minutes and readable without relying on an administrator session.
-- [ ] The app, public source, video and judge-walkthrough links work while signed out.
-- [ ] A fresh same-session Customer → Vendor → Runner → Customer demo completes; its simulation labels remain visible.
-- [ ] Actual AI-provider output is distinguishable from fallback/fixture output; provider credits/capacity support judging access.
-- [ ] The genuine Sandbox segment is clearly separate from the $9 simulated walkthrough; no Live payment or real payout is implied.
-- [ ] Public vendor details, featured media, music/voices and any quoted feedback have the appropriate permission; private records are off screen.
-- [ ] Claims describe a prototype and actual participation. No invented traction, savings, endorsement, route ETA or autonomous purchase is included.
-- [ ] Devpost fields and any project-history/team/eligibility disclosures are reviewed by the entrant; submission confirmation and public entry URL are retained.
-- [ ] Hosting, Demo Mode and required provider access remain available free of charge through December 15 at 10 a.m. Central.
+- [x] Owner approves finished submitted video; Devpost project has a YouTube URL. Independent runtime/public-view verification remains open.
+- [x] Owner reports repeated successful three-role customer/vendor/runner completion in the hosted demo.
+- [x] Public repository, ISC license, Vercel READY production deployment and submitted Devpost entry verified.
+- [x] Existing Sandbox captures and one-per-order genuine customer-payment credits were checked read-only against Supabase; no real payouts are implied.
+- [x] Submission narrative distinguishes AI-backed choices, canonical validation, genuine Sandbox payment and explicitly simulated fulfillment.
+- [ ] Confirm signed-out video visibility, runtime below three minutes, and all judge-access links; not independently checked in this audit.
+- [ ] Confirm media permissions, gallery images and any private on-screen details; operator-controlled evidence.
+- [ ] Keep the app, Demo Mode and required AI/provider quota available until the December 21 winner announcement, in accordance with organizer updates.
+- [ ] Independently confirm the entrant's custom fields and eligibility responses if another editing pass is warranted before the deadline.
 
 Monitoring, restore drills, retention automation, commercial launch, sponsored billing and real payouts remain separate rollout work. They are not presented as completed or added as dependencies for this hackathon package.
