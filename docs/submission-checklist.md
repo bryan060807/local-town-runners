@@ -1,6 +1,8 @@
 # Hackathon submission and screenshot checklist
 
-Use the [Fred bakery walkthrough](hackathon-demo.md) for the current story: two Habanero Cinnamon Rolls from Demo Hearth Bakery, **$9.00 total**. This is an operator checklist; unchecked items and suggested filenames do not represent screenshots already captured.
+**JUDGE READY (owner sign-off November 11, 2026):** The owner approved the finished submitted video and reports several successful end-to-end demo runs. [Devpost](https://devpost.com/software/paypal-proofpay) confirms submission November 4 and links the [YouTube video](https://youtu.be/3_TTpw0K51g). This checklist retains optional screenshot tasks and independent verification items; unchecked boxes are not evidence that the actual submitted video or operator walkthrough is missing.
+
+Use the [Fred bakery walkthrough](hackathon-demo.md) for the current story: two Habanero Cinnamon Rolls from Demo Hearth Bakery, **$9.00 total**. Suggested filenames are not evidence that those particular screenshots were captured.
 
 ## Create the project license in GitHub
 
@@ -108,11 +110,13 @@ When publishing new images in the repository, place only reviewed, sanitized cop
 ## Final submission checks
 
 - [x] Root **LICENSE** is committed on the public repository's default branch and GitHub detects ISC (rechecked November 2, 2026).
-- [ ] The description identifies the audience, problem, demonstrated benefit and limitations. State significant work completed during the submission period; Git history records the October 6 MVP (Central; October 7 UTC) and subsequent October AI, payment and fulfillment updates.
-- [ ] The video shows actual application footage, preserves provenance/simulation labels, and finishes in **2:50–2:55**, including the cinematic opener and closing frame. Upload it to **YouTube**, set visibility to **Public**, and test the submitted URL while signed out.
-- [ ] Cinematic images, music and voices are your own or properly licensed for the submitted use. Keep permissions and required attribution.
-- [ ] Submission links point to the hosted app, public source, video and walkthrough. Test a fresh private Demo Mode session while signed out of operator accounts; judges should not need your administrator credentials or server API keys.
-- [ ] Hosting, Demo Mode, AI quota and the needed integrations remain available to judges free of charge through **December 15, 2026, 10:00 a.m. Central**. Current provider configuration and availability still need a final pre-submission check.
-- [ ] Complete the Devpost registration and all required entry fields before **November 12, 2026, 2:00 p.m. Central**. Check the official event page for amendments before submitting.
+- [x] The published Devpost description identifies the problem, small-town audience, PayPal/AI integration, demonstrated workflow and prototype limitations.
+- [x] Operator approved the finished submitted YouTube video November 11; the published Devpost entry contains its URL. **Independent** signed-out public viewing, runtime under three minutes and on-screen provenance checks were not completed in this audit.
+- [x] Operator completed the same-session Customer → Vendor → Runner → Customer workflow repeatedly and reports it stable.
+- [x] The published Devpost entry links the hosted app and public repository; the README links the judge walkthrough and the root ISC license is committed.
+- [ ] Review cinematic images, music and voices for ownership/license permissions, required attribution and any private on-screen information.
+- [ ] If desired before cutoff, independently test the public video and a signed-out fresh private Demo Mode session; judges should not need administrator credentials or API keys.
+- [ ] Maintain hosting, Demo Mode and adequate AI/provider capacity through the **December 21, 2026** winner announcement, per organizer updates.
+- [x] Devpost submitted November 4, ahead of the **November 12, 2026, 2:00 p.m. Central** deadline. Organizer acceptance and individual entrant attestations remain outside this audit.
 
 Dates above convert the supplied official rules' Pacific times to America/Chicago. This checklist does not establish entrant eligibility, asset ownership or organizer acceptance; complete those operator-specific checks before entry.
