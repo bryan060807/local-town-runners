@@ -1,6 +1,6 @@
-# Local Town Runners — hackathon entry draft
+# Local Town Runners — original hackathon entry copy
 
-Prepared November 2, 2026. **Copy-ready draft for entrant review; not a submitted entry.** Adapt the sections to the actual Devpost form. Add the final public YouTube URL after upload, confirm entrant/team disclosures and check media permissions. Do not add vendors, interviews or outcome metrics unless actually confirmed.
+Originally prepared November 2, 2026. **Historical copy; the [published Devpost entry](https://devpost.com/software/paypal-proofpay) is the authoritative submission.** Devpost confirms submission November 4. On November 11 the owner approved the completed video and reported multiple successful full-demo runs. These statements do not independently verify the video's public viewing conditions, duration or its on-screen content. Do not invent vendor participation, interviews or outcome metrics.
 
 **Name:** Local Town Runners
 
@@ -12,7 +12,7 @@ Prepared November 2, 2026. **Copy-ready draft for entrant review; not a submitte
 
 **Judge instructions:** https://github.com/bryan060807/local-town-runners/blob/main/docs/hackathon-demo.md
 
-**Video:** Pending recording, editing and public YouTube upload.
+**Submitted video:** https://youtu.be/3_TTpw0K51g (operator approved November 11, 2026).
 
 ## The problem and audience
 
@@ -42,7 +42,7 @@ Three genuine Sandbox payments totaling $44 have verified completed captures, ma
 
 The prototype uses Next.js, React, TypeScript, Supabase/PostgreSQL, MapLibre, an OpenAI-compatible model integration, PayPal Sandbox, Resend and Vercel. Authentication, database row-level security and role-specific transitions enforce account/workspace boundaries. Real vendor onboarding records versioned consent and private PDF evidence before administrator review.
 
-The latest counted application release passed 146 unit/database tests and 168 browser checks. Actual hosted AI responses, public vendor pages and genuine Sandbox capture/webhook records are documented separately from mocked-provider tests and simulated orders. The public repository includes the ISC license, setup instructions, architecture, security limits and judge walkthrough.
+The latest exact-implementation CI verification passed 146 unit/database tests and 176 browser checks; its dependency audit reported 16 moderate advisories with the high-severity gate passing. Actual hosted AI responses, public vendor pages and genuine Sandbox capture/webhook records are documented separately from mocked-provider tests and simulated orders. The public repository includes the ISC license, setup instructions, architecture, security limits and judge walkthrough.
 
 The initial MVP was committed October 6, 2026 Central. Subsequent October work added onboarding, payment recovery and completed Sandbox verification, private simulated fulfillment, community recognition, neighborhood discovery, model-backed errand planning and responsive vendor presentation.
 
