@@ -2,7 +2,9 @@
 
 Discover local goods and coordinate pickups with a neighbor already going that way. Local Town Runners is a hackathon marketplace centered on Louisiana, Missouri, with catalog-grounded AI discovery, vendor storefronts and a complete customer → vendor → runner workflow.
 
-**[Try the app](https://runners.aibrylabs.com) · [Judge walkthrough](docs/hackathon-demo.md) · [Screenshots and submission checklist](docs/submission-checklist.md)**
+**[Try the app](https://runners.aibrylabs.com) · [Judge walkthrough](docs/hackathon-demo.md) · [Published Devpost entry](https://devpost.com/software/paypal-proofpay) · [Submitted video](https://youtu.be/3_TTpw0K51g) · [Submission checklist](docs/submission-checklist.md)**
+
+**JUDGE READY — owner sign-off, November 11, 2026.** The Devpost entry was submitted November 4 and includes the hosted app, public source, and YouTube video. The owner has approved the finished video and reports multiple successful complete customer/vendor/runner demonstrations. This is an operator acceptance statement, not an independent re-inspection of the video's runtime, visibility, or contents. The current hosted source, historical automated tests, and Sandbox ledger are separately documented below.
 
 The showcase combines participating local vendor storefronts with fictional private Demo Mode workspaces and PayPal **Sandbox**. Vendor, runner and platform allocations are simulated; no actual payout is sent. Real-vendor previews are for browsing; fictional workspaces handle the role-switching order walkthrough. It is not a commercial marketplace launch.
 
@@ -21,7 +23,7 @@ The showcase combines participating local vendor storefronts with fictional priv
 
 Three genuine marketplace Sandbox payments total **$44.00 USD**, each matched to a PAID order, completed webhook evidence and exactly one customer-payment ledger entry. This is separate from the hosted simulated walkthrough. See [Sandbox verification](docs/phase-4.3-sandbox-verification.md) and [simulation evidence](docs/evidence/demo-order-simulation-production-2026-10-27.json).
 
-The latest [hardening review](docs/hardening-2026-10-27.md) describes the security/reliability fixes, regression evidence, operational limits and recommended next steps. GitHub Actions runs project and browser checks without production credentials.
+The [October 27 hardening review](docs/hardening-2026-10-27.md) describes security and reliability fixes. The later [November 2 Sidekick verification](docs/sidekick-errand-planner.md) records passing exact-source CI: 146 unit/database tests and 176 browser checks (48 offline, 128 connected). Its dependency audit reported 16 moderate advisories while passing the high-severity gate; do not confuse this with earlier zero-advisory reports. GitHub Actions runs without production credentials.
 
 The [demo delivery update](docs/demo-delivery-polish.md) adds map-failure recovery, a clearer three-role walkthrough and a warmer introduction. The current [judge story](docs/hackathon-demo.md) follows Sidekick comparing bakery combinations, revising the choice to two cinnamon rolls for **$9.00**, and carrying that choice through a completed simulated delivery. Set the fictional runner's declared trip to Demo Hearth Bakery before recording; genuine Sandbox verification is shown separately.
 
@@ -31,13 +33,13 @@ Open the hosted app and choose **Enter Demo Mode**. The hosted walkthrough requi
 
 For real local participation, expand a card in **Participating local businesses** below Sidekick on the demo homepage. This displays current public information without shopping, reserving stock or acting as the real vendor. See [the showcase guide](docs/demo-vendor-showcase.md).
 
-The [submission checklist](docs/submission-checklist.md) explains how to add the project license, capture the app screenshots and prepare the final submission. Its screenshot order follows the current $9 bakery story. Existing [actual hosted AI screenshots](docs/screenshots/sidekick-planner/README.md) can support the submission with their original provenance; localhost mocked-provider images are test evidence.
+The [submission checklist](docs/submission-checklist.md) records the completed ISC license, submission status, remaining independent-access checks and screenshot provenance guidance. Its screenshot order follows the current $9 bakery story. Existing [actual hosted AI screenshots](docs/screenshots/sidekick-planner/README.md) can support the submission with their original provenance; localhost mocked-provider images are test evidence.
 
-The [final delivery plan](docs/final-submission-plan.md) sets the recording, optional vendor-intake cutoff and November 10 submission target. A [written entry draft](docs/hackathon-submission-draft.md) is ready for entrant review; the final video upload and Devpost submission are not yet confirmed.
+The [final delivery plan](docs/final-submission-plan.md) preserves the earlier schedule and now records November 11 operator sign-off. The [original written entry draft](docs/hackathon-submission-draft.md) is historical preparation copy; the [published Devpost entry](https://devpost.com/software/paypal-proofpay) is authoritative and was submitted November 4. The finished [YouTube video](https://youtu.be/3_TTpw0K51g) is linked in that published entry.
 
 The earliest visible MVP commit was made **October 6, 2026 (Central)**. Subsequent work added onboarding, payment recovery and completed Sandbox verification, private simulated fulfillment, community recognition, neighborhood discovery and actual model-backed errand planning. October 30 improved real-vendor presentation; November 2 added a read-only real-business showcase inside Demo Mode and consolidated planning/discovery into one Sidekick panel with a full-width map. The Git history and dated implementation reports document development within the competition period.
 
-Target a **2:50–2:55 public YouTube video**, including any cinematic opening. The supplied rules set the submission deadline at **November 12, 2026, 2:00 p.m. Central** and require free judge access through **December 15, 2026, 10:00 a.m. Central**. Keep the hosted app, Demo Mode and its configured AI/provider capacity available through judging, and check the organizer's current rules before submitting.
+The operator has approved the submitted video and repeatedly completed the full hosted demo. The audit has not independently measured the video's duration or tested signed-out YouTube viewing. The official submission cutoff is **November 12, 2026, 2:00 p.m. Central**; organizers instruct entrants to avoid further repository/video edits after that cutoff and keep the hosted app, Demo Mode and AI/provider capacity available through the **December 21, 2026** winners announcement. The formal judging window ends December 15.
 
 ## Run locally
 
